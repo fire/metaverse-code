@@ -1,0 +1,820 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0034)http://dotnet.jku.at/projects/slm/ -->
+<HTML><HEAD><TITLE>Projects - Simple Layout Manager - Dipl.-Ing. Markus Löberbauer</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1"><LINK 
+href="SimpleLayoutManager.files/core.css" type=text/css rel=STYLESHEET>
+<META content="MSHTML 6.00.2800.1479" name=GENERATOR></HEAD>
+<BODY><A name=_HTOP_></A><!-- header  - top, horizontal  -->
+<TABLE class=layout cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <COLGROUP>
+  <COL width=313>
+  <COL width=*>
+  <COL width=51>
+  <COL width=51>
+  <COL width=51>
+  <COL width=51></COLGROUP>
+  <TBODY>
+  <TR vAlign=center align=left>
+    <TD class=topbarLayout align=right><A href="http://dotnet.jku.at/"><IMG 
+      height=66 alt=Home src="SimpleLayoutManager.files/TitleLogo2.gif" 
+      width=309 border=0> </A></TD>
+    <TD class=topbarLayout>&nbsp;</TD>
+    <TD class=topbarLayout><A class=bookImage 
+      href="http://dotnet.jku.at/book/"><IMG 
+      title=".NET Application Development" alt=Cover 
+      src="SimpleLayoutManager.files/cover_Net_en_45.gif" border=1></A></TD>
+    <TD class=topbarLayout><A class=bookImage 
+      href="http://dotnet.jku.at/csbook/"><IMG title="C# To the Point" alt=Cover 
+      src="SimpleLayoutManager.files/cover_Cs_en_45.jpg" border=1></A></TD>
+    <TD class=topbarLayout><A class=bookImage 
+      href="http://dotnet.jku.at/buch/"><IMG title="Die .NET-Technologie" 
+      alt=Cover src="SimpleLayoutManager.files/cover_Net_de_45.gif" 
+    border=1></A></TD>
+    <TD class=topbarLayout><A class=bookImage 
+      href="http://dotnet.jku.at/csbuch/"><IMG 
+      title="Softwareentwicklung mit C#" alt=Cover 
+      src="SimpleLayoutManager.files/cover_Cs_de_45.gif" 
+  border=1></A></TD></TR></TBODY></TABLE><!-- left menu and content -->
+<TABLE class=layout cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <COLGROUP>
+  <COL width=168>
+  <COL width=8>
+  <COL width=*></COLGROUP>
+  <TBODY>
+  <TR>
+    <TD class=navbarLayout vAlign=top width=168>
+      <DIV class=menu><A class=level1>English books</A><BR class=nv><A 
+      class=level2 href="http://dotnet.jku.at/book/">.NET Appl. 
+      Development</A><BR class=nv><A class=level2 
+      href="http://dotnet.jku.at/csbook/">C# to the Point</A><BR class=nv><BR><A 
+      class=level1>German books</A><BR class=nv><A class=level2 
+      href="http://dotnet.jku.at/buch/">Die .NET-Technologie</A><BR class=nv><A 
+      class=level2 href="http://dotnet.jku.at/csbuch/">Softwareentwickl. mit 
+      C#</A><BR class=nv><BR><A class=level1 
+      href="http://dotnet.jku.at/">Home</A><BR class=nv><A class=level1 
+      href="http://dotnet.jku.at/news/">News</A><BR class=nv><A class=level1 
+      href="http://dotnet.jku.at/courses/">Course Material</A><BR class=nv><A 
+      class=level1 href="http://dotnet.jku.at/applications/">Applications</A><BR 
+      class=nv><A class=level1 
+      href="http://dotnet.jku.at/projects/">Projects</A><BR class=nv><A 
+      class=level1 href="http://dotnet.jku.at/events/">Events</A><BR class=nv><A 
+      class=level1 href="http://dotnet.jku.at/people/">Contact</A><BR 
+      class=nv><A class=level1 
+      href="http://dotnet.jku.at/links.html">Links</A><BR class=nv></DIV>
+      <FORM class=find action=http://www.ssw.uni-linz.ac.at/cgi-bin/htsearch 
+      method=post><INPUT type=hidden value=htdig-dotnet name=config> <INPUT 
+      type=hidden value=http://dotnet.jku.at name=restrict> <INPUT type=hidden 
+      name=exclude> <INPUT class=text size=16 name=words> <INPUT class=button type=submit value=Search> </FORM></TD>
+    <TD class=contentLayout width=8 rowSpan=2>&nbsp; </TD>
+    <TD class=contentLayout vAlign=top align=left rowSpan=2><!-- Beisskante Template2.html --><!-- Beisskante Seiteninhalt -->
+      <H1><A name=top>Simple Layout Managers</A></H1>
+      <H3>Introduction</H3>
+      <P>If you have to create a graphical user interface it is a possibility to 
+      snap evey control to a fix location. Usually this is not a good idea, most 
+      of the time you have to write an event handler which adopts the locations 
+      and sizes of your controls. Here the idea of a layout manager takes place, 
+      a layout manager provides a solution for standard scenario. </P>
+      <P>Because .NET (dotnet) only provides the possibility to dock and anchor 
+      a control, but no possibility to put controls in standardized grids or 
+      automaticaly resize every control proportional, I implemented this layout 
+      manager framework. This framework consists of a layout control which is 
+      derived form System.Windows.Forms.Control. If you like to use this layout 
+      manager you have to use this control as container for your controls. </P>
+      <P>
+      <UL>
+        <LI><A href="http://dotnet.jku.at/projects/slm/#Usage">Usage</A> 
+        <LI><A 
+        href="http://dotnet.jku.at/projects/slm/#FlowLayout">FlowLayout</A> 
+        <LI><A 
+        href="http://dotnet.jku.at/projects/slm/#RubberLayout">RubberLayout</A> 
+        <LI><A 
+        href="http://dotnet.jku.at/projects/slm/#GridLayout">GridLayout</A> 
+        <LI><A href="http://dotnet.jku.at/projects/slm/#QLayout">QLayout</A> 
+        <LI><A 
+        href="http://dotnet.jku.at/projects/slm/#QConstrainedLayout">QConstrainedLayout</A> 
+
+        <LI><A href="http://dotnet.jku.at/projects/slm/#Download">Download</A> 
+        </LI></UL>
+      <P>
+      <H3><A name=Usage>Usage</A></H3>In order to use a layout manager your 
+      first create an instance of that layout manager and than assign it (at 
+      creation time) to an instance of LayoutManager.LayoutControl. 
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><PRE>...
+LayoutManager.ILayoutManager layout = new SomeLayoutManager();
+LayoutManager.LayoutControl control = new LayoutManager.LayoutControl(layout);
+...
+</PRE></TD></TR></TBODY></TABLE><BR>Now you can work with the Control in 
+      the familiar way. 
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><PRE>...
+control.Controls.Add(fooControl);
+...
+</PRE></TD></TR></TBODY></TABLE><BR>If you like to change the layout 
+      manager of an LayoutControl later on, you can do so via the "Manager" 
+      propery. 
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><PRE>...
+control.Manager = new SomeOtherLayoutManager();
+...
+</PRE></TD></TR></TBODY></TABLE><BR>
+      <P>
+      <H3><A href="http://dotnet.jku.at/projects/slm/#top">^UP^</A> <A 
+      name=FlowLayout>FlowLayout</A></H3>FlowLayout is a simple left to right 
+      and top to bottom layout. You can sort the controls either by insertion 
+      order (default; <CODE>TabOrder = false</CODE>) or by TabIndex 
+      (<CODE>TabOrder = true</CODE>).<BR>To use it you have to create a 
+      LayoutControl using a FlowLayout object. 
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><PRE>...
+LayoutManager.LayoutControl control = new LayoutManager.LayoutControl(new LayoutManager.FlowLayout());
+...
+</PRE></TD></TR></TBODY></TABLE><BR>Then choose the size of the control. 
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><PRE>control.Size = new Size(100, 100);
+</PRE></TD></TR></TBODY></TABLE><BR>Now you can add controls as you like. 
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><PRE>...
+myLabel = new Label();
+myLabel.Size = new Size(50, 25);
+panle.Controls.Add(myLabel);
+...
+</PRE></TD></TR></TBODY></TABLE><BR>If you alter the size of the control 
+      now, the position of the controls will be readjusted. 
+      <P>
+      <H4>Example:</H4>
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><B>Source Code</B> <A 
+            href="http://dotnet.jku.at/projects/slm/TestFlow.cs.txt">Download</A></TD>
+          <TD><B>Result</B></TD>
+          <TD><B>Resized Window</B></TD></TR>
+        <TR>
+          <TD><PRE>/*
+Copyright (c) 2003 Markus Loeberbauer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+ 
+/* Author:   Markus Loeberbauer
+ * Homepage: http://www.ssw.uni-linz.ac.at/General/Staff/ML/
+ * EMail:    Loeberbauer@ssw.jku.at
+ * Phone:    + 43-732-2468-7134
+ *
+ * Compiler: Microsoft .NET Framework 1.1
+ * */
+using System;
+using System.Windows.Forms;
+using System.Drawing;
+
+public class Test : Form {
+	private LayoutManager.LayoutControl con;
+	private LayoutManager.FlowLayout layout;
+	
+	private void ClickBtn1(object sender, EventArgs e) {
+		layout.TabOrder = !layout.TabOrder;
+	}
+	
+	public Test() {
+		Button btn1 = new Button();
+		Button btn2 = new Button();
+		Button btn3 = new Button();
+		Button btn4 = new Button();
+		Button btn5 = new Button();
+		Random rnd  = new Random();
+		
+		layout = new LayoutManager.FlowLayout(3, 4);
+		
+		con = new LayoutManager.LayoutControl(layout);
+		con.Size = new Size(600, 400);
+		con.Dock = DockStyle.Fill;
+		con.BackColor = Color.Red;
+		
+		btn1.Text = "Test Button 1";
+		btn1.BackColor = Color.LightBlue;
+		btn1.Size = new Size(rnd.Next(25, 200), rnd.Next(15, 60));
+		btn1.Click += new EventHandler(ClickBtn1);
+		btn1.TabIndex = 2;
+		
+		con.Controls.Add(btn1);
+		
+		btn2.Text = "Test Button 2";
+		btn2.BackColor = Color.LightGreen;
+		btn2.Size = new Size(rnd.Next(25, 200), rnd.Next(15, 60));
+		btn2.TabIndex = 1;
+		con.Controls.Add(btn2);
+		
+		btn3.Text = "Test Button 3";
+		btn3.BackColor = Color.Red;
+		btn3.Size = new Size(rnd.Next(25, 200), rnd.Next(15, 60));
+		btn3.TabIndex = 5;
+		con.Controls.Add(btn3);
+		
+		btn4.Text = "Test Button 4";
+		btn4.BackColor = Color.Yellow;
+		btn4.Size = new Size(rnd.Next(25, 200), rnd.Next(15, 60));
+		btn4.TabIndex = 3;
+		con.Controls.Add(btn4);
+		
+		btn5.Text = "Test Button 5";
+		btn5.BackColor = Color.SteelBlue;
+		btn5.Size = new Size(rnd.Next(25, 200), rnd.Next(15, 60));
+		btn5.TabIndex = 4;
+		con.Controls.Add(btn5);
+		
+		this.Controls.Add(con);
+	}
+	
+	public static void Main() {
+		Application.Run(new Test());
+	}
+}
+</PRE></TD>
+          <TD vAlign=top><IMG alt="FlowLayout Test" 
+            src="SimpleLayoutManager.files/TestFlow.jpg"></TD>
+          <TD vAlign=top><IMG alt="FlowLayout Test Resized" 
+            src="SimpleLayoutManager.files/TestFlow2.jpg"><BR><IMG 
+            alt="FlowLayout Test Resized in TabOrder" 
+            src="SimpleLayoutManager.files/TestFlow3.jpg"> </TD></TR></TBODY></TABLE>
+      <P>
+      <H3><A href="http://dotnet.jku.at/projects/slm/#top">^UP^</A> <A 
+      name=RubberLayout>RubberLayout</A></H3>RubberLayout is a simple 
+      proportional layout.<BR>To use it you have to create a LayoutControl using 
+      a RubberLayout object. 
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><PRE>...
+LayoutManager.LayoutControl control = new LayoutManager.LayoutControl(new LayoutManager.RubberLayout());
+...
+</PRE></TD></TR></TBODY></TABLE><BR>Then choose the size of the control so 
+      that you can place your controls convenient. 
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><PRE>control.Size = new Size(100, 100);
+</PRE></TD></TR></TBODY></TABLE><BR>Now you can add controls as you like. 
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><PRE>...
+myLabel = new Label();
+myLabel.Bounds = new Rectangle(0, 0, 50, 25);
+panle.Controls.Add(myLabel);
+...
+</PRE></TD></TR></TBODY></TABLE><BR>If you alter the size of the control 
+      now, the label myLabel will always stay in the upper left corner of the 
+      control (position [0, 0]) and occupy half (50/100) its width and a quater 
+      of its height (25/100). 
+      <P>
+      <H4>Example:</H4>
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><B>Source Code</B> <A 
+            href="http://dotnet.jku.at/projects/slm/TestRubber.cs.txt">Download</A></TD>
+          <TD><B>Result</B></TD>
+          <TD><B>Resized Window</B></TD></TR>
+        <TR>
+          <TD><PRE>/*
+Copyright (c) 2003 Markus Loeberbauer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+ 
+/* Author:   Markus Loeberbauer
+ * Homepage: http://www.ssw.uni-linz.ac.at/General/Staff/ML/
+ * EMail:    Loeberbauer@ssw.jku.at
+ * Phone:    + 43-732-2468-7134
+ *
+ * Compiler: Microsoft .NET Framework 1.1
+ * */
+ 
+using System.Windows.Forms;
+using System.Drawing;
+
+public class Test : Form {
+	private LayoutManager.LayoutControl con;
+	private LayoutManager.ILayoutManager layout;
+	
+	public Test() {
+		Button btn = new Button();
+		
+		layout = new LayoutManager.RubberLayout();
+		con = new LayoutManager.LayoutControl(layout);
+		con.Size = new Size(100, 100);
+		con.Dock = DockStyle.Fill;
+		con.BackColor = Color.Red;
+		
+		btn.Text = "Test Button";
+		btn.Bounds =  new Rectangle(0, 0, 50, 25);
+		btn.BackColor = Color.LightBlue;
+		
+		con.Controls.Add(btn);
+		
+		this.Controls.Add(con);
+	}
+	
+	public static void Main() {
+		Application.Run(new Test());
+	}
+}
+</PRE></TD>
+          <TD vAlign=top><IMG alt="RubberLayout Test" 
+            src="SimpleLayoutManager.files/TestRubber.jpg"></TD>
+          <TD vAlign=top><IMG alt="RubberLayout Test Resized" 
+            src="SimpleLayoutManager.files/TestRubber2.jpg"></TD></TR></TBODY></TABLE>
+      <P>
+      <H3><A href="http://dotnet.jku.at/projects/slm/#top">^UP^</A> <A 
+      name=GridLayout>GridLayout</A></H3>GridLayout works with a grid of 
+      equidimensional cells, which will be filled row by row. <BR>To add a 
+      control to a specific cell in the grid, just use the method 
+      <CODE>GoTo(row, column)</CODE>, before adding the control.<BR><BR>If you 
+      fill a cell more than once, only the last control will be in the cell. 
+      <P>
+      <H4>Example:</H4>
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><B>Source Code</B> <A 
+            href="http://dotnet.jku.at/projects/slm/TestGrid.cs.txt">Download</A></TD>
+          <TD><B>Result</B></TD>
+          <TD><B>Resized Window</B></TD></TR>
+        <TR>
+          <TD><PRE>/*
+Copyright (c) 2003 Markus Loeberbauer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+ 
+/* Author:   Markus Loeberbauer
+ * Homepage: http://www.ssw.uni-linz.ac.at/General/Staff/ML/
+ * EMail:    Loeberbauer@ssw.jku.at
+ * Phone:    + 43-732-2468-7134
+ *
+ * Compiler: Microsoft .NET Framework 1.1
+ * */
+using System.Windows.Forms;
+using System.Drawing;
+
+public class Test : Form {
+	private LayoutManager.LayoutControl con;
+	private LayoutManager.ILayoutManager layout;
+	
+	public Test() {
+		Button btn1 = new Button();
+		Button btn2 = new Button();
+		
+		layout = new LayoutManager.GridLayout(3, 4);
+		
+		con = new LayoutManager.LayoutControl(layout);
+		con.Size = new Size(100, 100);
+		con.Dock = DockStyle.Fill;
+		con.BackColor = Color.Red;
+		
+		btn1.Text = "Test Button 1";
+		btn1.BackColor = Color.LightBlue;
+		con.Controls.Add(btn1);
+		
+		btn2.Text = "Test Button 2";
+		btn2.BackColor = Color.LightGreen;
+		((LayoutManager.GridLayout)layout).GoTo(2, 2);
+		con.Controls.Add(btn2);
+		
+		this.Controls.Add(con);
+	}
+	
+	public static void Main() {
+		Application.Run(new Test());
+	}
+}
+</PRE></TD>
+          <TD vAlign=top><IMG alt="Grid Layout" 
+            src="SimpleLayoutManager.files/TestGrid.jpg"></TD>
+          <TD vAlign=top><IMG alt="Grid Layout Resized" 
+            src="SimpleLayoutManager.files/TestGrid2.jpg"></TD></TR></TBODY></TABLE>
+      <P>
+      <H3><A href="http://dotnet.jku.at/projects/slm/#top">^UP^</A> <A 
+      name=QLayout>QLayout</A></H3>QLayout stands for queue/quick layout, 
+      because it lines up (queues) the given controls either in one row 
+      (horizontal mode) or column (vertical mode) always equally distributing 
+      the total amount of space between all controls. The controls will be added 
+      from left to right in horizontal mode or from top to bottom in vertical 
+      mode. If you need advanced features use the <A 
+      href="http://dotnet.jku.at/projects/slm/#QConstrainedLayout">QConstrainedLayout</A>. 
+
+      <H4>Example:</H4>
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><B>Source Code</B> <A 
+            href="http://dotnet.jku.at/projects/slm/TestQ.cs.txt">Download</A></TD>
+          <TD><B>Result</B></TD>
+          <TD><B>Resized Window</B></TD></TR>
+        <TR>
+          <TD><PRE>/*
+Copyright (c) 2003 Markus Loeberbauer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+ 
+/* Author:   Markus Loeberbauer
+ * Homepage: http://www.ssw.uni-linz.ac.at/General/Staff/ML/
+ * EMail:    Loeberbauer@ssw.jku.at
+ * Phone:    + 43-732-2468-7134
+ *
+ * Compiler: Microsoft .NET Framework 1.1
+ * */
+using System.Windows.Forms;
+using System.Drawing;
+
+public class Test : Form {
+	private LayoutManager.LayoutControl mainCon, leftCon, rightCon;
+	
+	public Test() {
+		Button btnL1 = new Button();
+		Button btnL2 = new Button();
+		Button btnL3 = new Button();
+		Button btnR1 = new Button();
+		Button btnR2 = new Button();
+
+		mainCon = new LayoutManager.LayoutControl(new LayoutManager.QLayout(LayoutManager.QLayout.Direction.Horizontal));
+		mainCon.Dock = DockStyle.Fill;
+		
+		leftCon = new LayoutManager.LayoutControl(new LayoutManager.QLayout(LayoutManager.QLayout.Direction.Vertical));
+		rightCon = new LayoutManager.LayoutControl(new LayoutManager.QLayout(LayoutManager.QLayout.Direction.Horizontal));
+		
+		mainCon.Controls.AddRange( new Control[]{ leftCon, rightCon } );
+		
+		btnL1.Text = "Test Button L 1";
+		btnL2.Text = "Test Button L 2";
+		btnL3.Text = "Test Button L 3";
+		leftCon.Controls.AddRange ( new Control[]{ btnL1, btnL2, btnL3 } );
+		
+		btnR1.Text = "Test Button R 1";
+		btnR2.Text = "Test Button R 2";
+		rightCon.Controls.AddRange ( new Control[]{ btnR1, btnR2 } );
+		
+		this.Controls.Add(mainCon);
+	}
+	
+	public static void Main() {
+		Application.Run(new Test());
+	}
+}
+</PRE></TD>
+          <TD vAlign=top><IMG alt="Q Layout" 
+            src="SimpleLayoutManager.files/TestQ.jpg"></TD>
+          <TD vAlign=top><IMG alt="Q Layout Resized" 
+            src="SimpleLayoutManager.files/TestQ2.jpg"></TD></TR></TBODY></TABLE>
+      <P>
+      <H3><A href="http://dotnet.jku.at/projects/slm/#top">^UP^</A> <A 
+      name=QConstrainedLayout>QConstrainedLayout</A></H3>The QConstrainedLayout 
+      works like the <A 
+      href="http://dotnet.jku.at/projects/slm/#QLayout">QLayout</A> but offers 
+      the possibility to define constrains (the alignment) for every control you 
+      add to the layout control. Use the method <CODE>"SetAlign(Control, HAlign, 
+      VAlign);"</CODE> to set the alignment.<BR>Possible alignments are: 
+      <TABLE border=1>
+        <TBODY>
+        <TR>
+          <TD><B>Horizontal Alignments</B></TD>
+          <TD><B>Vertical Alignments</B></TD></TR>
+        <TR>
+          <TD>HAlign.Left</TD>
+          <TD>VAlign.Top</TD></TR>
+        <TR>
+          <TD>HAlign.Center</TD>
+          <TD>VAlign.Center</TD></TR>
+        <TR>
+          <TD>HAlign.Right</TD>
+          <TD>VAlign.Bottom</TD></TR>
+        <TR>
+          <TD>HAlign.Fill</TD>
+          <TD>VAlign.Fill</TD></TR>
+        <TR>
+          <TD>HAlign.Fix</TD>
+          <TD>VAlign.Fix</TD></TR></TBODY></TABLE>Use the alignments "Fill" and 
+      "Fix" in the managed dimension<BR>and "Top", "Center", "Bottom", "Left", 
+      "Right" and "Fill" in the unmanaged dimension.<BR>For example, if you are 
+      in horizontal mode<BR>valid configurations would be: 
+      <UL>
+        <LI><CODE>SetAlign(c, HAling.Fix, VAling.Top);</CODE> 
+        <LI><CODE>SetAlign(c, HAling.Fill, VAling.Center);</CODE> 
+        <LI><CODE>SetAlign(c, HAling.Fix, VAling.Fill);</CODE> </LI></UL>Invalid 
+      configurations in horizontal mode: 
+      <UL>
+        <LI><CODE>SetAlign(c, <S>HAling.Right</S>, VAling.Top);</CODE> 
+        <LI><CODE>SetAlign(c, HAling.Fill, <S>VAling.Fix</S>);</CODE> 
+        <LI><CODE>SetAlign(c, <S>HAling.Left</S>, VAling.Fill);</CODE> </LI></UL>
+      <H4>Example:</H4>
+      <TABLE bgColor=#eeeee0 border=1>
+        <TBODY>
+        <TR>
+          <TD><B>Source Code</B> <A 
+            href="http://dotnet.jku.at/projects/slm/TestQConstrained.cs.txt">Download</A></TD>
+          <TD><B>Result</B></TD>
+          <TD><B>Resized Window</B></TD></TR>
+        <TR>
+          <TD><PRE>/*
+Copyright (c) 2003 Markus Loeberbauer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+ 
+/* Author:   Markus Loeberbauer
+ * Homepage: http://www.ssw.uni-linz.ac.at/General/Staff/ML/
+ * EMail:    Loeberbauer@ssw.jku.at
+ * Phone:    + 43-732-2468-7134
+ *
+ * Compiler: Microsoft .NET Framework 1.1
+ * */
+using System.Windows.Forms;
+using System.Drawing;
+using HAlign = LayoutManager.QConstrainedLayout.HAlign;
+using VAlign = LayoutManager.QConstrainedLayout.VAlign;
+
+public class Test : Form {
+
+  public Test() {
+    LayoutManager.QConstrainedLayout topLayout, bottomLayout;
+    LayoutManager.LayoutControl mainCon, topCon, bottomCon;
+    //
+    // topCon
+    //
+    topLayout = new LayoutManager.QConstrainedLayout(
+      LayoutManager.QConstrainedLayout.Direction.Vertical);
+    topCon = new LayoutManager.LayoutControl(topLayout);
+    Label lab1, lab2, lab3, lab4, lab5, lab6, lab7;
+    lab1 = new Label();
+    lab1.Text = "Left Fix Label";
+    lab1.Size = new Size(150, 24);
+    lab1.BackColor = Color.LightBlue;
+    topLayout.SetAlign(lab1, HAlign.Left, VAlign.Fix);
+
+    lab2 = new Label();
+    lab2.Text = "Center Fix Label";
+    lab2.Size = new Size(150, 24);
+    lab2.BackColor = Color.Red;
+    topLayout.SetAlign(lab2, HAlign.Center, VAlign.Fix);
+
+    lab3 = new Label();
+    lab3.Text = "Right Fix Label";
+    lab3.Size = new Size(150, 24);
+    lab3.BackColor = Color.Green;
+    topLayout.SetAlign(lab3, HAlign.Right, VAlign.Fix);
+
+    lab4 = new Label();
+    lab4.Text = "Left Fill Label";
+    lab4.Size = new Size(150, 24);
+    lab4.BackColor = Color.LightBlue;
+    topLayout.SetAlign(lab4, HAlign.Left, VAlign.Fill);
+
+    lab5 = new Label();
+    lab5.Text = "Center Fill Label";
+    lab5.Size = new Size(150, 24);
+    lab5.BackColor = Color.Red;
+    topLayout.SetAlign(lab5, HAlign.Center, VAlign.Fill);
+
+    lab6 = new Label();
+    lab6.Text = "Right Fill Label";
+    lab6.Size = new Size(150, 24);
+    lab6.BackColor = Color.Green;
+    topLayout.SetAlign(lab6, HAlign.Right, VAlign.Fill);
+
+    lab7 = new Label();
+    lab7.Text = "Fill Fill Label";
+    lab7.BackColor = Color.LightBlue;
+
+    topCon.Controls.AddRange(
+      new Control[] { lab1, lab2, lab3, lab4, lab5, lab6, lab7 } );
+
+    //
+    // bottomCon
+    //
+    bottomLayout = new LayoutManager.QConstrainedLayout(
+      LayoutManager.QConstrainedLayout.Direction.Horizontal);
+    bottomCon = new LayoutManager.LayoutControl(bottomLayout);
+
+    Label bottomLab;
+    TextBox txt;
+    Button btn;
+
+    bottomLab           = new Label();
+    bottomLab.Text      = "Very Long Label:";
+    bottomLab.BackColor = Color.LightBlue;
+    bottomLab.Bounds    = new Rectangle(0, 0, 200, 24);
+    bottomLayout.SetAlign(bottomLab, HAlign.Fix, VAlign.Top);
+
+    txt           = new TextBox();
+    txt.Multiline = true;
+
+    btn      = new Button();
+    btn.Text = "Button";
+    bottomLayout.SetAlign(btn, HAlign.Fix, VAlign.Bottom);
+
+    bottomCon.Controls.AddRange( new Control[]{ bottomLab, txt, btn } );
+    //
+    // mainCon
+    //
+    mainCon = new LayoutManager.LayoutControl (
+      new LayoutManager.QLayout(LayoutManager.QLayout.Direction.Vertical));
+    mainCon.Controls.AddRange(new Control[] { topCon, bottomCon });
+    mainCon.Dock = DockStyle.Fill;
+    //
+    // this
+    //
+    this.Controls.Add(mainCon);
+  }
+
+  public static void Main() {
+    Application.Run(new Test());
+  }
+}
+</PRE></TD>
+          <TD vAlign=top><IMG alt="Q Constrained Layout" 
+            src="SimpleLayoutManager.files/TestQConstrained.jpg"></TD>
+          <TD vAlign=top><IMG alt="Q Constrained Layout Resized" 
+            src="SimpleLayoutManager.files/TestQConstrained2.jpg"></TD></TR></TBODY></TABLE>
+      <P>
+      <H3><A href="http://dotnet.jku.at/projects/slm/#top">^UP^</A> <A 
+      name=Download>Download:</A></H3>
+      <TABLE border=1>
+        <TBODY>
+        <TR>
+          <TD><B>File</B> </TD>
+          <TD><B>Description</B> </TD></TR>
+        <TR>
+          <TD><A 
+            href="http://dotnet.jku.at/projects/slm/ILayoutManager.cs.txt">ILayoutManager.cs</A> 
+          </TD>
+          <TD>Interface of the layout manager. </TD></TR>
+        <TR>
+          <TD><A 
+            href="http://dotnet.jku.at/projects/slm/LayoutControl.cs.txt">LayoutControl.cs</A> 
+          </TD>
+          <TD>Control which uses the layout managers. </TD></TR>
+        <TR>
+          <TD><A 
+            href="http://dotnet.jku.at/projects/slm/FlowLayout.cs.txt">FlowLayout.cs</A> 
+          </TD>
+          <TD>Provides a simple left to right and top to bottom layout. </TD></TR>
+        <TR>
+          <TD><A 
+            href="http://dotnet.jku.at/projects/slm/RubberLayout.cs.txt">RubberLayout.cs</A> 
+          </TD>
+          <TD>Provides a proportional layout, which means every control you 
+            add will keep its position and size relative to the parent <A 
+            href="http://dotnet.jku.at/projects/slm/LayoutControl.cs.txt">LayoutControl 
+            </A>. </TD></TR>
+        <TR>
+          <TD><A 
+            href="http://dotnet.jku.at/projects/slm/GridLayout.cs.txt">GridLayout.cs</A> 
+          </TD>
+          <TD>Provides a grid layout. Simply specify the rows and columns, 
+            then add your controls (the first control will be added in first 
+            column of the first row). The grid will be filled row by row. </TD></TR>
+        <TR>
+          <TD><A 
+            href="http://dotnet.jku.at/projects/slm/QLayout.cs.txt">QLayout.cs</A> 
+          </TD>
+          <TD>QLayout stands for quick/queue layout. A layout which lines up 
+            (queue) the given controls, always distributing the available space 
+            equally between all controls. </TD></TR>
+        <TR>
+          <TD><A 
+            href="http://dotnet.jku.at/projects/slm/QConstrainedLayout.cs.txt">QConstrainedLayout.cs</A><BR><A 
+            href="http://dotnet.jku.at/projects/slm/QConstrainedSpace.cs.txt">QConstrainedSpace.cs</A> 
+          </TD>
+          <TD>This layout works like the QLayout, with the additional 
+            possiblility to set constrains for the "queued" 
+            controls.<BR>QConstrainedSpace is a helper class to produce 
+            Controls, which can be used as spaces for the QConstrainedLayout. 
+        </TD></TR>
+        <TR>
+          <TD><A 
+            href="http://dotnet.jku.at/projects/slm/slm.zip"><B>slm.zip</B></A> 
+          </TD>
+          <TD><B>This ZIP file contains all files you need, plus samples for 
+            every layout manager, plus a batch file to compile the layout 
+            manager and the samples. </B></TD></TR></TBODY></TABLE>
+      <P><A href="http://validator.w3.org/check/referer"><IMG height=31 
+      alt="Valid HTML 4.01!" src="SimpleLayoutManager.files/valid-html401" 
+      width=88 border=0></A> <A href="http://jigsaw.w3.org/css-validator/"><IMG 
+      style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; WIDTH: 88px; HEIGHT: 31px; BORDER-RIGHT-WIDTH: 0px" 
+      alt="Valid CSS!" src=""></A> </P><!-- Beisskante Seiteninhalt --><!-- Beisskante Template3.html --></TD></TR>
+  <TR>
+    <TD class=navbarLayout vAlign=bottom>
+      <DIV class=footer>
+      <TABLE cellSpacing=0 cellPadding=0 width=128 border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=center align=middle><A 
+            href="http://www.ssw.uni-linz.ac.at/"><IMG height=30 alt="" 
+            src="SimpleLayoutManager.files/SSWLogo.png" width=48 
+border=0></A></TD><!-- td valign="middle" align="center"><a href="http://www.ssw.uni-linz.ac.at/"><img width="55" height="54" border="0" alt="" src="/style/SSWLogoNeu.gif"></a></td -->
+          <TD vAlign=center align=middle><A href="http://www.jku.at/"><IMG 
+            height=54 alt="" src="SimpleLayoutManager.files/UniWappen.png" 
+            width=48 border=0></A></TD></TR></TBODY></TABLE>
+      <P>Hosted by the <A href="http://www.ssw.uni-linz.ac.at/">Institute for 
+      <BR>System Software</A> at the <A href="http://www.jku.at/">Johannes 
+      Kepler University Linz</A>. </P>
+      <P>Hardware supplied by <BR><A 
+      href="http://research.microsoft.com/labs/cam.asp">MSR Cambridge</A> </P>
+      <P><A href="mailto:admin@ssw.uni-linz.ac.at">Webmaster</A> 
+      &nbsp;&nbsp;&nbsp; <A 
+      href="http://dotnet.jku.at/projects/slm/#_HTOP_">Top</A> 
+  </P></DIV></TD></TR></TBODY></TABLE><!-- Beisskante Template3.html --></BODY></HTML>

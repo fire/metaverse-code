@@ -1,0 +1,24 @@
+/**
+ * $Id: TODO 171 2005-01-27 00:44:08Z meebey $
+ * $URL: svn://svn.qnetp.net/smartirc/SmartIrc4net/tags/0.3.5/TODO $
+ * $Rev: 171 $
+ * $Author: meebey $
+ * $Date: 2005-01-27 01:44:08 +0100 (Thu, 27 Jan 2005) $
+ */
+
+- write PingThread which pings every 60 sec the server and waits 300 seconds before it triggers IsConnectionError
+- Documentation
+- passive channel sync
+- add nicklist parameter for Login()
+- AutoRejoin
+- AutoJoinOnInvite
+- AutoNickChange
+- clean message parser, channel is not always right set (need to check for replycode!)
+- DCC chat, file send/receive
+- ipv6 support?
+- add IrcConnection.HostAddress (which IP is used for the client)
+- add OnSocketTimeout event
+- add server properties to IrcConnection (required for smart mode changes etc)
+- Exception Error Handling (argument checking)
+- Use async sockets?
+- Create Debian Package
