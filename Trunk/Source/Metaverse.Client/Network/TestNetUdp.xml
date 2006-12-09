@@ -1,0 +1,27 @@
+<root>
+<projects>
+
+<project target="testnetudp.exe">
+    <assemblies>
+    </assemblies>
+<packages>
+<package directory=".">
+
+<files>
+
+<file name="source\HelperClasses\MyRand.cs"/>
+
+<file name="source\Network\INetworkImplementation.cs"/>
+<file name="source\Network\NetworkImplementationFactory.cs"/>
+<file name="source\Network\NetworkImplementationUdp.cs"/>
+
+<file name="source\Network\TestNetworkUdp.cs"/>
+
+</files>
+
+</package>
+</packages>
+</project>
+</projects>
+</root>
+
