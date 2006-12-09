@@ -1,0 +1,32 @@
+<root>
+<projects>
+
+<project target="testnetmodel.exe">
+    <assemblies>
+    </assemblies>
+<packages>
+<package directory=".">
+
+<files>
+
+<file name="source\HelperClasses\MyRand.cs"/>
+
+<file name="source\Network\BinaryPacker.cs"/>
+<file name="source\Network\INetworkImplementation.cs"/>
+<file name="source\Network\NetworkImplementationFactory.cs"/>
+<file name="source\Network\NetworkImplementationUdp.cs"/>
+<file name="source\Network\NetworkModel2.cs"/>
+<file name="source\Network\NetworkModelConnection.cs"/>
+<file name="source\Network\NetPacketReferenceController.cs"/>
+<file name="source\Network\NetSharedSecretExchange.cs"/>
+
+<file name="source\Network\TestNetModel.cs"/>
+
+</files>
+
+</package>
+</packages>
+</project>
+</projects>
+</root>
+
