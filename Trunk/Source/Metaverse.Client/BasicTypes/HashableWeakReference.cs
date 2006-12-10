@@ -1,4 +1,4 @@
-
+using System;
 
 // this weakreference can be used in hashtables, and compared
 // I'm guessing there's a reason why this is a bad idea, but didnt find it yet
