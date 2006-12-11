@@ -115,6 +115,12 @@ namespace OSMP
                     object fieldvalue = fieldinfo.GetValue(value);
                     WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
                 }
+                foreach (System.Reflection.PropertyInfo propertyinfo in type.GetProperties())
+                {
+                    //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
+                    object fieldvalue = propertyinfo.GetValue(value,null);
+                    WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
+                }
             }
             else
             {
@@ -191,6 +197,12 @@ namespace OSMP
                   //  Console.WriteLine("unpacking " + fieldinfo.Name + " ...");
                     object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, fieldinfo.FieldType);
                     fieldinfo.SetValue(newobject, fieldvalue);
+                }
+                foreach (System.Reflection.PropertyInfo propertyinfo in type.GetProperties())
+                {
+                    //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
+                    object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, propertyinfo.PropertyType );
+                    propertyinfo.SetValue(newobject,fieldvalue, null );
                 }
                 return newobject;
             }
