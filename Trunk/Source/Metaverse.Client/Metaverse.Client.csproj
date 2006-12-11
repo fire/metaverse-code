@@ -122,7 +122,9 @@
     <Compile Include="Rendering\IGraphicsHelperFactory.cs" />
     <Compile Include="Rendering\IPicker3dModel.cs" />
     <Compile Include="Rendering\IRenderer.cs" />
-    <Compile Include="Rendering\MenuController.cs" />
+    <Compile Include="Rendering\MenuController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Rendering\MenuHelper.cs" />
     <Compile Include="Rendering\Picker3dController.cs" />
     <Compile Include="Rendering\Picker3dModelGl.cs" />
@@ -221,8 +223,5 @@ copy /y Test*_Generated.cs $(ProjectDir)NetworkV3\Layer2_Rpc\Test
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NetworkV3\Layer3_ApplicationLayer\" />
   </ItemGroup>
 </Project>

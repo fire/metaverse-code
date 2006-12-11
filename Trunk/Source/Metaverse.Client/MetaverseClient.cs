@@ -94,6 +94,12 @@ namespace OSMP
             worldstorage = WorldModel.GetInstance();
     
             InitializeWorld();
+
+            string serverip = "";
+            if( arguments.Named.ContainsKey("serverip" ) )
+            {
+                serverip = arguments.Named[ "serverip" ];
+            }
             
             PluginsLoader.GetInstance().LoadPlugins();
             
@@ -101,7 +107,15 @@ namespace OSMP
             worldstorage.AddEntity( myavatar );
 
             network = NetworkImplementationFactory.CreateNewInstance();
-            network.ConnectAsClient(config.ServerIPAddress, config.ServerPort);
+
+            if (serverip == "")
+            {
+                network.ConnectAsClient(config.ServerIPAddress, config.ServerPort);
+            }
+            else
+            {
+                network.ConnectAsClient(serverip, config.ServerPort);
+            }
             rpc = new RpcController(network);
             netreplicationcontroller = new NetReplicationController(rpc);
             
