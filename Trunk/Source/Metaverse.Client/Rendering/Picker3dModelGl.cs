@@ -27,14 +27,14 @@ namespace OSMP
 {
     public delegate void DrawWorldHandler();
     
-    class AdditionalGlWrap
-    {
-        [DllImport ("glselectwrap.dll", CharSet=CharSet.Auto )]
-        public static extern void glCreateSelectBuffer();
+    //class AdditionalGlWrap
+    //{
+      //  [DllImport ("glselectwrap.dll", CharSet=CharSet.Auto )]
+        //public static extern void glCreateSelectBuffer();
             
-        [DllImport ("glselectwrap.dll", CharSet=CharSet.Auto )]
-        public static extern int glGetNearestBufferName( int numhits );
-    }
+        //[DllImport ("glselectwrap.dll", CharSet=CharSet.Auto )]
+        //public static extern int glGetNearestBufferName( int numhits );
+    //}
     
     // responsible for picking, which in OpenGl means essentially using a glSelect buffer to decide what you clicked on.
     // This is the OpenGl specific class; you can derive others from IPicker3dModel
@@ -45,11 +45,48 @@ namespace OSMP
         
         bool bAddingNames; // we set this to true if we are adding names to hittargets, otherwise to false to gain speed
         
+        const int selectbuffersize = 4096;
+        int[] selectbuffer;
+        GCHandle selectbufferhandle;
+
+        void CreateSelectBuffer()
+        {
+            selectbuffer = new int[selectbuffersize];
+            selectbufferhandle = GCHandle.Alloc(selectbuffer, GCHandleType.Pinned);
+        }
+
+        void FreeSelectBuffer()
+        {
+            selectbufferhandle.Free();
+        }
+
+        int GetNearestBufferName(int inumhits)
+        {
+            int bestdepth = 0;
+            int bestpick = -1;
+            for (int i = 0; i < inumhits; i++)
+            {
+                //int thisitem = Marshal.ReadInt32(selectbufferptr, (i * 4 + 3) * 4);
+                //int thisdepth = Marshal.ReadInt32(selectbufferptr, (i * 4 + 1) * 4);
+                int thisitem = selectbuffer[i * 4 + 3];
+                int thisdepth = selectbuffer[i * 4 + 1];
+                if (thisdepth < bestdepth || bestpick == -1)
+                {
+                    //  cout << "new best depth: " << bestdepth << " pick: " << thisitem << endl;
+                    bestdepth = thisdepth;
+                    bestpick = (int)thisitem;
+                }
+            }
+            // cout<< "best hit: " << bestpick << endl;
+            return bestpick;
+
+        }
+
         public void AddHitTarget( HitTarget hittarget )
         {
             if( bAddingNames )
             {
-                Test.Debug("adding name " + hittarget.ToString() );
+                //Test.Debug("adding name " + hittarget.ToString() );
                 hittargets.Add( hittarget );
                 Gl.glLoadName( hittargets.Count );  // note: this isnt quite the index; it is index + 1
             }
@@ -78,7 +115,7 @@ namespace OSMP
             
             int[] viewport = new int[ 4 ];
             Gl.glGetIntegerv( Gl.GL_VIEWPORT, viewport );
-            AdditionalGlWrap.glCreateSelectBuffer();
+            CreateSelectBuffer();
         
             // This Creates A Matrix That Will Zoom Up To A Small Portion Of The Screen, Where The Mouse Is.
             Gl.glMatrixMode( Gl.GL_PROJECTION );        
@@ -109,12 +146,14 @@ namespace OSMP
             {
                 return null;
             }
-            int hitname = AdditionalGlWrap.glGetNearestBufferName( iNumHits );
+            int hitname = GetNearestBufferName( iNumHits );
             Console.WriteLine( "hitname: " + hitname.ToString() );
             if( hitname == -1 )
             {
                 return null;
             }
+
+            FreeSelectBuffer();
             
             return (HitTarget)hittargets[ hitname - 1 ];
         }        
