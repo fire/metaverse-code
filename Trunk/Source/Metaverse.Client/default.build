@@ -51,6 +51,8 @@
 			</copy>
 			<csc target="exe" output="bin/MetaverseClient.exe" debug="${debug}">
 				<references>
+					<include name="bin/NetworkInterfaces.dll" />
+                    
 					<include name="bin/Tao.OpenGl.dll" />
 					<include name="bin/Tao.OpenGl.Glu.dll" />
 					<include name="bin/Tao.OpenGl.ExtensionLoader.dll" />
@@ -82,6 +84,7 @@
 					<include name="HelperClasses\XmlHelper.cs"/>
 					<include name="HelperClasses\TimeKeeper.cs"/>
 					<include name="HelperClasses\MyRand.cs"/>
+					<include name="HelperClasses\ArrayHelper.cs"/>
 
 					<include name="WorldModel\EntityArrayList.cs"/>
 					<include name="WorldModel\Entity.cs"/>
@@ -153,10 +156,28 @@
 					<include name="MovementAndEditing\SelectionController.cs"/>
 					<include name="MovementAndEditing\AssignTextureHandler.cs"/>
 					<include name="MovementAndEditing\AssignColorHandler.cs"/>
+                    
+                    <include name="NetworkV3/HelperClasses/BinaryPacker.cs"/>
+                    <include name="NetworkV3/Layer1_Packets_And_Connections/INetworkImplementation.cs"/>
+                    <include name="NetworkV3/Layer1_Packets_And_Connections/NetPacketReferenceController.cs"/>
+                    <include name="NetworkV3/Layer1_Packets_And_Connections/NetSharedSecretExchange.cs"/>
+                    <include name="NetworkV3/Layer1_Packets_And_Connections/NetworkImplementationFactory.cs"/>
+                    <include name="NetworkV3/Layer1_Packets_And_Connections/NetworkModel.cs"/>
+                    <include name="NetworkV3/Layer1_Packets_And_Connections/NetworkModelConnection.cs"/>
+                    <include name="NetworkV3/Layer1_Packets_And_Connections/UDP/NetworkImplementationUdp.cs"/>
+                    
+                    <include name="NetworkV3/Layer2_Rpc/RpcController.cs"/>
+                    
+                    <include name="NetworkV3/ObjectReplication/ReplicationAttributes.cs"/>
+                    <include name="NetworkV3/ObjectReplication/NetObjectReferenceController.cs"/>
+                    <include name="NetworkV3/ObjectReplication/NetReplicationController.cs"/>
 
-					<include name="PluginsLoader.cs"/>
 
+					<include name="Server/MetaverseServer.cs"/>
+
+					<include name="EntryPoint.cs"/>
 					<include name="MetaverseClient.cs"/>
+					<include name="PluginsLoader.cs"/>
                 </sources>
             </csc>
 			<copy todir="../../Outputs/Metaverse.Client">

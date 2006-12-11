@@ -52,7 +52,7 @@ namespace OSMP
         public RpcController rpc;
         public NetReplicationController netreplicationcontroller;
 
-        WorldModel World;                    //!< The World and container for all objects in it (except the hardcoded land)
+        public WorldModel World;                    //!< The World and container for all objects in it (except the hardcoded land)
 
         //public const int iTicksPerFrame = 17;         //!< we assume the server is running at around 75fps, and if the server hasnothing better to do, it'll sleep this number of milliseconds
         //public int LastTickCount = 0;   //!< tickcount of last frame
@@ -146,18 +146,39 @@ namespace OSMP
         //! metaverseserver entry point.  Processes commandline arguments; starts dbinterface and serverfileagent components; handles initialization
         public void Init( string[] args )
         {
+            Arguments arguments = new Arguments(args);
+
+            if (arguments.Named.ContainsKey("noserver"))
+            {
+                Console.WriteLine("User requested no server.");
+                return;
+            }
+
             config = Config.GetInstance();
 
-            Test.Info("server starting");
+            Test.Info("*** Server starting ***");
 
             network = NetworkImplementationFactory.CreateNewInstance();
             Test.Debug("Creating Metaverse Client listener on port " + config.ServerPort);
             network.ListenAsServer(config.ServerPort);
 
+            network.NewConnection += new NewConnectionHandler(network_NewConnection);
+            network.Disconnection += new DisconnectionHandler(network_Disconnection);
+
             rpc = new RpcController(network);
             netreplicationcontroller = new NetReplicationController( rpc );
 
-            Test.Info("Server initialization complete");
+            Test.Info("*** Server initialization complete ***");
+        }
+
+        void network_Disconnection(object source, DisconnectionArgs e)
+        {
+            Console.WriteLine("Server: clientdisconnected");
+        }
+
+        void network_NewConnection(object source, NewConnectionArgs e)
+        {
+            Console.WriteLine("Server: new client connection" );
         }
     }
 }
