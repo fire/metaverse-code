@@ -33,6 +33,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILockRpcToClient.cs" />
+    <Compile Include="ILockRpcToServer.cs" />
+    <Compile Include="IObjectReplication.cs" />
+    <Compile Include="IReplicated.cs" />
     <Compile Include="ITestInterface.cs" />
   </ItemGroup>
   <ItemGroup>
