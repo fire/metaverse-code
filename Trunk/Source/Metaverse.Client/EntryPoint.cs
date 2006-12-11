@@ -1,4 +1,4 @@
-// Copyright Hugh Perkins 2004,2005,2006
+﻿// Copyright Hugh Perkins 2004,2005,2006
 //
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License version 2 as published by the
@@ -19,25 +19,35 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace OSMP
 {
-    public class EntityArrayList : List<Entity>
+    public class EntryPoint
     {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                //new TestBinaryPacker().Go();
+                //TestNetModel.Go(args);
+                //TestNetworkUdp.Go(args);
+                //TestNetRpc.Go(args);
+                //return 0;
+                MetaverseServer.GetInstance().Init( args );
+                MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler(EntryPoint_Tick);
+                MetaverseClient.GetInstance().Go( args );
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        static void EntryPoint_Tick()
+        {
+            MetaverseServer.GetInstance().Tick();
+        }
     }
 
- //   public class EntityArrayList : ArrayList{
-   //     public new virtual Entity this[ int index ]{get{return (Entity)base[ index ];}set{base[ index ] = value;}}
-     //   public class EntityEnumerator{
-       //     IEnumerator enumerator;
-         //   public EntityEnumerator( IEnumerator enumerator ){this.enumerator = enumerator;}
-           // public Entity Current{get{return (Entity)enumerator.Current;}}
-            //public bool MoveNext(){ return enumerator.MoveNext();}
-            //public void Reset(){enumerator.Reset();}
-        //}
-        //public new EntityEnumerator GetEnumerator()
-        //{
-            //return new EntityEnumerator( base.GetEnumerator() );
-        //}
-    //}
 }

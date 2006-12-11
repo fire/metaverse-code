@@ -34,153 +34,130 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml;
-using System.Net;
 
-using OSMP;
-
-public class Connection
+namespace OSMP
 {
-    
-}
-
-public class MetaverseServer
-{
-	const int iTicksPerFrame = 17;         //!< we assume the server is running at around 75fps, and if the server hasnothing better to do, it'll sleep this number of milliseconds
-	int LastTickCount = 0;   //!< tickcount of last frame
-	
-	float fSayDistance = 10.0;            //!< How far Says travel
-	
-    TcpListener clientlistener;    
-    ArrayList ClientConnections = new ArrayList();
-    
-    Config config;
-
-	mvWorldStorage World;                    //!< The World and container for all objects in it (except the hardcoded land)
-	
-	ArrayList DirtyCache = new ArrayList();            //!< set of all objects which have been changed but not yet written to db (mostly for objectmove stuff)
-	int iDirtyCacheWriteDelaySeconds = 10;   //!< Interval between writing objects that have moved to db
-	int iLastDirtyCacheWriteTickCount = 0;   //!< Last dirty cache write tickcount (careful, tickcount is in milliseconds)
-	
-	//! Returns true or false according to whether rConnection is a local client or not. Used for privilege assignment to local scripting engines
-    /*
-	bool IsLocalClient( Connection connection )
-	{
-	}
-    */
-    
-    public void WriteToDB( Entity dirtyentity )
+    public class MetaverseServer
     {
-    }
-	
-	//! Sends out updates to clients for all objects that have changed in the world
-	void ManageDirtyCache()   // could maybe use a separate thread for this???
-	{
-	    int iArrayNum;
-	    int iReference;
-	    if( TimeKeeper.GetTickCount() - iLastDirtyCacheWriteTickCount > 1000 * iDirtyCacheWriteDelaySeconds )
-	    {
-            for( int i = 0 ; i < DirtyCache.Count; i++ )
-            {
-                Entity dirtyentity = DirtyCache[i];
-                WriteToDB( dirtyentity );
-            }
-            DirtyCache.Clear();
-            iLastDirtyCacheWriteTickCount = TimeKeeper.GetTickCount();
-	    }
-	}
-	
-	//! Sends Message to all connected metaverse clients
-	void BroadcastToAllClients( string message )
-	{
-	    // MetaverseServerConnectionManager.Broadcast( Message );
-	}
-	
-	//! Sends message to all local connected clients; this will be primarily scripting engines
-	
-	//! Sends message to all local connected clients; this will be primarily scripting engines
-	//! These messages will tend to be higher security than the general internet client messages
-	//! and / or higher bandwidth.  For example, information about scripts is generally
-	//! only sent to local clients
-	void BroadcastToLocalClients( string message )
-	{
-	}
-	
-	//! Sends Message to all non-local connected client; ie users out on the Internet
-	void BroadcastToInternetClients( string message )
-	{
-	}
-		
-    public void CheckForNewClientConnections()
-    {
-        if( clientlistener.Pending() )
+        static MetaverseServer instance = new MetaverseServer();
+        public static MetaverseServer GetInstance() { return instance; }
+
+        MetaverseServer() // protected constructor, enforce singleton
         {
-            TcpClient newclient = clientlistener.AcceptTcpClient();
-            ClientConnections.Add( newclient );
-            Test.Debug( "Got new connection: " + newclient.Client.RemoteEndPoint.ToString() );
         }
-    }
-    
-    public void CheckForClientMessages()
-    {
-        for( int i = 0; i < ClientConnections.Count; i++ )
-        {
-            TcpClient thisclient = (TcpClient)ClientConnections[i];
-            NetworkStream networkstream = thisclient.GetStream();
-            if( networkstream.DataAvailable )
-            {
-                
-            }
-        }
-    }
 
-	//! Runs the metaverseserver.  Processes incoming messages, animates world, processes physics ...
-	void MainLoop()
-	{
-	    while( true )
-	    {
-            CheckForNewClientConnections();        
-            CheckForClientMessages();
-            ManageDirtyCache();    // objects that have moved and not been written to db        
-	    }
-	}
-	
-    bool bRunningWithDB = true;
-    bool bSpawnNewWindows = false;
-    
-	//! metaverseserver entry point.  Processes commandline arguments; starts dbinterface and serverfileagent components; handles initialization
-	int Go(string[]args)
-	{	
-	    Console.WriteLine( "Metaverse Server\n" );
-	
-	    config = Config.GetInstance();
-        
-        Arguments arguments = new Arguments( args );
-        
-        if( arguments.Named["nodb"] != null )
-        {
-		    Console.WriteLine( "Option --nodb selected: we will not be using the database for this session" );
-		    Console.WriteLine( "WARNING: objects will not be persistent beyond this session");
-		    bRunningWithDB = false;            
-        }
-        
-	    Test.Debug("Initing sockets");
-        
-	    Console.WriteLine( "Creating Metaverse Client listener on port " + iPortMetaverseServer.ToString() );
-	    MetaverseServerConnectionManager.Init( INADDR_ANY, iPortMetaverseServer );
-	
-	    Console.WriteLine( "Initialization complete" );
-	
-	    MainLoop();
-	
-	    return 0;
-	}
-}	
+        public INetworkImplementation network;
+        public RpcController rpc;
+        public NetReplicationController netreplicationcontroller;
 
-public class EntryPoint
-{
-    public static void Main( string[] args )
-    {
-        return new MetaverseServer().Go( args );
+        WorldModel World;                    //!< The World and container for all objects in it (except the hardcoded land)
+
+        //public const int iTicksPerFrame = 17;         //!< we assume the server is running at around 75fps, and if the server hasnothing better to do, it'll sleep this number of milliseconds
+        //public int LastTickCount = 0;   //!< tickcount of last frame
+
+        //public double SayDistance = 10.0;            //!< How far Says travel
+
+        //public List<object> ClientConnections = new List<object>();
+
+        //TimeKeeper timekeeper = new TimeKeeper();
+
+        public Config config;
+
+        //ArrayList DirtyCache = new ArrayList();            //!< set of all objects which have been changed but not yet written to db (mostly for objectmove stuff)
+        //int iDirtyCacheWriteDelaySeconds = 10;   //!< Interval between writing objects that have moved to db
+        //int iLastDirtyCacheWriteTickCount = 0;   //!< Last dirty cache write tickcount (careful, tickcount is in milliseconds)
+
+        //! Returns true or false according to whether rConnection is a local client or not. Used for privilege assignment to local scripting engines
+        /*
+        bool IsLocalClient( Connection connection )
+        {
+        }
+        */
+
+        //! Sends out updates to clients for all objects that have changed in the world
+        //void ManageDirtyCache()   // could maybe use a separate thread for this???
+        //{
+          //  int iArrayNum;
+            //int iReference;
+            //if ( timekeeper.GetTickCount() - iLastDirtyCacheWriteTickCount > 1000 * iDirtyCacheWriteDelaySeconds)
+            //{
+              //  for (int i = 0; i < DirtyCache.Count; i++)
+//                {
+  //                  Entity dirtyentity = DirtyCache[i];
+    //            }
+      //          DirtyCache.Clear();
+        //        iLastDirtyCacheWriteTickCount = TimeKeeper.GetTickCount();
+          //  }
+        //}
+
+        //! Sends Message to all connected metaverse clients
+        void BroadcastToAllClients(string message)
+        {
+            // MetaverseServerConnectionManager.Broadcast( Message );
+        }
+
+        //! Sends message to all local connected clients; this will be primarily scripting engines
+
+        //! Sends message to all local connected clients; this will be primarily scripting engines
+        //! These messages will tend to be higher security than the general internet client messages
+        //! and / or higher bandwidth.  For example, information about scripts is generally
+        //! only sent to local clients
+        void BroadcastToLocalClients(string message)
+        {
+        }
+
+        //! Sends Message to all non-local connected client; ie users out on the Internet
+        void BroadcastToInternetClients(string message)
+        {
+        }
+
+        //public void CheckForNewClientConnections()
+        //{
+        //  if( clientlistener.Pending() )
+        //{
+        //  TcpClient newclient = clientlistener.AcceptTcpClient();
+        //ClientConnections.Add( newclient );
+        //Test.Debug( "Got new connection: " + newclient.Client.RemoteEndPoint.ToString() );
+        //}
+        //}
+
+        //public void CheckForClientMessages()
+        //{
+        //  for( int i = 0; i < ClientConnections.Count; i++ )
+        //{
+        //  TcpClient thisclient = (TcpClient)ClientConnections[i];
+        //NetworkStream networkstream = thisclient.GetStream();
+        //if( networkstream.DataAvailable )
+        //{
+
+        //}
+        //}
+        //}
+
+        public void Tick()
+        {
+            //CheckForNewClientConnections();
+            //CheckForClientMessages();
+            //ManageDirtyCache();    // objects that have moved and not been written to db        
+        }
+
+        //! metaverseserver entry point.  Processes commandline arguments; starts dbinterface and serverfileagent components; handles initialization
+        public void Init( string[] args )
+        {
+            config = Config.GetInstance();
+
+            Test.Info("server starting");
+
+            network = NetworkImplementationFactory.CreateNewInstance();
+            Test.Debug("Creating Metaverse Client listener on port " + config.ServerPort);
+            network.ListenAsServer(config.ServerPort);
+
+            rpc = new RpcController(network);
+            netreplicationcontroller = new NetReplicationController( rpc );
+
+            Test.Info("Server initialization complete");
+        }
     }
 }

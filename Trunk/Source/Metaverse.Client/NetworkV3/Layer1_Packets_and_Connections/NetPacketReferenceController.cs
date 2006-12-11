@@ -51,6 +51,8 @@ namespace OSMP
         DateTime lastresendcheck;
         short nextpacketreference = 1;
         bool isserver;
+
+        BinaryPacker binarypacker = new BinaryPacker();
         
         public Hashtable recentreceivedpackets = new Hashtable();  // ( packetref, datetime )
         public Queue receivedpacketsnotacked = new Queue();  // just contains list of packet references, no timestamp
@@ -112,7 +114,7 @@ namespace OSMP
             int nextposition = e.NextPosition; 
             while( nextposition < packet.Length )
             {
-                short ackedpacketreference = (short)BinaryPacker.ReadValueFromBuffer( packet, ref nextposition, typeof( short ) );
+                short ackedpacketreference = (short)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(short));
                 Console.WriteLine( "  ... Packet " + ackedpacketreference.ToString() + " acked" );
                 sentpacketsawaitingack.Remove( ackedpacketreference );
             }
@@ -185,7 +187,7 @@ namespace OSMP
                     for( int i = 0; i < numpacketstoack; i++ )
                     {
                         short packettoack = (short)receivedpacketsnotacked.Dequeue();
-                        BinaryPacker.WriteValueToBuffer( ackpacketdata, ref nextposition, packettoack );
+                        binarypacker.WriteValueToBuffer(ackpacketdata, ref nextposition, packettoack);
                         Console.WriteLine("   ... acking " + packettoack.ToString() );
                     }
                 }

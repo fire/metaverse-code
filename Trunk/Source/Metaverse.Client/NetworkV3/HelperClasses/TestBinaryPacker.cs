@@ -28,15 +28,22 @@ namespace OSMP
     // call this to test binary packer
     class TestBinaryPacker
     {
+        [AttributeUsage( AttributeTargets.Field | AttributeTargets.Property )]
+        class AttributePack : Attribute
+        {
+        }
+
         [StructLayout( LayoutKind.Sequential )]
         class TestClass
         {
             public int[] indexes;
             public string name;
             string country;
+            [AttributePack]
             public string Country { get { return country; } set { country = value; } }
             public bool booleanvaluetrue;
             public bool booleanvaluefalse;
+
             public char charvalue;
             public int intvalue;
             public double doublevalue;
@@ -63,14 +70,19 @@ namespace OSMP
             testclass.indexes = new int[] { 5, 1, 4, 2, 3 };
             testclass.childclass = new ChildClass();
             testclass.childclass.name = "name inside child class";
-            BinaryPacker.WriteValueToBuffer(bytearray, ref position, testclass);
-            BinaryPacker.WriteValueToBuffer(bytearray, ref position, "The quick brown fox.");
-            BinaryPacker.WriteValueToBuffer(bytearray, ref position, "Rain in Spain.");
+            new BinaryPacker().WriteValueToBuffer(bytearray, ref position, testclass);
+            new BinaryPacker().WriteValueToBuffer(bytearray, ref position, "The quick brown fox.");
+            new BinaryPacker().WriteValueToBuffer(bytearray, ref position, "Rain in Spain.");
+
+            BinaryPacker binarypacker = new BinaryPacker(new Type[] { typeof( AttributePack ) });
+            //Test.WriteOut(bytearray);
+
+            binarypacker.WriteValueToBuffer(bytearray, ref position, testclass);
 
             Test.WriteOut(bytearray );
 
             position = 0;
-            TestClass outputobject = (TestClass)BinaryPacker.ReadValueFromBuffer(bytearray, ref position, typeof(TestClass));
+            TestClass outputobject = (TestClass)new BinaryPacker().ReadValueFromBuffer(bytearray, ref position, typeof(TestClass));
             Console.WriteLine(outputobject.intvalue);
             Console.WriteLine(outputobject.booleanvaluetrue);
             Console.WriteLine(outputobject.booleanvaluefalse);
@@ -84,8 +96,12 @@ namespace OSMP
             }
             Console.WriteLine(outputobject.childclass.name);
 
-            Console.WriteLine( (string)BinaryPacker.ReadValueFromBuffer( bytearray, ref position, typeof( string ) ) );
-            Console.WriteLine((string)BinaryPacker.ReadValueFromBuffer(bytearray, ref position, typeof(string)));
+            Console.WriteLine((string)new BinaryPacker().ReadValueFromBuffer(bytearray, ref position, typeof(string)));
+            Console.WriteLine((string)new BinaryPacker().ReadValueFromBuffer(bytearray, ref position, typeof(string)));
+
+            outputobject = (TestClass)binarypacker.ReadValueFromBuffer(bytearray, ref position, typeof(TestClass));
+            Console.WriteLine(outputobject.name); // should be blank, because no AttributePack
+            Console.WriteLine(outputobject.Country);
         }
     }
 }

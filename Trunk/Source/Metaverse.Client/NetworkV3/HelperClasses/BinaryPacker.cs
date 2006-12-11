@@ -19,6 +19,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
@@ -30,12 +31,49 @@ namespace OSMP
     // We dont embed any type information in the binary, for compactness, so it is important
     // that reader knows accurately what it should be trying to read
 
-    // note that char is treated as an ASCII char, not unicode.  This is by design, though it's arguably not a great design.
+    // note that char is treated as an ASCII char, not unicode.  This is by design.
     // we do this for cases where we just want to use a single letter code for things
-    // suggestions -> hughperkins@gmail.com
+    // for normal text, need to use a System.string, which is packed as UTF8
     public class BinaryPacker
     {
-        public static void WriteValueToBuffer( byte[] buffer, ref int nextposition, object value )
+        /// <summary>
+        /// Anything that can be packed by BinaryPacker will be
+        /// </summary>
+        public BinaryPacker()
+        {
+        }
+
+        /// <summary>
+        /// When packing/unpacking classes, only fields and properties with an attribute matching allowedattributes
+        /// will be packed
+        /// </summary>
+        /// <param name="allowedattributes"></param>
+        public BinaryPacker(Type[] allowedattributes)
+        {
+            this.allowedattributes = allowedattributes;
+        }
+
+        public Type[] allowedattributes;
+
+        bool HasAllowedAttribute(MemberInfo memberinfo)
+        {
+            object[] attributes = memberinfo.GetCustomAttributes(false);
+            foreach (object attribute in attributes)
+            {
+                //Console.WriteLine( attribute.GetType().ToString());
+                foreach (Type allowedattributetype in allowedattributes)
+                {
+                  //  Console.WriteLine(allowedattributetype.ToString() + " " + attribute.GetType().ToString());
+                    if (attribute.GetType() == allowedattributetype )
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public void WriteValueToBuffer( byte[] buffer, ref int nextposition, object value )
         {
             if (value == null)
             {
@@ -112,14 +150,20 @@ namespace OSMP
                 foreach (FieldInfo fieldinfo in type.GetFields())
                 {
                   //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
-                    object fieldvalue = fieldinfo.GetValue(value);
-                    WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
+                    if (allowedattributes == null || HasAllowedAttribute(fieldinfo))
+                    {
+                        object fieldvalue = fieldinfo.GetValue(value);
+                        WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
+                    }
                 }
                 foreach (System.Reflection.PropertyInfo propertyinfo in type.GetProperties())
                 {
-                    //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
-                    object fieldvalue = propertyinfo.GetValue(value,null);
-                    WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
+                    if (allowedattributes == null || HasAllowedAttribute(propertyinfo))
+                    {
+                        //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
+                        object fieldvalue = propertyinfo.GetValue(value, null);
+                        WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
+                    }
                 }
             }
             else
@@ -127,10 +171,10 @@ namespace OSMP
                 throw new Exception("Unknown type: " + type.ToString() + " " + value.ToString());
             }
         }
-        
+
         // Note to self: for Macs, we probably need to swap endianness?
         // can detect endedness using BitConverter.IsLittleEndian
-        public static object ReadValueFromBuffer( byte[] buffer, ref int nextposition, Type type )
+        public object ReadValueFromBuffer( byte[] buffer, ref int nextposition, Type type )
         {    
             if( type == typeof( bool ) )
             {
@@ -194,15 +238,21 @@ namespace OSMP
                 object newobject = Activator.CreateInstance(type);
                 foreach (FieldInfo fieldinfo in type.GetFields())
                 {
-                  //  Console.WriteLine("unpacking " + fieldinfo.Name + " ...");
-                    object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, fieldinfo.FieldType);
-                    fieldinfo.SetValue(newobject, fieldvalue);
+                    if (allowedattributes == null || HasAllowedAttribute(fieldinfo))
+                    {
+                        //  Console.WriteLine("unpacking " + fieldinfo.Name + " ...");
+                        object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, fieldinfo.FieldType);
+                        fieldinfo.SetValue(newobject, fieldvalue);
+                    }
                 }
                 foreach (System.Reflection.PropertyInfo propertyinfo in type.GetProperties())
                 {
-                    //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
-                    object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, propertyinfo.PropertyType );
-                    propertyinfo.SetValue(newobject,fieldvalue, null );
+                    if (allowedattributes == null || HasAllowedAttribute(propertyinfo))
+                    {
+                        //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
+                        object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, propertyinfo.PropertyType);
+                        propertyinfo.SetValue(newobject, fieldvalue, null);
+                    }
                 }
                 return newobject;
             }

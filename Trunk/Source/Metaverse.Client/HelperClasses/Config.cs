@@ -26,38 +26,14 @@ using System.Xml;
 
 namespace OSMP
 {
-
-    //! Database connection info for one database. Contained by mvConfig class
-    public class DatabaseConnectionInfo
-    {
-        public string host;
-        public string databasename;
-        public string username;
-        public string password;
-        public DatabaseConnectionInfo( string host, string databasename, string username, string password )
-        {
-            this.host = host; this.databasename = databasename; this.username = username; this.password = password;
-        }
-    };
-    
-    //! Connection info for the authentication server. Contained by mvConfig class
-    public class AuthServerConnectionInfo
-    {
-        public string ipaddress;
-        public int port;
-        public string password;
-        public AuthServerConnectionInfo( string ipaddress, int port, string password )
-        {
-            this.ipaddress= ipaddress; this.port = port; this.password = password;
-        }
-    }
-    
     public class Config
     {
         string sFilePath = "config.xml";
         
         public int iDebugLevel;
-        public int iOSMPServerPort = 2501;
+
+        public string ServerIPAddress = "";
+        public int ServerPort = 2501;
             
         public Hashtable CommandsByKeycode = new Hashtable();
         public Hashtable KeycodesByCommand = new Hashtable();
@@ -103,7 +79,8 @@ namespace OSMP
             }
         
             XmlElement servernode = (XmlElement)configdoc.DocumentElement.SelectSingleNode( "server" );
-            iOSMPServerPort = Convert.ToInt32( servernode.GetAttribute("listenport"));
+            ServerPort = Convert.ToInt32( servernode.GetAttribute("port"));
+            ServerIPAddress = servernode.GetAttribute("ipaddress");
                     
             Test.Debug("... config.xml read");
         }
@@ -121,17 +98,5 @@ namespace OSMP
                 return "";
             }
         }
-
-/*        
-        public string GetCommandForKeycode( string sKeycode )
-        {
-            return (string)CommandsByKeycode[ sKeycode ];
-        }
-        
-        public string GetKeycodeForCommand( string sCommand )
-        {
-            return (string)KeycodesByCommand[ sCommand ];
-        }
-        */
     }
 }

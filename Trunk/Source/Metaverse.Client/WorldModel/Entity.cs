@@ -24,27 +24,37 @@ using System.Xml;
 namespace OSMP
 {
     //! Base class for all prims and objects in the world.  Virtual: cant be instantiated itself
-    public abstract class Entity : IHasProperties
+    public abstract class Entity : IHasProperties, IHasReference
     {
+        public int Reference { get { return iReference; } }
+
+        [Replicate]
         public int iReference;            //!< fundamental unique identifier for the object.  Created by dbinterface.  Unique.  (LIke a guiid)
+        [Replicate]
         public int iParentReference;   //!< reference for object's parent, or 0 if object is a toplevel object
+        [Replicate]
         public int iOwnerReference;       //!< iReference of owner/creator of object
             
         public Entity Parent = null;
+        [Replicate]
         public string name = "New entity";   //!< Object's name
-        
+
+        [Replicate, Movement]
         public Vector3 pos = new Vector3();                   //!< position of object in sim/world
-        public Vector3 scale;
+        [Replicate, Movement]
         public Rot rot = new Rot();                   //!< rotation of object
+
+        [Replicate]
+        public Vector3 scale;
             
-        public string sScriptReference; //!< md5 checksum of assigned script
+        //public string sScriptReference; //!< md5 checksum of assigned script
            
 // Ditching these, since ditching physics ;-) and also they take up bandwidth
-// We can always put some of these back alter if we really want...        
+// We can always put some of these back later if we really want...        
         //public bool bPhysicsEnabled;  //!< Physics enabled
         //public bool bPhantomEnabled;  //!< Phantom enabled
         //public bool bGravityEnabled;  //!< Gravity enabled
-        //public bool bTerrainEnabled;  //!< Terrain enabled (no, I dont remember what this means :-O)
+        //public bool bTerrainEnabled;  //!< Terrain enabled 
         //public Vector3 vVelocity = new Vector3();      //!< Current linear velocity
         //public Vector3 vAngularVelocity = new Vector3();      //!< Current angular velocity
         //public Vector3 vLocalForce = new Vector3();      //!< Current local linear force spontaneously acting on object

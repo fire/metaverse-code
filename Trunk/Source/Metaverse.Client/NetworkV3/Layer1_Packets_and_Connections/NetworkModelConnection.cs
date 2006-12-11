@@ -40,7 +40,7 @@ namespace OSMP
             this.NextPosition = nextposition;
         }
     }
-    
+
     public delegate void PacketHandler( object source, PacketHandlerArgs e );
     
     // This is going to handle a single network connection
@@ -51,7 +51,9 @@ namespace OSMP
         bool isserver;
         
         object connection;
-        
+
+        BinaryPacker binarypacker = new BinaryPacker();
+    
         DateTime lasttimestamp;
         
         NetPacketReferenceController packetreferencecontroller;
@@ -91,9 +93,9 @@ namespace OSMP
             
             if( packet.Length >= 4 + 2 + 1 )
             {
-                int packetkey = (int)BinaryPacker.ReadValueFromBuffer( packet, ref nextposition, typeof( int ) );
-                short packetref = (short)BinaryPacker.ReadValueFromBuffer( packet, ref nextposition, typeof( short ) );
-                char packetcode = (char)BinaryPacker.ReadValueFromBuffer( packet, ref nextposition, typeof( char ) );
+                int packetkey = (int)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(int));
+                short packetref = (short)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(short));
+                char packetcode = (char)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(char));
                 
                 Console.WriteLine( "Packet key: " + packetkey.ToString() + " packetref: " + packetref.ToString() );
 
@@ -137,9 +139,9 @@ namespace OSMP
             
             short packetreference = packetreferencecontroller.NextReference;
             
-            BinaryPacker.WriteValueToBuffer( packet, ref nextposition, sharedsecretexchange.SharedSecretKey );
-            BinaryPacker.WriteValueToBuffer( packet, ref nextposition, packetreference );
-            BinaryPacker.WriteValueToBuffer( packet, ref nextposition, packettype );
+            binarypacker.WriteValueToBuffer( packet, ref nextposition, sharedsecretexchange.SharedSecretKey );
+            binarypacker.WriteValueToBuffer(packet, ref nextposition, packetreference);
+            binarypacker.WriteValueToBuffer(packet, ref nextposition, packettype);
             Buffer.BlockCopy( data, 0, packet, nextposition, data.Length );
             
             packetreferencecontroller.RegisterSentPacket( packetreference, packet );
@@ -157,10 +159,10 @@ namespace OSMP
         {
             byte[]outgoingpacket = new byte[ data.Length + 4 + 2 + 1 ];
             int nextposition = 0;
-            
-            BinaryPacker.WriteValueToBuffer( outgoingpacket, ref nextposition, sharedsecretexchange.SharedSecretKey );
-            BinaryPacker.WriteValueToBuffer( outgoingpacket, ref nextposition, (short)0 );
-            BinaryPacker.WriteValueToBuffer( outgoingpacket, ref nextposition, packettype );
+
+            binarypacker.WriteValueToBuffer(outgoingpacket, ref nextposition, sharedsecretexchange.SharedSecretKey);
+            binarypacker.WriteValueToBuffer(outgoingpacket, ref nextposition, (short)0);
+            binarypacker.WriteValueToBuffer(outgoingpacket, ref nextposition, packettype);
             Buffer.BlockCopy( data, 0, outgoingpacket, nextposition, data.Length );
             
             RawSend( outgoingpacket );
