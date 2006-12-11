@@ -75,7 +75,6 @@ namespace OSMP
 
                 RpcController rpc = new RpcController( networkimplementation );
                 TestController.GetInstance().rpc = rpc;
-
                 Testing.TestInterface_ClientProxy testinterface_clientproxy = new OSMP.Testing.TestInterface_ClientProxy(rpc, null);
                 testinterface_clientproxy.SayHello();
 

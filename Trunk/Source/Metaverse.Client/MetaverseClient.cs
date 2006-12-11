@@ -25,21 +25,26 @@ namespace OSMP
 {
     public class MetaverseClient
     {
+        static MetaverseClient instance = new MetaverseClient();
+        public static MetaverseClient GetInstance() { return instance; }
+
+        MetaverseClient() // protected constructor, enforce singleton
+        {
+        }
+
         public double fHeight = -1.0;    //!< height of hardcoded land
         //public int iMyReference = 0;  //!< iReference of user's avatar
         public Avatar myavatar;
     
-        Config config;
-        IRenderer renderer;
-        PlayerMovement playermovement;
-        WorldModel worldstorage;
+        public Config config;
+        public IRenderer renderer;
+        public PlayerMovement playermovement;
+        public WorldModel worldstorage; // client's copy of worldmodel
+
+        public INetworkImplementation network;
+        public RpcController rpc;
+        public NetReplicationController netreplicationcontroller;
         
-        static MetaverseClient instance = new MetaverseClient();
-        public static MetaverseClient GetInstance()
-        {
-            return instance;
-        }
-    
         //! Manages world processing; things like: moving avatar, managing camera, animation, physics, etc...
         void ProcessWorld()
         {
@@ -57,12 +62,20 @@ namespace OSMP
             playermovement.MovePlayer();
           //  Console.WriteLine( playermovement.avatarpos );
         }
+
+        public delegate void TickHandler();
+        public event TickHandler Tick;
     
         //! Main loop, called by SDL once a frame
         void MainLoop()
         {
             ProcessWorld();
             ChatController.GetInstance().CheckMessages();
+            if (Tick != null)
+            {
+                Tick();
+            }
+            network.Tick();
         }
     
         //! Gets world state from server
@@ -86,6 +99,11 @@ namespace OSMP
             
             myavatar = new Avatar();
             worldstorage.AddEntity( myavatar );
+
+            network = NetworkImplementationFactory.CreateNewInstance();
+            network.ConnectAsClient(config.ServerIPAddress, config.ServerPort);
+            rpc = new RpcController(network);
+            netreplicationcontroller = new NetReplicationController(rpc);
             
             renderer = RendererFactory.GetInstance();
             renderer.RegisterMainLoopCallback( new MainLoopDelegate( this.MainLoop ) );

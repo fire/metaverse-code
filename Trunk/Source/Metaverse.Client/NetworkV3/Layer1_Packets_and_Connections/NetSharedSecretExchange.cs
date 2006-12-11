@@ -69,7 +69,9 @@ namespace OSMP
         
         public bool Validated = false;
         public int SharedSecretKey;
-        
+
+        BinaryPacker binarypacker = new BinaryPacker();
+
         NetworkModelConnection parent;
         bool isserver;
         int tempclientkey;
@@ -119,15 +121,15 @@ namespace OSMP
             {
                 byte[] packet = e.Data;
                 int tempnextposition = e.NextPosition;
-                int tempclientkey = (int)BinaryPacker.ReadValueFromBuffer( packet, ref tempnextposition, typeof( int ) );
+                int tempclientkey = (int)binarypacker.ReadValueFromBuffer( packet, ref tempnextposition, typeof( int ) );
 
                 byte[] newpacket = new byte[8];
                 tempnextposition = 0;
                 
                 Console.WriteLine( "R packet received, sending C packet, tempclientkey: " + tempclientkey.ToString() + " sharedkey: " + SharedSecretKey.ToString() );
-                
-                BinaryPacker.WriteValueToBuffer( newpacket, ref tempnextposition, tempclientkey );
-                BinaryPacker.WriteValueToBuffer( newpacket, ref tempnextposition, SharedSecretKey );
+
+                binarypacker.WriteValueToBuffer(newpacket, ref tempnextposition, tempclientkey);
+                binarypacker.WriteValueToBuffer(newpacket, ref tempnextposition, SharedSecretKey);
                 parent.Send( 'C', newpacket );
             }
         }
@@ -138,11 +140,11 @@ namespace OSMP
             {
                 byte[] packet = e.Data;
                 int tempnextposition = e.NextPosition;
-                int tempclientkey = (int)BinaryPacker.ReadValueFromBuffer( packet, ref tempnextposition, typeof( int ) );
+                int tempclientkey = (int)binarypacker.ReadValueFromBuffer(packet, ref tempnextposition, typeof(int));
                 Console.WriteLine( "C packet received, tempclientkey: " + tempclientkey.ToString() );
                 if( tempclientkey == this.tempclientkey )
                 {
-                    SharedSecretKey = (int)BinaryPacker.ReadValueFromBuffer( packet, ref tempnextposition, typeof( int ) );
+                    SharedSecretKey = (int)binarypacker.ReadValueFromBuffer(packet, ref tempnextposition, typeof(int));
                     Console.WriteLine( "Connection to server confirmed, sharedkey: " + SharedSecretKey.ToString() );
                     Validated = true;
                     parent.Send( 'C', new byte[]{} );
@@ -182,7 +184,7 @@ namespace OSMP
             Console.WriteLine( "Sending R packet to server...");
             byte[] packet = new byte[4];
             int tempnextposition = 0;
-            BinaryPacker.WriteValueToBuffer( packet, ref tempnextposition, tempclientkey );
+            binarypacker.WriteValueToBuffer(packet, ref tempnextposition, tempclientkey);
             parent.Send( 'R', packet );
             lastRpacket = DateTime.Now;
             initialrpacketsent = true;

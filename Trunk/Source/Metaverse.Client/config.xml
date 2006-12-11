@@ -52,6 +52,6 @@ spacebar, shift, alt, ctrl, delete, enter
 </client>
 <config debuglevel="3">
 </config>
-<server listenport="2501">
+<server port="2501" ipaddress="127.0.0.1">
 </server>
 </root>

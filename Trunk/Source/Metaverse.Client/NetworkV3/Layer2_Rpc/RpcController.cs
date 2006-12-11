@@ -34,6 +34,8 @@ namespace OSMP
         string[] allowedtypes = new string[] { "OSMP.Testing.ITestInterface" };
 
         INetworkImplementation network;
+
+        BinaryPacker binarypacker = new BinaryPacker();
         
         bool isserver = true;
             
@@ -52,11 +54,11 @@ namespace OSMP
                 if (e.Data.GetLength(0) > 1)
                 {
                     int position = 0;
-                    char type = (char)BinaryPacker.ReadValueFromBuffer(e.Data, ref position, typeof(Char));
+                    char type = (char)binarypacker.ReadValueFromBuffer(e.Data, ref position, typeof(Char));
                     if (type == RpcType)
                     {
-                        string typename = (string)BinaryPacker.ReadValueFromBuffer(e.Data, ref position, typeof(string));
-                        string methodname = (string)BinaryPacker.ReadValueFromBuffer(e.Data, ref position, typeof(string));
+                        string typename = (string)binarypacker.ReadValueFromBuffer(e.Data, ref position, typeof(string));
+                        string methodname = (string)binarypacker.ReadValueFromBuffer(e.Data, ref position, typeof(string));
                         //Console.WriteLine("Got rpc " + typename + " " + methodname);
                         if (ArrayHelper.IsInArray(allowedtypes, typename)) // security check to prevent arbitrary activation
                         {
@@ -91,7 +93,7 @@ namespace OSMP
                             object[] parameters = new object[parameterinfos.GetLength(0)];
                             for (int i = 0; i < parameters.GetLength(0); i++)
                             {
-                                parameters[i] = BinaryPacker.ReadValueFromBuffer(e.Data, ref position, parameterinfos[i].ParameterType);
+                                parameters[i] = binarypacker.ReadValueFromBuffer(e.Data, ref position, parameterinfos[i].ParameterType);
                             }
 
                             //foreach (object parameter in parameters)
@@ -137,12 +139,12 @@ namespace OSMP
             byte[]packet = new byte[1400]; // note to self: make this a little more dynamic...
             int nextposition = 0;
 
-            BinaryPacker.WriteValueToBuffer(packet, ref nextposition, RpcType );
-            BinaryPacker.WriteValueToBuffer(packet, ref nextposition, typename );
-            BinaryPacker.WriteValueToBuffer(packet, ref nextposition, methodname );
+            binarypacker.WriteValueToBuffer(packet, ref nextposition, RpcType);
+            binarypacker.WriteValueToBuffer(packet, ref nextposition, typename);
+            binarypacker.WriteValueToBuffer(packet, ref nextposition, methodname);
             foreach (object parameter in args)
             {
-                BinaryPacker.WriteValueToBuffer(packet, ref nextposition, parameter );
+                binarypacker.WriteValueToBuffer(packet, ref nextposition, parameter);
             }
             
             //Console.WriteLine( nextposition + " bytes " + Encoding.ASCII.GetString( packet, 0, nextposition ) );
