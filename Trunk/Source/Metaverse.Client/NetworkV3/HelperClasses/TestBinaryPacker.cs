@@ -33,6 +33,8 @@ namespace OSMP
         {
             public int[] indexes;
             public string name;
+            string country;
+            public string Country { get { return country; } set { country = value; } }
             public bool booleanvaluetrue;
             public bool booleanvaluefalse;
             public char charvalue;
@@ -56,6 +58,7 @@ namespace OSMP
             testclass.charvalue = 'C';
             testclass.doublevalue = 123.4567890;
             testclass.intvalue = 1234567890;
+            testclass.Country = "Spain";
             testclass.name = "Test class name";
             testclass.indexes = new int[] { 5, 1, 4, 2, 3 };
             testclass.childclass = new ChildClass();
@@ -73,6 +76,7 @@ namespace OSMP
             Console.WriteLine(outputobject.booleanvaluefalse);
             Console.WriteLine(outputobject.charvalue);
             Console.WriteLine(outputobject.doublevalue);
+            Console.WriteLine(outputobject.Country);
             Console.WriteLine(outputobject.name);
             foreach (int value in outputobject.indexes)
             {
