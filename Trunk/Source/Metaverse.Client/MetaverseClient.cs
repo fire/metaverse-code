@@ -96,17 +96,3 @@ namespace OSMP
     }
 }
    
-public class EntryPoint   
-{
-    public static int Main( string[] args )
-    {
-        try{
-            return MetaverseClient.GetInstance().Go( args );
-        }
-        catch( Exception e )
-        {
-            Console.WriteLine( e );
-            return -1;
-        }
-    }
-}

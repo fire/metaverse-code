@@ -143,7 +143,7 @@ namespace OSMP
                 {
                     IPEndPoint endpoint = new IPEndPoint( IPAddress.Any, 0 );
                     Byte[]receiveddata = udpclient.Receive( ref endpoint );
-                    Console.WriteLine("received: " + Encoding.UTF8.GetString( receiveddata,0, receiveddata.Length ) );
+                    //Console.WriteLine("received: " + Encoding.UTF8.GetString( receiveddata,0, receiveddata.Length ) );
                     lock( receivedpackets )
                     {
                         receivedpackets.Enqueue( new object[]{ endpoint, receiveddata } );
@@ -186,8 +186,15 @@ namespace OSMP
         // for server
         public void Send( object connection, byte[] data, int length )
         {
-            ( ( ConnectionInfo )connections[ connection ] ).UpdateLastOutgoingPacketTime();
-            udpclient.Send( data, data.Length, (IPEndPoint)connection );
+            if (isserver)
+            {
+                ((ConnectionInfo)connections[connection]).UpdateLastOutgoingPacketTime();
+                udpclient.Send(data, data.Length, (IPEndPoint)connection);
+            }
+            else
+            {
+                Send(data, length);
+            }
         }
 
         public void Send(object connection, byte[] data )
@@ -225,7 +232,7 @@ namespace OSMP
                     ConnectionInfo connectioninfo = (ConnectionInfo)entry.Value;
                     if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                     {
-                        Console.WriteLine("sending keepalive to " + connection.ToString() );
+                        //Console.WriteLine("sending keepalive to " + connection.ToString() );
                         Send( connection, new byte[]{} );
                         connectioninfo.UpdateLastOutgoingPacketTime();
                     }
@@ -236,7 +243,7 @@ namespace OSMP
                 ConnectionInfo connectioninfo = connectiontoserver;
                 if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                 {
-                    Console.WriteLine("sending keepalive to server" );
+                    //Console.WriteLine("sending keepalive to server" );
                     Send( new byte[]{} );
                     connectioninfo.UpdateLastOutgoingPacketTime();
                 }

@@ -24,7 +24,7 @@ using System.Reflection;
 
 namespace OSMP
 {
-    // binarypacker can pack simple types, rank-1 arrays, and classes, and combinations of these things
+    // binarypacker can pack simple types, rank-1 arrays of simple types, classes, and combinations of these things
     // For writing, it just needs whatever you want to write, and an appropriately-sized array to write to
     // For reading, it needs the Type of what you are trying to read
     // We dont embed any type information in the binary, for compactness, so it is important
@@ -37,6 +37,10 @@ namespace OSMP
     {
         public static void WriteValueToBuffer( byte[] buffer, ref int nextposition, object value )
         {
+            if (value == null)
+            {
+                throw new Exception("Attempted to pack null value.  Please make sure all values are not null and try again.");
+            }
             Type type = value.GetType();
             if( type == typeof( bool ) )
             {
@@ -58,14 +62,12 @@ namespace OSMP
             else if( type == typeof( string ) )
             {
                 byte[]payload = Encoding.UTF8.GetBytes( (string)value );
-                int length = payload.Length;
-                byte[]lengthbytes = BitConverter.GetBytes( length );
+
+                short length = (short)payload.GetLength(0);
+                WriteValueToBuffer(buffer, ref nextposition, length);
                 
-                Buffer.BlockCopy( lengthbytes, 0, buffer, nextposition, lengthbytes.Length );
-                nextposition += lengthbytes.Length;
-                
-                Buffer.BlockCopy( payload, 0, buffer, nextposition, payload.Length );
-                nextposition += payload.Length;
+                Buffer.BlockCopy( payload, 0, buffer, nextposition, payload.GetLength(0) );
+                nextposition += payload.GetLength(0);
             }
             else if( type == typeof( double ) )
             {
@@ -106,16 +108,17 @@ namespace OSMP
             }
             else if (type.IsClass) // pack public fields from class
             {
+                //Console.WriteLine("Pack class " + type.Name);
                 foreach (FieldInfo fieldinfo in type.GetFields())
                 {
-                    Console.WriteLine("packing " + fieldinfo.Name + " ...");
+                  //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
                     object fieldvalue = fieldinfo.GetValue(value);
                     WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
                 }
             }
             else
             {
-                throw new Exception("Unknown type: " + type.ToString() + " " + value.ToString() );
+                throw new Exception("Unknown type: " + type.ToString() + " " + value.ToString());
             }
         }
         
@@ -135,8 +138,7 @@ namespace OSMP
             }
             else if( type == typeof( string ) )
             {
-                int payloadlength = BitConverter.ToInt32( buffer, nextposition );
-                nextposition += 4;
+                short payloadlength = (short)ReadValueFromBuffer( buffer, ref nextposition, typeof( short ) );
                 
                 string datastring = Encoding.UTF8.GetString( buffer, nextposition, payloadlength );
                 nextposition += payloadlength;
@@ -182,10 +184,11 @@ namespace OSMP
             }
             else if (type.IsClass) // unpack public fields from class
             {
+                //Console.WriteLine("unpack class " + type.Name);
                 object newobject = Activator.CreateInstance(type);
                 foreach (FieldInfo fieldinfo in type.GetFields())
                 {
-                    Console.WriteLine("unpacking " + fieldinfo.Name + " ...");
+                  //  Console.WriteLine("unpacking " + fieldinfo.Name + " ...");
                     object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, fieldinfo.FieldType);
                     fieldinfo.SetValue(newobject, fieldvalue);
                 }
