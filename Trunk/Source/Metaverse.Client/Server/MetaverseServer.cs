@@ -148,7 +148,7 @@ namespace OSMP
         {
             Arguments arguments = new Arguments(args);
 
-            if (arguments.Named.ContainsKey("noserver"))
+            if (arguments.Unnamed.Contains("noserver"))
             {
                 Console.WriteLine("User requested no server.");
                 return;
