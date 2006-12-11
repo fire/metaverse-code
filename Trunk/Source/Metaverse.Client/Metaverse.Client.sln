@@ -2,6 +2,14 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C# Express 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Client", "Metaverse.Client.csproj", "{B43DFCEC-2F68-4108-A83C-A02A773FD8CB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44F0885A-0270-4ACA-8A18-68A786B1E89D} = {44F0885A-0270-4ACA-8A18-68A786B1E89D}
+		{07E3E9BF-C938-4534-9FDD-EC4A54365BA7} = {07E3E9BF-C938-4534-9FDD-EC4A54365BA7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkProxyGenerator", "..\RpcProxyGenerator\NetworkProxyGenerator.csproj", "{07E3E9BF-C938-4534-9FDD-EC4A54365BA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkInterfaces", "..\NetworkInterfaces\NetworkInterfaces.csproj", "{44F0885A-0270-4ACA-8A18-68A786B1E89D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +21,14 @@ Global
 		{B43DFCEC-2F68-4108-A83C-A02A773FD8CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B43DFCEC-2F68-4108-A83C-A02A773FD8CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B43DFCEC-2F68-4108-A83C-A02A773FD8CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07E3E9BF-C938-4534-9FDD-EC4A54365BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07E3E9BF-C938-4534-9FDD-EC4A54365BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07E3E9BF-C938-4534-9FDD-EC4A54365BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07E3E9BF-C938-4534-9FDD-EC4A54365BA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44F0885A-0270-4ACA-8A18-68A786B1E89D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44F0885A-0270-4ACA-8A18-68A786B1E89D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44F0885A-0270-4ACA-8A18-68A786B1E89D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44F0885A-0270-4ACA-8A18-68A786B1E89D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

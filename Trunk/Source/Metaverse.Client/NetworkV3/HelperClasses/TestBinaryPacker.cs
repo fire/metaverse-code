@@ -61,6 +61,8 @@ namespace OSMP
             testclass.childclass = new ChildClass();
             testclass.childclass.name = "name inside child class";
             BinaryPacker.WriteValueToBuffer(bytearray, ref position, testclass);
+            BinaryPacker.WriteValueToBuffer(bytearray, ref position, "The quick brown fox.");
+            BinaryPacker.WriteValueToBuffer(bytearray, ref position, "Rain in Spain.");
 
             Test.WriteOut(bytearray );
 
@@ -77,6 +79,9 @@ namespace OSMP
                 Console.WriteLine(value);
             }
             Console.WriteLine(outputobject.childclass.name);
+
+            Console.WriteLine( (string)BinaryPacker.ReadValueFromBuffer( bytearray, ref position, typeof( string ) ) );
+            Console.WriteLine((string)BinaryPacker.ReadValueFromBuffer(bytearray, ref position, typeof(string)));
         }
     }
 }
