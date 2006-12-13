@@ -31,7 +31,7 @@ namespace OSMP
         public void LoadPlugins()
         {
             KeyHandlerQuit.GetInstance();
-            /*
+            
             EntityPropertiesDialog.GetInstance();
             Editing3d.GetInstance();
             SelectionController.GetInstance();
@@ -54,7 +54,7 @@ namespace OSMP
             FractalSplineTube.Register();
             FractalSplineRing.Register();
             FractalSplineTorus.Register();
-             */
+             
         }
     }
 }
