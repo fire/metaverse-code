@@ -29,9 +29,13 @@ namespace OSMP
     //! Rot contains a rotation, in x,y,z,s quaternion format; plus helper functions
     public class Rot
     {
+        [Replicate]
         public double x; //!< quaternion x
+        [Replicate]
         public double y; //!< quaternion y
+        [Replicate]
         public double z; //!< quaternion z
+        [Replicate]
         public double s; //!< quaternion s ("scalar")
         //! initializes from passed in string array, eg ["0","0","0","1"]
         public Rot( string[] array )

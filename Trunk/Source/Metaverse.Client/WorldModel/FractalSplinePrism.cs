@@ -40,8 +40,8 @@ namespace OSMP
             
             FractalSplinePrism newentity = new FractalSplinePrism();
             buildproperties.WriteToEntity( newentity, "Prism" );
-            
-            WorldModel.GetInstance().AddEntity( newentity );
+
+            MetaverseClient.GetInstance().worldstorage.AddEntity(newentity);
         }
         
         public FractalSplinePrism()

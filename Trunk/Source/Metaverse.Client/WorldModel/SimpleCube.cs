@@ -43,8 +43,8 @@ namespace OSMP
             newcube.rot = buildproperties.rot;
             newcube.scale = new Vector3( 0.2, 0.2, 0.2 );
             newcube.name = "new cube";
-            
-            WorldModel.GetInstance().AddEntity( newcube );
+
+            MetaverseClient.GetInstance().worldstorage.AddEntity(newcube);
         }
         
         public SimpleCube()

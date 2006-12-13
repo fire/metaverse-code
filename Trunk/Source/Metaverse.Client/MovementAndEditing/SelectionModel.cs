@@ -58,7 +58,7 @@ namespace OSMP
         {
             Test.Debug("Instantiating SelectionModel");
 
-            worldstorage = WorldModel.GetInstance();
+            worldstorage = MetaverseClient.GetInstance().worldstorage;
             worldstorage.ClearEvent += new ClearHandler( this.ClearHandler );
             worldstorage.AfterDelete += new AfterDeleteHandler( this.DeleteEntityHandler );        
         }

@@ -79,6 +79,15 @@ namespace OSMP
 
             binarypacker.WriteValueToBuffer(bytearray, ref position, testclass);
 
+            byte[] bytearraytowrite = Encoding.UTF8.GetBytes("Hello world");
+            new BinaryPacker().WriteValueToBuffer(bytearray, ref position, bytearraytowrite);
+
+            FractalSplineBox box = new FractalSplineBox();
+            box.name = "Test box";
+            box.pos = new Vector3(1, 123.123, 150.150);
+            binarypacker.allowedattributes = new Type[] { typeof(Replicate) };
+            binarypacker.WriteValueToBuffer(bytearray, ref position, box);
+
             Test.WriteOut(bytearray );
 
             position = 0;
@@ -99,9 +108,17 @@ namespace OSMP
             Console.WriteLine((string)new BinaryPacker().ReadValueFromBuffer(bytearray, ref position, typeof(string)));
             Console.WriteLine((string)new BinaryPacker().ReadValueFromBuffer(bytearray, ref position, typeof(string)));
 
+            binarypacker.allowedattributes = new Type[] { typeof(AttributePack) };
             outputobject = (TestClass)binarypacker.ReadValueFromBuffer(bytearray, ref position, typeof(TestClass));
             Console.WriteLine(outputobject.name); // should be blank, because no AttributePack
             Console.WriteLine(outputobject.Country);
+
+            bytearraytowrite = (byte[])new BinaryPacker().ReadValueFromBuffer(bytearray, ref position, typeof(byte[]));
+            Console.WriteLine( "[" + Encoding.UTF8.GetString(bytearraytowrite) + "]" );
+
+            binarypacker.allowedattributes = new Type[] { typeof(Replicate) };
+            object boxobject = binarypacker.ReadValueFromBuffer(bytearray, ref position, typeof(FractalSplineBox));
+            Console.WriteLine(boxobject);
         }
     }
 }

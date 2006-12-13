@@ -19,8 +19,9 @@
 //
 
 using System;
-using System.Collections;
-using System.Windows.Forms;
+using System.Collections.Generic;
+//using System.Windows.Forms;
+using System.Text;
 
 namespace OSMP
 {
@@ -59,20 +60,17 @@ namespace OSMP
         }
     }
     
-    /*
     public delegate void ObjectCreatedHandler( object source, ObjectCreatedArgs e );
     public delegate void ObjectModifiedHandler( object source, ObjectModifiedArgs e );
     public delegate void ObjectDeletedHandler( object source, ObjectDeletedArgs e );
-    */
-    
-      
+        
     // derive from this on a replicated object controller that wants to create replication references itself
     // this will be the case forworldmodel/controller for example, in order to allow replicated object caching
     // note to self: perhaps caching can be done by the replicationcontroller???
     // so, do we really need this???
     public interface IHasReference
     {
-        int Reference{ get; }
+        int Reference { get; set; }
     }
     
     // derive from ths on any classes that manage replicated objects
@@ -80,9 +78,18 @@ namespace OSMP
     // you also need to get the replicatedobjectcaller to call NetReplicationController.GetInstance().RegisterReplicatedObjectController()
     public interface IReplicatedObjectController
     {
+        event ObjectCreatedHandler ObjectCreated;
+        event ObjectModifiedHandler ObjectModified;
+        event ObjectDeletedHandler ObjectDeleted;
+
         void ReplicatedObjectCreated( object notifier, ObjectCreatedArgs e );
         void ReplicatedObjectModified( object notifier, ObjectModifiedArgs e );
         void ReplicatedObjectDeleted( object notifier, ObjectDeletedArgs e );        
+    }
+
+    public interface IReferenceGenerator
+    {
+        int GenerateReference();
     }
     
     public class ObjectReplicationClientToServer : NetworkInterfaces.IObjectReplicationClientToServer
@@ -90,16 +97,22 @@ namespace OSMP
         object connection;
         public ObjectReplicationClientToServer(object connection) { this.connection = connection; }
 
-        public void ObjectCreated( int remoteclientreference, string typename, object entity)
+        public void ObjectCreated( int remoteclientreference, string typename, int attributebitmap, byte[] entitydata )
         {
+            MetaverseServer.GetInstance().netreplicationcontroller.ObjectCreatedRpcClientToServer(connection,
+                remoteclientreference, typename, attributebitmap, entitydata );
         }
 
         public void ObjectModified( int reference, string typename, object entity )
         {
+            MetaverseServer.GetInstance().netreplicationcontroller.ObjectModifiedRpc(connection,
+                reference, typename, entity);
         }
 
         public void ObjectDeleted( int reference)
         {
+            MetaverseServer.GetInstance().netreplicationcontroller.ObjectDeletedRpc(connection,
+                reference );
         }
     }
 
@@ -108,20 +121,28 @@ namespace OSMP
         object connection;
         public ObjectReplicationServerToClient(object connection) { this.connection = connection; }
 
-        public void ObjectCreatedServerToCreatorClient(int reference, string typename, object entity)
+        public void ObjectCreatedServerToCreatorClient(int clientreference, int globalreference )
         {
+            MetaverseClient.GetInstance().netreplicationcontroller.ObjectCreatedRpcServerToCreatorClient(connection,
+                clientreference,globalreference);
         }
 
         public void ObjectCreated(int reference, string typename, object entity)
         {
+            MetaverseClient.GetInstance().netreplicationcontroller.ObjectCreatedRpcServerToClient(connection,
+                reference, typename, entity);
         }
 
         public void ObjectModified(int reference, string typename, object entity)
         {
+            MetaverseClient.GetInstance().netreplicationcontroller.ObjectModifiedRpc(connection,
+                reference, typename, entity);
         }
 
         public void ObjectDeleted(int reference)
         {
+            MetaverseClient.GetInstance().netreplicationcontroller.ObjectDeletedRpc(connection,
+                reference );
         }
     }
 
@@ -135,7 +156,8 @@ namespace OSMP
         public NetObjectReferenceController referencecontroller;
 
         bool ismaster = false;
-        Hashtable objectcontrollers = new Hashtable();
+        Dictionary<Type,IReplicatedObjectController> objectcontrollers = new Dictionary<Type,IReplicatedObjectController>();
+        Dictionary<int, object> tempreferences = new Dictionary<int,object>();
         
         //static NetReplicationController instance = new NetReplicationController();
         //public static NetReplicationController GetInstance(){ return instance; }
@@ -161,51 +183,147 @@ namespace OSMP
         // note that for class hierarchies, only the base type needs to be registered
         public void RegisterReplicatedObjectController( IReplicatedObjectController controller, Type managedtype )
         {
-            if( objectcontrollers.Contains( managedtype ) && objectcontrollers[ managedtype ] != controller )
+            if( objectcontrollers.ContainsKey( managedtype ) && objectcontrollers[ managedtype ] != controller )
             {
                 throw new Exception( "Error: a replicated type can only be registered by a single replicatedobjectcontroller.  " + 
                     "Duplicated type: " + managedtype.ToString() + " by " + controller.ToString() + " conflicts with " + objectcontrollers[ managedtype ].ToString() );
             }
-            if( !objectcontrollers.Contains( managedtype ) )
+            if( !objectcontrollers.ContainsKey( managedtype ) )
             {
                 objectcontrollers.Add( managedtype, controller );
+                controller.ObjectCreated += new ObjectCreatedHandler(controller_ObjectCreated);
+                controller.ObjectDeleted += new ObjectDeletedHandler(controller_ObjectDeleted);
+                controller.ObjectModified += new ObjectModifiedHandler(controller_ObjectModified);
             }
         }
 
         // events for incoming changes from object controllers
-        public void ObjectCreated( object controller, ObjectCreatedArgs e )
-        {
-        }
-        
-        public void ObjectModified( object controller, ObjectModifiedArgs e )
-        {
-        }
-        
-        public void ObjectDeleted( object controller, ObjectDeletedArgs e )
+        void controller_ObjectModified(object source, ObjectModifiedArgs e)
         {
         }
 
-        // rpcmethods
-        // ==========
-
-        public void ObjectCreatedRpcClientToServer(object connection, int remoteclientreference, string typename, object entity )
+        void controller_ObjectDeleted(object source, ObjectDeletedArgs e)
         {
         }
 
-        public void ObjectCreatedRpcServerToCreatorClient(object connection, int remoteclientreference, int reference, string typename, object entity)
+        void controller_ObjectCreated(object source, ObjectCreatedArgs e)
         {
+            Console.WriteLine("netreplicationcontroller ObjectCreated " + e.TargetObject);
+            if( this.rpc.IsServer )
+            {
+                //NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy objectreplicationproxy = new OSMP.NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy( rpc, 
+                // handled by something like DirtyCacheController
+            }
+            else
+            {
+                int tempreference = GenerateTempReference();
+                tempreferences.Add( tempreference, e.TargetObject );
+
+                Type[]AttributeTypeList = new Type[]{ typeof( Replicate ) };
+                int bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap( AttributeTypeList );
+                BinaryPacker binarypacker = new BinaryPacker();
+                binarypacker.allowedattributes = AttributeTypeList;
+                byte[] entitydata = new byte[4096];
+                int nextposition = 0;
+                binarypacker.WriteValueToBuffer(entitydata, ref nextposition, e.TargetObject);
+
+                byte[]entitydatatotransmit = new byte[ nextposition ];
+                Buffer.BlockCopy( entitydata,0, entitydatatotransmit, 0, nextposition );
+
+                Console.WriteLine(Encoding.UTF8.GetString(entitydatatotransmit));
+
+                NetworkInterfaces.ObjectReplicationClientToServer_ClientProxy objectreplicationproxy = new OSMP.NetworkInterfaces.ObjectReplicationClientToServer_ClientProxy(rpc, null);
+                objectreplicationproxy.ObjectCreated(tempreference, e.TargetObject.GetType().ToString(), bitmap, entitydatatotransmit );
+            }
         }
 
-        public void ObjectCreatedRpcServerToClient(object connection, int reference, string typename, object entity)
+        int nextreference = 1;
+        int GenerateTempReference()
         {
+            nextreference++;
+            return nextreference - 1;
+        }
+
+        // incoming rpc calls
+        // ===================
+
+        public void ObjectCreatedRpcClientToServer(object connection, int remoteclientreference, string typename, int attributebitmap, byte[] entitydata )
+        {
+            Console.WriteLine("ObjectCreatedRpcClientToServer " + typename );
+
+            Console.WriteLine(Encoding.UTF8.GetString(entitydata));
+
+            // note to self: should probably make a whitelist of allowed typenames, maybe via primitive class registration
+            Type newtype = Type.GetType(typename);
+            object newobject = Activator.CreateInstance(newtype);
+
+            IReplicatedObjectController replicatedobjectcontroller = null;
+            foreach (Type replicatedtype in objectcontrollers.Keys)
+            {
+                if (replicatedtype.IsInstanceOfType(newobject))
+                {
+                    replicatedobjectcontroller = objectcontrollers[replicatedtype];
+                }
+            }
+
+            List<Type> AttributeTypeList = new ReplicateAttributeHelper().BitmapToAttributeTypeArray(attributebitmap);
+            BinaryPacker binarypacker = new BinaryPacker();
+            binarypacker.allowedattributes = AttributeTypeList.ToArray();
+
+            int nextposition = 0;
+            newobject = binarypacker.ReadValueFromBuffer(entitydata, ref nextposition, newtype );
+            Console.WriteLine("server received replicated object: " + newobject);
+
+            int newobjectreference = 0;
+            if (replicatedobjectcontroller != null && replicatedobjectcontroller is IReferenceGenerator)
+            {
+                newobjectreference = (replicatedobjectcontroller as IReferenceGenerator).GenerateReference();
+            }
+            else
+            {
+                newobjectreference = nextreference;
+                nextreference++;
+            }
+
+            Console.WriteLine("New object reference: " + newobjectreference);
+            if( newobject is IHasReference )
+            {
+                ( newobject as IHasReference ).Reference = newobjectreference;
+            }
+
+            if (replicatedobjectcontroller != null)
+            {
+                replicatedobjectcontroller.ReplicatedObjectCreated(this,
+        new ObjectCreatedArgs(DateTime.Now, newobject));
+            }
+
+            //new ObjectReplicationServerToClient( connection ).ObjectCreatedServerToCreatorClient(
+        }
+
+        public void ObjectCreatedRpcServerToCreatorClient(object connection, int clientreference, int globalreference)
+        {
+            Console.WriteLine("ObjectCreatedRpcServerToCreatorClient " + clientreference + " -> " + globalreference);
+            object thisobject = this.tempreferences[clientreference];
+            if (thisobject is IHasReference)
+            {
+                (thisobject as IHasReference).Reference = globalreference;
+            }
+            tempreferences.Remove(clientreference);
+        }
+
+        public void ObjectCreatedRpcServerToClient(object connection, int reference, string typename, object entity )
+        {
+            Console.WriteLine("ObjectCreatedRpcServerToClient " + entity);
         }
 
         public void ObjectModifiedRpc(object connection, int reference, string typename, object entity)
         {
+            Console.WriteLine("ObjectModifiedRpc " + entity);
         }
 
         public void ObjectDeletedRpc(object connection, int reference)
         {
+            Console.WriteLine("ObjectDeletedRpc " + reference);
         }        
 
         // tick is going to prepare/send some packets to replicate dirty/new objects

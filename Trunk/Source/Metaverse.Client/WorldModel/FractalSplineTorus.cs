@@ -40,8 +40,8 @@ namespace OSMP
             
             FractalSplineTorus newentity = new FractalSplineTorus();
             buildproperties.WriteToEntity( newentity, "Torus" );
-            
-            WorldModel.GetInstance().AddEntity( newentity );
+
+            MetaverseClient.GetInstance().worldstorage.AddEntity(newentity);
         }
         
         public FractalSplineTorus()

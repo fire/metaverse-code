@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Threading;
 using OSMP;
 
 namespace OSMP
@@ -71,7 +72,7 @@ namespace OSMP
         {
             //Console.WriteLine("Tick");
             ProcessWorld();
-            ChatController.GetInstance().CheckMessages();
+            //ChatController.GetInstance().CheckMessages();
             if (Tick != null)
             {
                 Tick();
@@ -86,50 +87,62 @@ namespace OSMP
             playermovement.avatarzrot = 0;
             playermovement.avataryrot = 0;
         }
-        
-        public int Go( string[] args )
-        {
-            Arguments arguments = new Arguments( args );
-            config = Config.GetInstance();
-            playermovement = PlayerMovement.GetInstance();
-            worldstorage = WorldModel.GetInstance();
-    
-            InitializeWorld();
 
+        public bool waitingforserverconnection = true;
+        public int Go(string[] args)
+        {
+            Arguments arguments = new Arguments(args);
+
+            config = Config.GetInstance();
             string serverip = "";
-            if( arguments.Named.ContainsKey("serverip" ) )
+            if (arguments.Named.ContainsKey("serverip"))
             {
-                serverip = arguments.Named[ "serverip" ];
+                serverip = arguments.Named["serverip"];
             }
-            
-            network = new NetworkLevel2Controller();
-            network.NewConnection += new Level2NewConnectionHandler(network_NewConnection);
+
             if (serverip == "")
             {
-                network.ConnectAsClient(config.ServerIPAddress, config.ServerPort);
+                serverip = config.ServerIPAddress;
             }
-            else
+
+            network = new NetworkLevel2Controller();
+            network.NewConnection += new Level2NewConnectionHandler(network_NewConnection);
+
+            network.ConnectAsClient(serverip, config.ServerPort);
+
+            rpc = new RpcController(network);
+            netreplicationcontroller = new NetReplicationController(rpc);
+
+            while (waitingforserverconnection)
             {
-                network.ConnectAsClient(serverip, config.ServerPort);
+                network.Tick();
+                if (Tick != null)
+                {
+                    Tick();
+                }
+                Thread.Sleep(50);
             }
 
-            PluginsLoader.GetInstance().LoadPlugins();
-
-            myavatar = new Avatar();
-            worldstorage.AddEntity(myavatar);
-
-            renderer = RendererFactory.GetInstance();
-            renderer.RegisterMainLoopCallback( new MainLoopDelegate( this.MainLoop ) );
-            renderer.StartMainLoop();
-            
             return 0;
         }
 
         void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
             Console.WriteLine("client connected to server");
-            rpc = new RpcController(network);
-            netreplicationcontroller = new NetReplicationController(rpc);
+            waitingforserverconnection = false;
+            playermovement = PlayerMovement.GetInstance();
+            worldstorage = new WorldModel(netreplicationcontroller);
+
+            InitializeWorld();
+
+            PluginsLoader.GetInstance().LoadClientPlugins();
+
+            myavatar = new Avatar();
+            worldstorage.AddEntity(myavatar);
+
+            renderer = RendererFactory.GetInstance();
+            renderer.RegisterMainLoopCallback(new MainLoopDelegate(this.MainLoop));
+            renderer.StartMainLoop();
         }
     }
 }

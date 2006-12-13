@@ -70,6 +70,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace OSMP
 { 
@@ -112,8 +113,12 @@ namespace OSMP
 
     public delegate void ClearHandler( object source );
     
-    public class WorldModel
+    public class WorldModel : IReplicatedObjectController
     {
+        public event ObjectCreatedHandler ObjectCreated;
+        public event ObjectModifiedHandler ObjectModified;
+        public event ObjectDeletedHandler ObjectDeleted;
+
         public event BeforeCreateHandler BeforeCreate;
         public event BeforeDeleteHandler BeforeDelete;
         public event BeforeModifyHandler BeforeModify;
@@ -124,34 +129,40 @@ namespace OSMP
 
         public event ClearHandler ClearEvent;
         
-        public EntityArrayList entities;
+        public List<Entity> entities = new List<Entity>();
             
-        static WorldModel instance = new WorldModel(); // This is for deserialization (eg load a world from xml).  Not for normal use.
-        public static WorldModel GetInstance()
+        //static WorldModel instance = new WorldModel(); // This is for deserialization (eg load a world from xml).  Not for normal use.
+        //public static WorldModel GetInstance()
+        //{
+          //  return instance;
+        //}
+
+        NetReplicationController netreplicationcontroller;
+
+        public WorldModel( NetReplicationController netreplicationcontroller )
         {
-            return instance;
+            this.netreplicationcontroller = netreplicationcontroller;
+            entities = new List<Entity>();
+            netreplicationcontroller.RegisterReplicatedObjectController(this, typeof(Entity));
         }
         
-        public WorldModel()
+        // incoming event from NetReplicationController:
+        void IReplicatedObjectController.ReplicatedObjectCreated(object notifier, ObjectCreatedArgs e)
         {
-            entities = new EntityArrayList();
-            //NetReplicationController.GetInstance().RegisterReplicatedObjectController( this, typeof( Entity ) );
+            Console.WriteLine("WorldModel ReplicatedObjectCreated " + e.TargetObject);
         }
         
         // incoming event from NetReplicationController:
-        //public void ReplicatedObjectCreated( object notifier, ObjectCreatedArgs e )
-        //{
-        //}
+        void IReplicatedObjectController.ReplicatedObjectModified(object notifier, ObjectModifiedArgs e)
+        {
+            Console.WriteLine("WorldModel ReplicatedObjectModified " + e.TargetObject);
+        }
         
         // incoming event from NetReplicationController:
-        //public void ReplicatedObjectModified( object notifier, ObjectModifiedArgs e )
-        //{
-        //}
-        
-        // incoming event from NetReplicationController:
-        //public void ReplicatedObjectDeleted( object notifier, ObjectDeletedArgs e )
-        //{
-        //}
+        void IReplicatedObjectController.ReplicatedObjectDeleted(object notifier, ObjectDeletedArgs e)
+        {
+            Console.WriteLine("WorldModel ReplicatedObjectDeleted " + e.TargetObject);
+        }
         
         public Entity GetEntityByReference( int iReference )
         {
@@ -199,7 +210,7 @@ namespace OSMP
         public bool AddEntity( Entity entity )
         {
             bool bAddApproved = true;
-            if( BeforeDelete != null )
+            if( BeforeCreate != null )
             {
                 foreach( BeforeCreateHandler beforecreatecallback in BeforeCreate.GetInvocationList() )
                 {
@@ -216,10 +227,16 @@ namespace OSMP
             }
             
             entities.Add( entity );
-            
-            if( AfterDelete != null )
+
+            if (ObjectCreated != null)
             {
-                AfterDelete(  this, new DeleteEntityEventArgs( entity ) );
+                Console.WriteLine(entity);
+                ObjectCreated( this, new ObjectCreatedArgs( DateTime.Now, entity ) );
+            }
+
+            if( AfterCreate != null )
+            {
+                AfterCreate(this, new CreateEntityEventArgs(entity));
             }
             
             return true;

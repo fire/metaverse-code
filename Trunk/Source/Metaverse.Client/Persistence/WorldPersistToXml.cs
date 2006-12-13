@@ -92,7 +92,7 @@ namespace OSMP
         
         public void Store( string filename )
         {
-            WorldModel worldmodel = WorldModel.GetInstance();
+            WorldModel worldmodel = MetaverseClient.GetInstance().worldstorage;
             
             ArrayList types = new ArrayList();
             foreach( Entity entity in worldmodel.entities )
@@ -111,7 +111,7 @@ namespace OSMP
         // need to add a publisher/subscriber to this ;-)
         public void Restore( string filename )
         {
-            WorldModel worldmodel = WorldModel.GetInstance();
+            WorldModel worldmodel = MetaverseClient.GetInstance().worldstorage;
             
             // note to self: should make these types a publisher/subscriber thing
             XmlSerializer serializer = new XmlSerializer( worldmodel.entities.GetType(), new Type[]{

@@ -127,6 +127,8 @@ namespace OSMP
         
         public ChatController()
         {
+            MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler(ChatController_Tick);
+
             KeyFilterComboKeys.GetInstance().RegisterCombo(new string[]{"activatechat"},null, new KeyComboHandler( EnterChat ) );
             
             IMPanel = RendererFactory.GetInstance().IMPanel;
@@ -172,6 +174,11 @@ namespace OSMP
             
             ImImplementationFactory.GetInstance().MessageReceived += new MessageReceivedHandler( MessageReceived );
         }
+
+        void ChatController_Tick()
+        {
+            ImImplementationFactory.GetInstance().CheckMessages();
+        }
         
         public void EnterChat( object source, ComboKeyEventArgs e )
         {
@@ -179,11 +186,6 @@ namespace OSMP
             {
                 chatentry.Focus();
             }
-        }
-        
-        public void CheckMessages()
-        {
-            ImImplementationFactory.GetInstance().CheckMessages();
         }
         
         void Login()

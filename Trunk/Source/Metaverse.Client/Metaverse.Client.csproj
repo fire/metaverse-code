@@ -23,7 +23,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\Outputs\Metaverse.Client\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -101,6 +101,8 @@
     <Compile Include="NetworkV3\Layer2_Connection\Test\TestLevel2.cs" />
     <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\LockRpcToClient_ClientProxy_Generated.cs" />
     <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\LockRpcToServer_ClientProxy_Generated.cs" />
+    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
+    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
     <Compile Include="NetworkV3\Layer4_Rpc\RpcController.cs">
       <SubType>Code</SubType>
     </Compile>

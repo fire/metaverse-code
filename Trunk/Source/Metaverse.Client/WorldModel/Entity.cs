@@ -26,7 +26,7 @@ namespace OSMP
     //! Base class for all prims and objects in the world.  Virtual: cant be instantiated itself
     public abstract class Entity : IHasProperties, IHasReference
     {
-        public int Reference { get { return iReference; } }
+        public int Reference { get { return iReference; } set { iReference = value; } }
 
         [Replicate]
         public int iReference;            //!< fundamental unique identifier for the object.  Created by dbinterface.  Unique.  (LIke a guiid)
@@ -45,7 +45,7 @@ namespace OSMP
         public Rot rot = new Rot();                   //!< rotation of object
 
         [Replicate]
-        public Vector3 scale;
+        public Vector3 scale = new Vector3();
             
         //public string sScriptReference; //!< md5 checksum of assigned script
            

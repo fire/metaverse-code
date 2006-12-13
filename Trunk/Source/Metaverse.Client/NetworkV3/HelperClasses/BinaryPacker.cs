@@ -75,6 +75,7 @@ namespace OSMP
 
         public void WriteValueToBuffer( byte[] buffer, ref int nextposition, object value )
         {
+            //Console.WriteLine(value + " " + value.GetType());
             if (value == null)
             {
                 throw new Exception("Attempted to pack null value.  Please make sure all values are not null and try again.");
@@ -109,6 +110,7 @@ namespace OSMP
             }
             else if( type == typeof( double ) )
             {
+               // Console.WriteLine("Pack double " + value);
                 byte[]result = BitConverter.GetBytes( (double)value );
                 Buffer.BlockCopy( result, 0, buffer, nextposition, result.Length );
                 
@@ -135,9 +137,20 @@ namespace OSMP
                 int size = valueasarray.GetLength(0);
                 // first we write the size, then the data
                 WriteValueToBuffer(buffer, ref nextposition, size);
-                foreach (object item in valueasarray)
+
+                // shortcut for byte arrays:
+                if (type.GetElementType() == typeof(byte))
                 {
-                    WriteValueToBuffer(buffer, ref nextposition, item);
+                   // Console.WriteLine("blockcopy " + size + " bytes");
+                    Buffer.BlockCopy(valueasarray, 0, buffer, nextposition, size);
+                    nextposition += size;
+                }
+                else
+                {
+                    foreach (object item in valueasarray)
+                    {
+                        WriteValueToBuffer(buffer, ref nextposition, item);
+                    }
                 }
                 //byte[] result = BitConverter.GetBytes((short)value);
                 //Buffer.BlockCopy(result, 0, buffer, nextposition, result.Length);
@@ -146,13 +159,13 @@ namespace OSMP
             }
             else if (type.IsClass) // pack public fields from class
             {
-                //Console.WriteLine("Pack class " + type.Name);
+               // Console.WriteLine("Pack class " + type.Name);
                 foreach (FieldInfo fieldinfo in type.GetFields())
                 {
-                  //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
                     if (allowedattributes == null || HasAllowedAttribute(fieldinfo))
                     {
                         object fieldvalue = fieldinfo.GetValue(value);
+                       // Console.WriteLine("packing " + fieldinfo.Name + " " + fieldvalue + " ...");
                         WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
                     }
                 }
@@ -160,8 +173,8 @@ namespace OSMP
                 {
                     if (allowedattributes == null || HasAllowedAttribute(propertyinfo))
                     {
-                        //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
                         object fieldvalue = propertyinfo.GetValue(value, null);
+                        //Console.WriteLine("packing " + propertyinfo.Name + " " + fieldvalue + " ...");
                         WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
                     }
                 }
@@ -225,10 +238,20 @@ namespace OSMP
                 // first we read the size, then the data
                 int size = (int)ReadValueFromBuffer(buffer, ref nextposition, typeof(int));
                 Type elementtype = type.GetElementType();
+               // Console.WriteLine("Array " + elementtype.ToString() + "[" + size + "]");
                 Array valueasarray = Array.CreateInstance(elementtype, size);
-                for( int i = 0; i < size; i++ )
+                // shortcut for byte arrays:
+                if (type.GetElementType() == typeof(byte))
                 {
-                    valueasarray.SetValue( ReadValueFromBuffer(buffer, ref nextposition, elementtype ), i );
+                    Buffer.BlockCopy(buffer, nextposition, valueasarray, 0, size);
+                    nextposition += size;
+                }
+                else
+                {
+                    for (int i = 0; i < size; i++)
+                    {
+                        valueasarray.SetValue(ReadValueFromBuffer(buffer, ref nextposition, elementtype), i);
+                    }
                 }
                 return valueasarray;
             }
@@ -240,8 +263,8 @@ namespace OSMP
                 {
                     if (allowedattributes == null || HasAllowedAttribute(fieldinfo))
                     {
-                        //  Console.WriteLine("unpacking " + fieldinfo.Name + " ...");
                         object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, fieldinfo.FieldType);
+                       // Console.WriteLine("unpacking " + fieldinfo.Name + " value " + fieldvalue + " ...");
                         fieldinfo.SetValue(newobject, fieldvalue);
                     }
                 }
@@ -249,8 +272,8 @@ namespace OSMP
                 {
                     if (allowedattributes == null || HasAllowedAttribute(propertyinfo))
                     {
-                        //  Console.WriteLine("packing " + fieldinfo.Name + " ...");
                         object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, propertyinfo.PropertyType);
+                       // Console.WriteLine("unpacking " + propertyinfo.Name + "  value " + fieldvalue + " ...");
                         propertyinfo.SetValue(newobject, fieldvalue, null);
                     }
                 }

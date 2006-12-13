@@ -186,7 +186,7 @@ namespace OSMP
         }
         public void RegisterCombo( string[] Combo, string[] AllowedModifiers, KeyComboHandler keycombohandler )
         {
-            Test.WriteOut( "RegisterCombo: " + Combo[0] );
+          //  Test.WriteOut( "RegisterCombo: " + Combo[0] );
             combos.Add( new ComboInfo( new StringArrayList( Combo ), new StringArrayList( AllowedModifiers ), keycombohandler ) );
         }
     }

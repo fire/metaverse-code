@@ -1,4 +1,4 @@
-// Copyright Hugh Perkins 2006
+﻿// Copyright Hugh Perkins 2006
 // hughperkins@gmail.com http://manageddreams.com
 //
 // This program is free software; you can redistribute it and/or modify it
@@ -19,12 +19,18 @@
 //
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace OSMP
+namespace NetworkInterfaces
 {
-    public class ImImplementationFactory
+    public interface IObjectReferenceRpc
     {
-        static IImImplementation instance = new IrcController();
-        public static IImImplementation GetInstance() { throw new Exception(); return instance; }
+        // client to server
+        void RequestNewReferenceRpc(object connection, Type targettype, RefToLocalObject requester);
+
+        // This returns a new reference; it is the client's responsibility to ensure this is only applied to a brand-new object        
+        // server to client
+        void ReferenceResponse(object connection, int reference, Type targettype, RefToLocalObject requesterref);
     }
 }

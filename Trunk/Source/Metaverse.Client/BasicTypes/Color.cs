@@ -29,9 +29,13 @@ namespace OSMP
     //! Color contains a color, in r,g,b format; plus helper functions
     public class Color
     {
+        [Replicate]
         public double r = 0;  //!< red value
+        [Replicate]
         public double g = 0;  //!< green value
+        [Replicate]
         public double b = 0;  //!< blue value
+        [Replicate]
         public double a = 1; // alpha value
         
         public Color()

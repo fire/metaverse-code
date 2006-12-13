@@ -40,8 +40,8 @@ namespace OSMP
             
             FractalSplineCylinder newentity = new FractalSplineCylinder();
             buildproperties.WriteToEntity( newentity, "Cylinder" );
-            
-            WorldModel.GetInstance().AddEntity( newentity );
+
+            MetaverseClient.GetInstance().worldstorage.AddEntity(newentity);
         }
         
         public FractalSplineCylinder()
