@@ -40,8 +40,8 @@ namespace OSMP
             
             FractalSplineTube newentity = new FractalSplineTube();
             buildproperties.WriteToEntity( newentity, "Tube" );
-            
-            WorldModel.GetInstance().AddEntity( newentity );
+
+            MetaverseClient.GetInstance().worldstorage.AddEntity(newentity);
         }
         
         public FractalSplineTube()

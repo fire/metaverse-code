@@ -24,7 +24,7 @@ using System.Text;
 
 namespace OSMP
 {
-    public class TestNetModel
+    public class TestLevel2
     {
         public class Server
         {

@@ -23,6 +23,8 @@ using System.Collections;
 
 namespace OSMP
 {
+    // this generates 
+
     // note to self: might want to add Tick to remove dead objects (ie weakreference.Target is null)
     public class RefToLocalObject
     {

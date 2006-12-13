@@ -24,8 +24,11 @@ using System.Xml;
 namespace OSMP
 {
     public class Vector3{
+        [Replicate]
         public double x;
+        [Replicate]
         public double y;
+        [Replicate]
         public double z;
             
         public Vector3()

@@ -22,7 +22,9 @@ using System;
 namespace OSMP
 {
     public class Vector2{
+        [Replicate]
         public double x;
+        [Replicate]
         public double y;
             
         public Vector2()

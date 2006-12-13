@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
@@ -30,8 +31,6 @@ namespace OSMP
     public class RpcController
     {
         const char RpcType = 'Y';
-        // this is for security, so the client cant ask for Assembly or Activator etc
-        string[] allowedtypes = new string[] { "OSMP.Testing.ITestInterface" };
 
         NetworkLevel2Controller network;
 
@@ -48,6 +47,19 @@ namespace OSMP
             isserver = network.IsServer;
         }
 
+        bool TypeIsAllowed(string typename)
+        {
+            List<Type> allowedtypes = OSMP.NetworkInterfaces.AuthorizedTypes.GetInstance().AuthorizedTypeList;
+            foreach (Type type in allowedtypes)
+            {
+                if (typename == type.ToString())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         void network_ReceivedPacket( NetworkLevel2Connection connection, byte[] data, int offset, int length )
         {
             Console.WriteLine("rpc received packet " + Encoding.UTF8.GetString(data, offset, length));
@@ -62,7 +74,8 @@ namespace OSMP
                         string typename = (string)binarypacker.ReadValueFromBuffer(data, ref position, typeof(string));
                         string methodname = (string)binarypacker.ReadValueFromBuffer(data, ref position, typeof(string));
                         Console.WriteLine("Got rpc [" + typename + "] [" + methodname + "]");
-                        if (ArrayHelper.IsInArray(allowedtypes, typename)) // security check to prevent arbitrary activation
+                        if( TypeIsAllowed( typename ) ) // security check to prevent arbitrary activation
+                        //if (ArrayHelper.IsInArray(allowedtypes, typename))
                         {
                             int dotpos = typename.LastIndexOf(".");
                             string namespacename = "";
@@ -78,11 +91,11 @@ namespace OSMP
                             }
                             Console.WriteLine("[" + namespacename + "][" + interfacename + "]");
 
-                            string serverwrapperclassname = interfacename.Substring(1) + "";
-                            if (namespacename != "")
-                            {
-                                serverwrapperclassname = namespacename + "." + serverwrapperclassname;
-                            }
+                            string serverwrapperclassname = "OSMP." + interfacename.Substring(1) + "";
+                            //if (namespacename != "")
+                            //{
+                              //  serverwrapperclassname = namespacename + "." + serverwrapperclassname;
+                            //}
                             Console.WriteLine("[" + serverwrapperclassname + "]");
 
                             Type interfacetype = Type.GetType(typename);

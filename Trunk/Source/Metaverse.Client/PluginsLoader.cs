@@ -28,33 +28,48 @@ namespace OSMP
         {
             return instance;
         }
-        public void LoadPlugins()
+
+        public void LoadClientPlugins()
         {
+            LoadGlobalPlugins();
+
             KeyHandlerQuit.GetInstance();
-            
             EntityPropertiesDialog.GetInstance();
             Editing3d.GetInstance();
             SelectionController.GetInstance();
             AssignTextureHandler.GetInstance();
             AssignColorHandler.GetInstance();
             WorldPersistToXml.GetInstance();
-            
+
             ImportExportPrimBlender.GetInstance();
-            
-            ChatController.GetInstance();
-            
+
+            //ChatController.GetInstance();
+
             HelpAbout.GetInstance();
-            
+
             //SimpleCube.Register();  // SimpleCube and SimpleCone are for testing primarily
             //SimpleCone.Register();
-            
+
             FractalSplineBox.Register();
             FractalSplinePrism.Register();
             FractalSplineCylinder.Register();
             FractalSplineTube.Register();
             FractalSplineRing.Register();
             FractalSplineTorus.Register();
-             
         }
+
+        public void LoadServerPlugins()
+        {
+            LoadGlobalPlugins();
+        }
+
+        void LoadGlobalPlugins()
+        {
+        }
+
+        //public void LoadPlugins()
+        //{   
+             
+        //}
     }
 }

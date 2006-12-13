@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace OSMP
 {
@@ -31,12 +32,34 @@ namespace OSMP
             {
                 //new TestBinaryPacker().Go();
                 //TestNetworkUdp.Go(args);
-                //TestNetModel.Go(args);
+                //TestLevel2.Go(args);
                 //TestNetRpc.Go(args);
-                //return 0;
-                MetaverseServer.GetInstance().Init( args );
-                MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler(EntryPoint_Tick);
-                MetaverseClient.GetInstance().Go( args );
+                //new TestReplicationAttributes().Go();
+                //return;
+
+                Arguments arguments = new Arguments(args);
+
+                if( arguments.Unnamed.Contains("clientonly") )
+                {
+                    Console.WriteLine("User requested client only");
+                    MetaverseClient.GetInstance().Go(args);
+                }
+                else if (arguments.Unnamed.Contains("serveronly"))
+                {
+                    Console.WriteLine("User requested server only");
+                    MetaverseServer.GetInstance().Init(args);
+                    while (true)
+                    {
+                        MetaverseServer.GetInstance().Tick();
+                        Thread.Sleep(50);
+                    }
+                }
+                else
+                {
+                    MetaverseServer.GetInstance().Init(args);
+                    MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler(EntryPoint_Tick);
+                    MetaverseClient.GetInstance().Go(args);
+                }
             }
             catch (Exception e)
             {

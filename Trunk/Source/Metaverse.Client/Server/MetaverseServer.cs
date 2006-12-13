@@ -102,34 +102,9 @@ namespace OSMP
         {
         }
 
-        //public void CheckForNewClientConnections()
-        //{
-        //  if( clientlistener.Pending() )
-        //{
-        //  TcpClient newclient = clientlistener.AcceptTcpClient();
-        //ClientConnections.Add( newclient );
-        //Test.Debug( "Got new connection: " + newclient.Client.RemoteEndPoint.ToString() );
-        //}
-        //}
-
-        //public void CheckForClientMessages()
-        //{
-        //  for( int i = 0; i < ClientConnections.Count; i++ )
-        //{
-        //  TcpClient thisclient = (TcpClient)ClientConnections[i];
-        //NetworkStream networkstream = thisclient.GetStream();
-        //if( networkstream.DataAvailable )
-        //{
-
-        //}
-        //}
-        //}
-
         public void Tick()
         {
             network.Tick();
-            //CheckForNewClientConnections();
-            //CheckForClientMessages();
             //ManageDirtyCache();    // objects that have moved and not been written to db        
         }
 
@@ -137,12 +112,6 @@ namespace OSMP
         public void Init( string[] args )
         {
             Arguments arguments = new Arguments(args);
-
-            if (arguments.Unnamed.Contains("noserver"))
-            {
-                Console.WriteLine("User requested no server.");
-                return;
-            }
 
             config = Config.GetInstance();
 
@@ -157,6 +126,9 @@ namespace OSMP
 
             rpc = new RpcController(network);
             netreplicationcontroller = new NetReplicationController( rpc );
+            World = new WorldModel(netreplicationcontroller);
+
+            PluginsLoader.GetInstance().LoadServerPlugins();
 
             Test.Info("*** Server initialization complete ***");
         }

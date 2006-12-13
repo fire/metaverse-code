@@ -15,9 +15,9 @@ public class ObjectReplicationClientToServer_ClientProxy : OSMP.NetworkInterface
       this.rpc = rpc;
       this.connection = connection;
    }
-   public void ObjectCreated( System.Int32 remoteclientreference, System.String entitytypename, System.Object entity )
+   public void ObjectCreated( System.Int32 remoteclientreference, System.String entitytypename, System.Int32 attributebitmap, System.Byte[] entitydata )
    {
-      rpc.SendRpc( connection, "OSMP.NetworkInterfaces.IObjectReplicationClientToServer", "ObjectCreated",  new object[]{ remoteclientreference, entitytypename, entity } );
+      rpc.SendRpc( connection, "OSMP.NetworkInterfaces.IObjectReplicationClientToServer", "ObjectCreated",  new object[]{ remoteclientreference, entitytypename, attributebitmap, entitydata } );
    }
    public void ObjectModified( System.Int32 reference, System.String entitytypename, System.Object entity )
    {

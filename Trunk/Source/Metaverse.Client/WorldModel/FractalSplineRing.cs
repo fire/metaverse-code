@@ -41,7 +41,7 @@ namespace OSMP
             FractalSplineRing newentity = new FractalSplineRing();
             buildproperties.WriteToEntity( newentity, "Ring" );
             
-            WorldModel.GetInstance().AddEntity( newentity );
+            MetaverseClient.GetInstance().worldstorage.AddEntity( newentity );
         }
         
         public FractalSplineRing()

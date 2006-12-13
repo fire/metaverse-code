@@ -43,8 +43,8 @@ namespace OSMP
             prim.rot = buildproperties.rot;
             prim.scale = new Vector3( 0.2, 0.2, 0.2 );
             prim.name = "new cube";
-            
-            WorldModel.GetInstance().AddEntity( prim );
+
+            MetaverseClient.GetInstance().worldstorage.AddEntity(prim);
         }
         
         public SimpleCone()

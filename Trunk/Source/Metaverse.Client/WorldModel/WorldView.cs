@@ -48,7 +48,7 @@ namespace OSMP
                 
         public WorldView()
         {
-            worldmodel = WorldModel.GetInstance();
+            worldmodel = MetaverseClient.GetInstance().worldstorage;
             graphics = GraphicsHelperFactory.GetInstance();
         }
 

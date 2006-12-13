@@ -40,8 +40,8 @@ namespace OSMP
             
             FractalSplineBox newentity = new FractalSplineBox();
             buildproperties.WriteToEntity( newentity, "Box" );
-            
-            WorldModel.GetInstance().AddEntity( newentity );
+
+            MetaverseClient.GetInstance().worldstorage.AddEntity(newentity);
         }
         
         public FractalSplineBox()

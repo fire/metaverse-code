@@ -25,7 +25,9 @@ namespace OSMP
 {
     public class Axis
     {
+        [Replicate]
         bool bPositiveAxis = true;
+        [Replicate]
         int axisindex = 0;
         
         static string[] axisnames = new string[]{"x","y","z"};
