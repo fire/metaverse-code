@@ -41,7 +41,7 @@ namespace OSMP
         public PlayerMovement playermovement;
         public WorldModel worldstorage; // client's copy of worldmodel
 
-        public INetworkImplementation network;
+        public NetworkLevel2Controller network;
         public RpcController rpc;
         public NetReplicationController netreplicationcontroller;
         
@@ -69,6 +69,7 @@ namespace OSMP
         //! Main loop, called by SDL once a frame
         void MainLoop()
         {
+            //Console.WriteLine("Tick");
             ProcessWorld();
             ChatController.GetInstance().CheckMessages();
             if (Tick != null)
@@ -101,13 +102,8 @@ namespace OSMP
                 serverip = arguments.Named[ "serverip" ];
             }
             
-            PluginsLoader.GetInstance().LoadPlugins();
-            
-            myavatar = new Avatar();
-            worldstorage.AddEntity( myavatar );
-
-            network = NetworkImplementationFactory.CreateNewInstance();
-
+            network = new NetworkLevel2Controller();
+            network.NewConnection += new Level2NewConnectionHandler(network_NewConnection);
             if (serverip == "")
             {
                 network.ConnectAsClient(config.ServerIPAddress, config.ServerPort);
@@ -116,14 +112,24 @@ namespace OSMP
             {
                 network.ConnectAsClient(serverip, config.ServerPort);
             }
-            rpc = new RpcController(network);
-            netreplicationcontroller = new NetReplicationController(rpc);
-            
+
+            PluginsLoader.GetInstance().LoadPlugins();
+
+            myavatar = new Avatar();
+            worldstorage.AddEntity(myavatar);
+
             renderer = RendererFactory.GetInstance();
             renderer.RegisterMainLoopCallback( new MainLoopDelegate( this.MainLoop ) );
             renderer.StartMainLoop();
             
             return 0;
+        }
+
+        void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
+        {
+            Console.WriteLine("client connected to server");
+            rpc = new RpcController(network);
+            netreplicationcontroller = new NetReplicationController(rpc);
         }
     }
 }

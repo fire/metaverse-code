@@ -30,8 +30,8 @@ namespace OSMP
             try
             {
                 //new TestBinaryPacker().Go();
-                //TestNetModel.Go(args);
                 //TestNetworkUdp.Go(args);
+                //TestNetModel.Go(args);
                 //TestNetRpc.Go(args);
                 //return 0;
                 MetaverseServer.GetInstance().Init( args );

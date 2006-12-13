@@ -21,17 +21,6 @@
 //! \file
 //! \brief This module is the metaverseserver module which is responsible for managing the server-side parts of OSMP.
 //!
-//! This module is the metaverseserver module which is responsible for managing the server-side parts of OSMP.
-//! It connects to DBInterface in order to read and write to a database
-//! ScriptingEngines can connect to it in order to read and write to the world
-//! A server console/gui can also connect to this to obtain informatoin on current connections and so on
-//!
-//! The server has a copy of the world
-//! It interfaces with a collision and physics dll
-//! Scripting engines link with the metaverseserver via XML sockets IPC.
-//! The server handles communicatiosn with the clients, and with the database.
-//! we might possibly put a WAn compression module in between the server and the Internet/WAN connection
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,7 +37,7 @@ namespace OSMP
         {
         }
 
-        public INetworkImplementation network;
+        public NetworkLevel2Controller network;
         public RpcController rpc;
         public NetReplicationController netreplicationcontroller;
 
@@ -158,12 +147,12 @@ namespace OSMP
 
             Test.Info("*** Server starting ***");
 
-            network = NetworkImplementationFactory.CreateNewInstance();
+            network = new NetworkLevel2Controller();
             Test.Debug("Creating Metaverse Client listener on port " + config.ServerPort);
             network.ListenAsServer(config.ServerPort);
 
-            network.NewConnection += new NewConnectionHandler(network_NewConnection);
-            network.Disconnection += new DisconnectionHandler(network_Disconnection);
+            network.NewConnection += new Level2NewConnectionHandler(network_NewConnection);
+            network.Disconnection += new Level2DisconnectionHandler(network_Disconnection);
 
             rpc = new RpcController(network);
             netreplicationcontroller = new NetReplicationController( rpc );
@@ -171,14 +160,14 @@ namespace OSMP
             Test.Info("*** Server initialization complete ***");
         }
 
-        void network_Disconnection(object source, DisconnectionArgs e)
+        void network_Disconnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
-            Console.WriteLine("Server: clientdisconnected");
+            Console.WriteLine("Server: client connected: " + net2con.connectioninfo);
         }
 
-        void network_NewConnection(object source, NewConnectionArgs e)
+        void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
-            Console.WriteLine("Server: new client connection" );
+            Console.WriteLine("Server: client disconnected: " + net2con.connectioninfo);
         }
     }
 }

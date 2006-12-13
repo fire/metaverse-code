@@ -64,7 +64,7 @@ namespace OSMP
         string WindowName = "The OpenSource Metaverse Project";
 
         Container components = new Container();
-        SimpleOpenGlControl glControl = new SimpleOpenGlControl();
+        SimpleOpenGlControl glControl = null;
         Panel impanel;
         
         int iWindowWidth;
@@ -120,7 +120,8 @@ namespace OSMP
 
             //glControl.Location = new Point( 20, 20 );
             //glControl.Dock = DockStyle.Fill;
-            
+
+            glControl = new SimpleOpenGlControl();   
             glControl.Visible = true;
             
             glControl.MouseMove +=  new MouseEventHandler( this._MouseMove );

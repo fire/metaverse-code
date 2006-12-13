@@ -88,21 +88,25 @@
     <Compile Include="MovementAndEditing\SelectionView.cs" />
     <Compile Include="NetworkV3\HelperClasses\BinaryPacker.cs" />
     <Compile Include="NetworkV3\HelperClasses\TestBinaryPacker.cs" />
-    <Compile Include="NetworkV3\Layer1_Packets_and_Connections\INetworkImplementation.cs" />
-    <Compile Include="NetworkV3\Layer1_Packets_and_Connections\NetPacketReferenceController.cs" />
-    <Compile Include="NetworkV3\Layer1_Packets_and_Connections\NetSharedSecretExchange.cs" />
-    <Compile Include="NetworkV3\Layer1_Packets_and_Connections\NetworkImplementationFactory.cs" />
-    <Compile Include="NetworkV3\Layer1_Packets_and_Connections\NetworkModel.cs" />
-    <Compile Include="NetworkV3\Layer1_Packets_and_Connections\NetworkModelConnection.cs">
+    <Compile Include="NetworkV3\Layer1_Implementation\INetworkImplementation.cs" />
+    <Compile Include="NetworkV3\Layer1_Implementation\Test\TestNetworkUdp.cs" />
+    <Compile Include="NetworkV3\Layer1_Implementation\UDP\NetworkImplementationUdp.cs" />
+    <Compile Include="NetworkV3\Layer2_Connection\NetPacketReferenceController.cs" />
+    <Compile Include="NetworkV3\Layer2_Connection\NetSharedSecretExchange.cs" />
+    <Compile Include="NetworkV3\Layer1_Implementation\NetworkImplementationFactory.cs" />
+    <Compile Include="NetworkV3\Layer2_Connection\NetworkLevel2Controller.cs" />
+    <Compile Include="NetworkV3\Layer2_Connection\NetworkLevel2Connection.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NetworkV3\Layer1_Packets_and_Connections\Test\TestNetModel.cs" />
-    <Compile Include="NetworkV3\Layer1_Packets_and_Connections\Test\TestNetworkUdp.cs" />
-    <Compile Include="NetworkV3\Layer1_Packets_and_Connections\UDP\NetworkImplementationUdp.cs" />
-    <Compile Include="NetworkV3\Layer2_Rpc\RpcController.cs" />
-    <Compile Include="NetworkV3\Layer2_Rpc\Test\TestInterface.cs" />
-    <Compile Include="NetworkV3\Layer2_Rpc\Test\TestInterface_ClientProxy_Generated.cs" />
-    <Compile Include="NetworkV3\Layer2_Rpc\Test\TestNetRpc.cs" />
+    <Compile Include="NetworkV3\Layer2_Connection\Test\TestLevel2.cs" />
+    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\LockRpcToClient_ClientProxy_Generated.cs" />
+    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\LockRpcToServer_ClientProxy_Generated.cs" />
+    <Compile Include="NetworkV3\Layer4_Rpc\RpcController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NetworkV3\Layer4_Rpc\Test\TestInterface.cs" />
+    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\TestInterface_ClientProxy_Generated.cs" />
+    <Compile Include="NetworkV3\Layer4_Rpc\Test\TestNetRpc.cs" />
     <Compile Include="NetworkV3\ObjectReplication\NetObjectReferenceController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -211,8 +215,9 @@
     </Reference>
   </ItemGroup>
   <PropertyGroup>
-    <PreBuildEvent>rpcproxygenerator networkinterfaces.dll OSMP.Testing ITestInterface &gt;generate.log
-copy /y Test*_Generated.cs $(ProjectDir)NetworkV3\Layer2_Rpc\Test
+    <PreBuildEvent>rpcproxygenerator &gt;generate.log
+
+copy /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies
 </PreBuildEvent>
   </PropertyGroup>
   <ItemGroup>
@@ -223,5 +228,6 @@ copy /y Test*_Generated.cs $(ProjectDir)NetworkV3\Layer2_Rpc\Test
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.xml" />
+    <Content Include="NetworkV3\Layer3_PacketAssembly\readme.txt" />
   </ItemGroup>
 </Project>

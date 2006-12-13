@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="EntryPoint.cs" />
     <Compile Include="NetworkProxyBuilder.cs" />
+    <Compile Include="RunGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
