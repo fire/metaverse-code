@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NetworkInterfaces
+namespace OSMP.NetworkInterfaces
 {
     // replicated objects can derive from this
     // just makes typing a little stronger sometimes (eg in LockController class)

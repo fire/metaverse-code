@@ -3,11 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C# Express 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Client", "Metaverse.Client.csproj", "{B43DFCEC-2F68-4108-A83C-A02A773FD8CB}"
 	ProjectSection(ProjectDependencies) = postProject
-		{44F0885A-0270-4ACA-8A18-68A786B1E89D} = {44F0885A-0270-4ACA-8A18-68A786B1E89D}
 		{07E3E9BF-C938-4534-9FDD-EC4A54365BA7} = {07E3E9BF-C938-4534-9FDD-EC4A54365BA7}
+		{44F0885A-0270-4ACA-8A18-68A786B1E89D} = {44F0885A-0270-4ACA-8A18-68A786B1E89D}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkProxyGenerator", "..\RpcProxyGenerator\NetworkProxyGenerator.csproj", "{07E3E9BF-C938-4534-9FDD-EC4A54365BA7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44F0885A-0270-4ACA-8A18-68A786B1E89D} = {44F0885A-0270-4ACA-8A18-68A786B1E89D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkInterfaces", "..\NetworkInterfaces\NetworkInterfaces.csproj", "{44F0885A-0270-4ACA-8A18-68A786B1E89D}"
 EndProject

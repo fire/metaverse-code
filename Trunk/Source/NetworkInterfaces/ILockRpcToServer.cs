@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NetworkInterfaces
+namespace OSMP.NetworkInterfaces
 {
     public interface ILockRpcToServer
     {
