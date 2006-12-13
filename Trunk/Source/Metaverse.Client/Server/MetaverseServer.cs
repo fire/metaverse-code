@@ -127,6 +127,7 @@ namespace OSMP
 
         public void Tick()
         {
+            network.Tick();
             //CheckForNewClientConnections();
             //CheckForClientMessages();
             //ManageDirtyCache();    // objects that have moved and not been written to db        
