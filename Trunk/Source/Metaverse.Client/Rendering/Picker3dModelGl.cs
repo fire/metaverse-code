@@ -53,6 +53,7 @@ namespace OSMP
         {
             selectbuffer = new int[selectbuffersize];
             selectbufferhandle = GCHandle.Alloc(selectbuffer, GCHandleType.Pinned);
+            Gl.glSelectBuffer(selectbuffersize, selectbuffer);
         }
 
         void FreeSelectBuffer()
@@ -86,7 +87,7 @@ namespace OSMP
         {
             if( bAddingNames )
             {
-                //Test.Debug("adding name " + hittarget.ToString() );
+                Test.Debug("adding name " + hittarget.ToString() );
                 hittargets.Add( hittarget );
                 Gl.glLoadName( hittargets.Count );  // note: this isnt quite the index; it is index + 1
             }
@@ -144,17 +145,20 @@ namespace OSMP
             
             if( iNumHits == 0 )
             {
+                Console.WriteLine("no hits");
                 return null;
             }
             int hitname = GetNearestBufferName( iNumHits );
             Console.WriteLine( "hitname: " + hitname.ToString() );
             if( hitname == -1 )
             {
+                Console.WriteLine("not in buffer");
                 return null;
             }
 
             FreeSelectBuffer();
-            
+
+            Console.WriteLine(hittargets[hitname - 1]);
             return (HitTarget)hittargets[ hitname - 1 ];
         }        
     }
