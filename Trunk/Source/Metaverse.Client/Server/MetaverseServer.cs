@@ -105,6 +105,7 @@ namespace OSMP
         public void Tick()
         {
             network.Tick();
+            netreplicationcontroller.Tick();
             //ManageDirtyCache();    // objects that have moved and not been written to db        
         }
 

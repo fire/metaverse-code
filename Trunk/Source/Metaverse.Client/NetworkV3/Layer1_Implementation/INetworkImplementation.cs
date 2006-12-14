@@ -25,11 +25,11 @@ namespace OSMP
 {
     public class ConnectionInfo
     {
-        public object Connection; // used by underlying implementation
+        public IPEndPoint Connection; // used by underlying implementation
         public IPAddress IPAddress;
         public int Port;
         public ConnectionInfo() { }
-        public ConnectionInfo(object Connection, IPAddress IPAddress, int Port)
+        public ConnectionInfo(IPEndPoint Connection, IPAddress IPAddress, int Port)
         {
             this.Connection = Connection;
             this.IPAddress = IPAddress;
@@ -56,8 +56,8 @@ namespace OSMP
         event Level1DisconnectionHandler Disconnection;
         event Level1ReceivedPacketHandler ReceivedPacket;
 
-        IPAddress GetIPAddressForConnection(object connection);
-        int GetPortForConnection(object connection);
+        IPAddress GetIPAddressForConnection(IPEndPoint connection);
+        int GetPortForConnection(IPEndPoint connection);
 
         bool IsServer{get;}
         int ServerPort{get;}
@@ -81,7 +81,7 @@ namespace OSMP
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="data"></param>
-        void Send( object connection, byte[] data );
-        void Send(object connection, byte[] data, int length);
+        void Send(IPEndPoint connection, byte[] data);
+        void Send(IPEndPoint connection, byte[] data, int length);
     }
 }

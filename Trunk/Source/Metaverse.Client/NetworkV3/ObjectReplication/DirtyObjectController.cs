@@ -21,46 +21,53 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 
 namespace OSMP
 {
     // runs on server
     public class DirtyObjectController
     {
-        Dictionary<object,DirtyObjectQueueSingleClient> remoteclientdirtyqueues = new Dictionary<object,DirtyObjectQueueSingleClient>(); // queue by connection
+        public Dictionary<IPEndPoint, DirtyObjectQueueSingleClient> remoteclientdirtyqueues = new Dictionary<IPEndPoint, DirtyObjectQueueSingleClient>(); // queue by connection
         
         //static RemoteClientController instance = new RemoteClientController();
         //public static RemoteClientController GetInstance(){ return instance; }
 
-        INetworkImplementation network;
-        RpcController rpc;
+        public NetReplicationController netreplicationcontroller;
+        public NetworkLevel2Controller network;
+        public RpcController rpc;
 
-        public DirtyObjectController( INetworkImplementation network, RpcController rpc )
+        public DirtyObjectController( NetReplicationController netreplicationcontroller, NetworkLevel2Controller network, RpcController rpc )
         {
+            this.netreplicationcontroller = netreplicationcontroller;
             this.rpc = rpc;
             this.network = network;
             //network = NetworkControllerFactory.GetInstance();
-            network.NewConnection += new NewConnectionHandler(NewConnection);
-            network.Disconnection += new DisconnectionHandler( Disconnection );
+            network.NewConnection += new Level2NewConnectionHandler(network_NewConnection);
+            network.Disconnection += new Level2DisconnectionHandler(network_Disconnection);
         }
-        public void MarkDirty( Entity targetobject )
+
+        void network_Disconnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
+        {
+            remoteclientdirtyqueues.Remove(net2con.connectioninfo.Connection);
+        }
+
+        void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
+        {
+            remoteclientdirtyqueues.Add(net2con.connectioninfo.Connection, new DirtyObjectQueueSingleClient(this, net2con.connectioninfo.Connection));
+        }
+        public void MarkDirty(IHasReference targetobject, Type[] dirtytypes)
         {
             foreach (DirtyObjectQueueSingleClient remoteclientdirtyqueue in remoteclientdirtyqueues.Values)
             {
                 //RemoteClient remoteclient = (RemoteClient)remoteclientobject;
-                remoteclientdirtyqueue.MarkDirty(targetobject);
+                remoteclientdirtyqueue.MarkDirty(targetobject, dirtytypes);
             }
         }
-        public void NewConnection( object connection, NewConnectionArgs e )
-        {
-            remoteclientdirtyqueues.Add(connection, new DirtyObjectQueueSingleClient(connection));
-        }
-        public void Disconnection( object connection, DisconnectionArgs e )
-        {
-            remoteclientdirtyqueues.Remove(connection);
-        }
+
         public void Tick()
         {
+            //Console.WriteLine("dirtyobjectcontroller.tick");
             foreach (DirtyObjectQueueSingleClient remoteclient in remoteclientdirtyqueues.Values)
             {
                 //RemoteClient remoteclient = (RemoteClient)remoteclientobject;

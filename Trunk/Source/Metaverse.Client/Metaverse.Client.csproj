@@ -109,6 +109,8 @@
     <Compile Include="NetworkV3\Layer4_Rpc\Test\TestInterface.cs" />
     <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\TestInterface_ClientProxy_Generated.cs" />
     <Compile Include="NetworkV3\Layer4_Rpc\Test\TestNetRpc.cs" />
+    <Compile Include="NetworkV3\ObjectReplication\DirtyObjectController.cs" />
+    <Compile Include="NetworkV3\ObjectReplication\DirtyObjectQueueSingleClient.cs" />
     <Compile Include="NetworkV3\ObjectReplication\NetObjectReferenceController.cs">
       <SubType>Code</SubType>
     </Compile>

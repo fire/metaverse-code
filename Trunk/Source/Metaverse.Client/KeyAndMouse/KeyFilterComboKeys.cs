@@ -120,12 +120,12 @@ namespace OSMP
             for( int i = 0; i < CombosUnset.Count; i++ )
             {
                 ( (ComboInfo)CombosUnset[i] ).handler( this, new ComboKeyEventArgs( false ) );
-                Test.WriteOut( "released combo: " + ((ComboInfo)CombosUnset[i]).Combo.ToString() );
+                //Test.WriteOut( "released combo: " + ((ComboInfo)CombosUnset[i]).Combo.ToString() );
             }
             for( int i = 0; i < CombosSet.Count; i++ )
             {
                 ( (ComboInfo)CombosSet[i] ).handler( this, new ComboKeyEventArgs( true ) );
-                Test.WriteOut( "new combo: " + ((ComboInfo)CombosSet[i]).Combo.ToString() );
+                //Test.WriteOut( "new combo: " + ((ComboInfo)CombosSet[i]).Combo.ToString() );
             }
         }
         public bool IsComboDown( StringArrayList Combo, StringArrayList AllowedModifiers )

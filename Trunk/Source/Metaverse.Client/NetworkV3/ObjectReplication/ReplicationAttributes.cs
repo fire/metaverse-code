@@ -5,16 +5,21 @@ using System.Text;
 namespace OSMP
 {
     // attributes that affect which fields/properties are replicated
-    
-    public class Replicate : Attribute
+
+    public interface IReplicationAttribute
     {
     }
 
-    public class Movement : Attribute
+    public class Replicate : Attribute, IReplicationAttribute
+    {
+    }
+
+    public class Movement : Attribute, IReplicationAttribute
     {
     }
     // Add more attributes here...
-    
+
+
     public class ReplicateAttributeHelper
     {
         public ReplicateAttributeHelper()
@@ -28,19 +33,19 @@ namespace OSMP
             Add( typeof( Replicate ) );
             Add( typeof( Movement ) );
         }
-        
-        Dictionary<Type,int> BitnumByTypeAttribute = new Dictionary<Type,int>();
-        Dictionary<int,Type> TypeAttributeByBitnum = new Dictionary<int,Type>();
+
+        Dictionary<Type, int> BitnumByTypeAttribute = new Dictionary<Type, int>();
+        Dictionary<int, Type> TypeAttributeByBitnum = new Dictionary<int, Type>();
         
         int nextbitnum = 0;
-        void Add( Type AttributeType )
+        void Add(Type AttributeType)
         {
             BitnumByTypeAttribute.Add( AttributeType, nextbitnum );
             TypeAttributeByBitnum.Add( nextbitnum,AttributeType );
             nextbitnum++;
         }
-        
-        public List<Type> BitmapToAttributeTypeArray( int bitmap )
+
+        public List<Type> BitmapToAttributeTypeArray(int bitmap)
         {
             List<Type> typeattributes = new List<Type>();
             foreach( int bitnumber in TypeAttributeByBitnum.Keys )
@@ -56,7 +61,7 @@ namespace OSMP
         public int TypeArrayToBitmap(Type[] typearray)
         {
             int bitmap = 0;
-            foreach( Type attributetype in typearray )
+            foreach (Type attributetype in typearray)
             {
                 bitmap |= ( 1 << BitnumByTypeAttribute[ attributetype ] );
             }
@@ -68,22 +73,22 @@ namespace OSMP
     {
         public void Go()
         {
-            int bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap( new Type[]{ typeof( Replicate ) } );
-            foreach( Type attributetype in new ReplicateAttributeHelper().BitmapToAttributeTypeArray( bitmap ) )
+            int bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap(new Type[] { typeof(Replicate) });
+            foreach (Type attributetype in new ReplicateAttributeHelper().BitmapToAttributeTypeArray(bitmap))
             {
                 Console.WriteLine( attributetype );
             }
             Console.WriteLine();
-            
-            bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap( new Type[]{ typeof( Movement ) } );
-            foreach( Type attributetype in new ReplicateAttributeHelper().BitmapToAttributeTypeArray( bitmap ) )
+
+            bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap(new Type[] { typeof(Movement) });
+            foreach (Type attributetype in new ReplicateAttributeHelper().BitmapToAttributeTypeArray(bitmap))
             {
                 Console.WriteLine( attributetype );
             }
             Console.WriteLine();
-            
-            bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap( new Type[]{ typeof( Replicate ), typeof( Movement ) } );
-            foreach( Type attributetype in new ReplicateAttributeHelper().BitmapToAttributeTypeArray( bitmap ) )
+
+            bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap(new Type[] { typeof(Replicate), typeof(Movement) });
+            foreach (Type attributetype in new ReplicateAttributeHelper().BitmapToAttributeTypeArray(bitmap))
             {
                 Console.WriteLine( attributetype );
             }

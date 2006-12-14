@@ -22,12 +22,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text; // for Encoding
+using System.Net;
     
 namespace OSMP
 {
     public interface INetPacketHandler
     {
-        void ReceivedPacket( int refnum, object connection, byte[] packetdata, int nextposition );
+        void ReceivedPacket(int refnum, IPEndPoint connection, byte[] packetdata, int nextposition);
     }
     
     public delegate void Level2NewConnectionHandler( NetworkLevel2Connection net2con, ConnectionInfo connectioninfo );
@@ -164,12 +165,12 @@ namespace OSMP
             Send( null, packettype, data, 0, data.Length);
         }
 
-        public void Send(object connection, char packettype, byte[] data)
+        public void Send(IPEndPoint connection, char packettype, byte[] data)
         {
             Send(connection, packettype, data, 0, data.Length);
         }
 
-        public void Send( object connection, char packettype, byte[] data, int offset, int length)
+        public void Send(IPEndPoint connection, char packettype, byte[] data, int offset, int length)
         {
             //Console.WriteLine("netcontroller Send isserver " + IsServer );
             if (IsServer)

@@ -109,13 +109,13 @@ namespace OSMP
         // handles incoming ack packets ('A' packets)
         public void APacketHandler( object source, PacketHandlerArgs e )
         {
-            Console.WriteLine( "Processing 'A' packet: " );
+            //Console.WriteLine( "Processing 'A' packet: " );
             byte[] packet = e.Data;
             int nextposition = e.NextPosition; 
             while( nextposition < packet.Length )
             {
                 short ackedpacketreference = (short)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(short));
-                Console.WriteLine( "  ... Packet " + ackedpacketreference.ToString() + " acked" );
+              //  Console.WriteLine( "  ... Packet " + ackedpacketreference.ToString() + " acked" );
                 sentpacketsawaitingack.Remove( ackedpacketreference );
             }
             DumpSentPacketsAwaitingAck();
@@ -123,10 +123,10 @@ namespace OSMP
         
         void DumpSentPacketsAwaitingAck()
         {
-            foreach( DictionaryEntry dictionaryentry in sentpacketsawaitingack )
-            {
-                Console.WriteLine( "sent packet awaiting ack: " + dictionaryentry.Key.ToString() );
-            }
+            //foreach( DictionaryEntry dictionaryentry in sentpacketsawaitingack )
+            //{
+                //Console.WriteLine( "sent packet awaiting ack: " + dictionaryentry.Key.ToString() );
+            //}
         }
         
         public void Tick()
@@ -180,7 +180,7 @@ namespace OSMP
                     {
                         return;
                     }
-                    Console.WriteLine("Creating ack packet..." );
+                    //Console.WriteLine("Creating ack packet..." );
                     int numpacketstoack = receivedpacketsnotacked.Count;
                     ackpacketdata = new byte[ numpacketstoack * 2 ];
                     int nextposition = 0;
@@ -188,7 +188,7 @@ namespace OSMP
                     {
                         short packettoack = (short)receivedpacketsnotacked.Dequeue();
                         binarypacker.WriteValueToBuffer(ackpacketdata, ref nextposition, packettoack);
-                        Console.WriteLine("   ... acking " + packettoack.ToString() );
+                      //  Console.WriteLine("   ... acking " + packettoack.ToString() );
                     }
                 }
                 //Console.WriteLine("Sending ack packet " + Encoding.ASCII.GetString( ackpacketdata, 0, ackpacketdata.Length ) );
