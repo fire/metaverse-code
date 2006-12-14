@@ -65,6 +65,8 @@ namespace OSMP
             FractalSplineRing.Register();
             FractalSplineTorus.Register();
 
+            UIController.GetInstance();
+
             ServerInfo.GetInstance();
             ConnectServer.GetInstance();
         }

@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization; 
 using System.Windows.Forms;
@@ -117,11 +118,19 @@ namespace OSMP
             XmlSerializer serializer = new XmlSerializer( worldmodel.entities.GetType(), new Type[]{
                 typeof( Avatar ),
                 typeof( FractalSplineCylinder ), 
-                //typeof( FractalSplineRing ), 
-                typeof( FractalSplineBox )
+                typeof( FractalSplineRing ), 
+                typeof( FractalSplineBox ),
+                typeof( FractalSplineTorus ),
+                typeof( FractalSplinePrism ),
+                typeof( FractalSplineTube )
                 } );            
             FileStream filestream = new FileStream( filename, FileMode.Open );
-            worldmodel.entities = (EntityArrayList)serializer.Deserialize( filestream );                
+            MessageBox.Show(serializer.Deserialize(filestream).GetType().ToString());
+            List<Entity> entities = (List<Entity>)serializer.Deserialize( filestream );
+            foreach (Entity entity in entities)
+            {
+                worldmodel.AddEntity(entity);
+            }
         }
     }
 }

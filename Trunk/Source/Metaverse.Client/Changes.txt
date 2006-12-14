@@ -1,4 +1,6 @@
 Next release:
+
+Release December 12 2006:
 - renamed "Properties" in context menu to "Edit"
 - activating Edit on an object automatically selects that object
 - added message box on selecting Edit with instructions for editing controls

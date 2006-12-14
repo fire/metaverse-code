@@ -10,6 +10,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Metaverse.Client</RootNamespace>
     <AssemblyName>Metaverse.Client</AssemblyName>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -131,7 +133,7 @@
     <Compile Include="Persistence\ProjectFileController.cs" />
     <Compile Include="Persistence\WorldPersistToXml.cs" />
     <Compile Include="PluginsLoader.cs" />
-    <Compile Include="Rendering\ContextMenuController.cs" />
+    <Compile Include="UI\ContextMenuController.cs" />
     <Compile Include="Rendering\DialogHelper.cs" />
     <Compile Include="Rendering\GraphicsHelperFactory.cs" />
     <Compile Include="Rendering\GraphicsHelperGl.cs" />
@@ -153,6 +155,8 @@
     <Compile Include="Server\MetaverseServer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\Dialogs\UIContextMenu.cs" />
+    <Compile Include="UI\UIController.cs" />
     <Compile Include="WorldModel\Avatar.cs" />
     <Compile Include="WorldModel\Entity.cs" />
     <Compile Include="WorldModel\EntityArrayList.cs" />
@@ -173,6 +177,10 @@
     <Compile Include="WorldModel\WorldView.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="atk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\atk-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="DevIL.NET, Version=0.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\DevIL.NET.dll</HintPath>
@@ -180,6 +188,22 @@
     <Reference Include="FractalSpline, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\FractalSpline.dll</HintPath>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\gdk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glade-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\glade-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glib-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\glib-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\gtk-sharp.dll</HintPath>
     </Reference>
     <Reference Include="MathGL, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -231,7 +255,11 @@
     <PreBuildEvent>rpcproxygenerator &gt;generate.log
 
 copy /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies
+
+xcopy /d $(ProjectDir)..\..\Libraries\*.dll $(ProjectDir)\bin
 </PreBuildEvent>
+    <PostBuildEvent>copy /y $(ProjectDir)metaverse.client.glade . &gt;copy.log
+xcopy /d $(ProjectDir)\bin\*.dll . &gt;&gt; copy.log</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetworkInterfaces\NetworkInterfaces.csproj">
@@ -242,6 +270,8 @@ copy /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies
   <ItemGroup>
     <Content Include="Changes.txt" />
     <Content Include="config.xml" />
+    <Content Include="Metaverse.ico" />
     <Content Include="NetworkV3\Layer3_PacketAssembly\readme.txt" />
+    <Content Include="osmpico32.bmp" />
   </ItemGroup>
 </Project>

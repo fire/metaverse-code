@@ -24,52 +24,64 @@ using System.Windows.Forms;
 
 namespace OSMP
 {
-    public class ContextMenuArgs : EventArgs
-    {
-        public int MouseX;
-        public int MouseY;
-        public Entity Entity;
-        public ContextMenuArgs( int mousex, int mousey, Entity entity )
-        {
-            MouseX = mousex; MouseY = mousey; this.Entity = entity;
-        }
-    }
-    
-    public delegate void ContextMenuHandler( object source, ContextMenuArgs e );
-    
     // Manages the context menu for us
-    // hooks into Renderer's ContextMenuPopup event, and provides its own
-    // uses MouseCache to populate its own event with mousex and mousey
+    // This used to do everything, but now it just wraps UIContextMenu
     public class ContextMenuController
     {
         public event ContextMenuHandler ContextMenuPopup;
-        public event ContextMenuHandler ContextMenuClick;
+        //public event ContextMenuHandler ContextMenuClick;
         
-        ContextMenu contextmenu;
+        //thissegmentContextMenu contextmenu;
         
-        int iMouseX;
-        int iMouseY;
-        Entity entity;
+        //int iMouseX;
+        //int iMouseY;
+        //Entity entity;
         
-        ArrayList contextmenucommanditems = new ArrayList();
-        ArrayList contextmenucallbacks = new ArrayList();
+        //ArrayList contextmenucommanditems = new ArrayList();
+        //ArrayList contextmenucallbacks = new ArrayList();
                 
-        ArrayList persistentcontextmenupaths = new ArrayList();
-        ArrayList persistentcontextmenucallbacks = new ArrayList();
+        //ArrayList persistentcontextmenupaths = new ArrayList();
+        //ArrayList persistentcontextmenucallbacks = new ArrayList();
                 
         static ContextMenuController instance = new ContextMenuController();
         public static ContextMenuController GetInstance()
         {
             return instance;
         }
-        
-        public ContextMenuController()
+
+        // This context menu function is for ContextMenuPopup events
+        // It will not persist.  Use this for menu items which are context dependent, like entity properties (doesnt display if no entity selected)
+        public void RegisterContextMenu(string[] contextmenupath, ContextMenuHandler callback)
         {
-            IRenderer renderer = RendererFactory.GetInstance();
-            contextmenu = renderer.ContextMenu;
-            renderer.ContextMenuPopup += new EventHandler( _ContextMenuPopup );
+            UIController.GetInstance().contextmenu.RegisterContextMenu(contextmenupath, callback);
+            //_RegisterContextMenu( contextmenupath, callback );
         }
 
+        // This context menu function creates a persistent contextmenu.  This is good for things like Quit
+        public void RegisterPersistentContextMenu(string[] contextmenupath, ContextMenuHandler callback)
+        {
+            UIController.GetInstance().contextmenu.RegisterPersistentContextMenu(contextmenupath, callback);
+
+            //  persistentcontextmenupaths.Add( contextmenupath );
+            //            persistentcontextmenucallbacks.Add( callback );
+
+            //          return;
+        }
+
+        // hook for uicontextmenu to call event
+        public void OnContextMenuPopup(object source, ContextMenuArgs e)
+        {
+            ContextMenuPopup(source, e);
+        }
+
+        public ContextMenuController()
+        {
+            //IRenderer renderer = RendererFactory.GetInstance();
+            //contextmenu = renderer.ContextMenu;
+            //renderer.ContextMenuPopup += new EventHandler( _ContextMenuPopup );
+        }
+
+        /*
         void _RegisterContextMenu( string[] contextmenupath, ContextMenuHandler handler )
         {
             Menu.MenuItemCollection thesemenuitems = contextmenu.MenuItems;
@@ -90,7 +102,8 @@ namespace OSMP
                 _RegisterContextMenu( (string[])persistentcontextmenupaths[i], (ContextMenuHandler)persistentcontextmenucallbacks[i] );
             }
         }
-        
+    */
+        /*
         public void _ContextMenuPopup( object source, EventArgs e )
         {
             if( ContextMenuPopup == null )
@@ -112,23 +125,9 @@ namespace OSMP
 
             AddPersistentItems();
         }
-        
-        // This context menu function is for ContextMenuPopup events
-        // It will not persist.  Use this for menu items which are context dependent, like entity properties (doesnt display if no entity selected)
-        public void RegisterContextMenu( string[] contextmenupath, ContextMenuHandler callback )
-        {
-            _RegisterContextMenu( contextmenupath, callback );
-        }
+        */
 
-        // This context menu function creates a persistent contextmenu.  This is good for things like Quit
-        public void RegisterPersistentContextMenu( string[] contextmenupath, ContextMenuHandler callback )
-        {
-            persistentcontextmenupaths.Add( contextmenupath );
-            persistentcontextmenucallbacks.Add( callback );
-            
-            return;
-        }
-
+        /*
         public void _ContextMenuClick( object o, EventArgs e )
         {
             for( int i = 0; i < contextmenucallbacks.Count; i++ )
@@ -139,5 +138,6 @@ namespace OSMP
                 }
             }
         }
+        */
     }
 }
