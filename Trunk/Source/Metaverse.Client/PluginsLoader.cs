@@ -42,7 +42,7 @@ namespace OSMP
             LoadGlobalPlugins();
 
             KeyHandlerQuit.GetInstance();
-            EntityPropertiesDialog.GetInstance();
+            UIEntityPropertiesDialog.GetInstance();
             Editing3d.GetInstance();
             SelectionController.GetInstance();
             AssignTextureHandler.GetInstance();

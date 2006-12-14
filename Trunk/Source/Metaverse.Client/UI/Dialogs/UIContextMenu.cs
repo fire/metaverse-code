@@ -53,20 +53,29 @@ namespace OSMP
 
         public UIContextMenu()
         {
-            RendererFactory.GetInstance().ContextMenuPopup += new EventHandler(ContextMenu_ContextMenuPopup);
+            //RendererFactory.GetInstance().ContextMenuPopup += new EventHandler(ContextMenu_ContextMenuPopup);
             //UIController.GetInstance().contextmenu.RegisterContextMenu(contextmenupath, callback);
             MouseFilterFormsMouseCache.GetInstance().MouseDown += new System.Windows.Forms.MouseEventHandler(GtkContextMenu_MouseDown);
+            MouseFilterFormsMouseCache.GetInstance().MouseUp += new System.Windows.Forms.MouseEventHandler(UIContextMenu_MouseUp);
+        }
 
+        void UIContextMenu_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
         }
 
         void GtkContextMenu_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
+            //Console.WriteLine(e.Button + " " + MouseFilterFormsMouseCache.GetInstance().RightMouseDown);
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
                 if (contextmenu != null)
                 {
-                    contextmenu.Destroy();
+                  //  contextmenu.Destroy();
                 }
+            }
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                ContextMenu_ContextMenuPopup(sender, e);
             }
         }
 
@@ -81,10 +90,10 @@ namespace OSMP
 
             contextmenu = new Menu();
 
-            MenuItem submenuitem = new MenuItem("About TestPlugin...");
-            submenuitem.Activated += new EventHandler(Testpluginmenuitem_Activated);
-            contextmenu.Add(submenuitem);
-            contextmenu.Add(new MenuItem("item3"));
+            //MenuItem submenuitem = new MenuItem("About TestPlugin...");
+            //submenuitem.Activated += new EventHandler(Testpluginmenuitem_Activated);
+            //contextmenu.Add(submenuitem);
+            //contextmenu.Add(new MenuItem("item3"));
 
             IMouseFilterMouseCache mousefiltermousecache = MouseFilterMouseCacheFactory.GetInstance();
             iMouseX = mousefiltermousecache.MouseX;
@@ -100,8 +109,18 @@ namespace OSMP
             ContextMenuController.GetInstance().OnContextMenuPopup(this, new ContextMenuArgs(iMouseX, iMouseY, entity));
 
             contextmenu.ShowAll();
-            contextmenu.Popup();
+            contextmenu.Popup(null,null,null,IntPtr.Zero,3, Gtk.Global.CurrentEventTime);
         }
+
+        //void _menupositionfunc( Menu menu, out int x, out int y, out bool pushin )
+        //{
+            //Console.WriteLine("_menupositionfunc mouse: " + MouseFilterFormsMouseCache.GetInstance().MouseX + " " + MouseFilterFormsMouseCache.GetInstance().MouseY );
+            //Point renderertopleftscreencoords = RendererSdlCtrl.GetInstance().WindowTopLeftScreenCoords;
+            //Console.WriteLine(renderertopleftscreencoords.X + " " + renderertopleftscreencoords.Y);
+            //x = MouseFilterFormsMouseCache.GetInstance().MouseX - 1 + renderertopleftscreencoords.X;
+            //y = MouseFilterFormsMouseCache.GetInstance().MouseY - 1 + renderertopleftscreencoords.Y;
+            //pushin = true;
+        //}
 
         void Testpluginmenuitem_Activated( object sender, EventArgs e )
         {
@@ -117,7 +136,7 @@ namespace OSMP
         {
             MenuItem commanditem = null;
 
-            Console.WriteLine("scan existing:");
+            //Console.WriteLine("scan existing:");
             Menu currentmenu = contextmenu;
             for (int i = 0; i < contextmenupath.Length - 1; i++)
             {
@@ -176,7 +195,7 @@ namespace OSMP
 
         void _ContextMenuClick(object o, EventArgs e)
         {
-            //Console.WriteLine("contextmenuclick " + o);
+            Console.WriteLine("contextmenuclick " + o);
             for (int i = 0; i < contextmenucallbacks.Count; i++)
             {
                 if (contextmenucommanditems[i] == o)
@@ -185,32 +204,5 @@ namespace OSMP
                 }
             }
         }
-
-        /*
-        MenuItem CreateMenuItemInTree( string[] contextmenupath, Widget[] thesemenuitems )
-        {
-            for( int i = 0; i < contextmenupath.Length - 1; i++ )
-            {
-                bool bAlreadyCreated = false;
-                for( int j = 0; j < thesemenuitems.Length && !bAlreadyCreated; j++ )
-                {
-                    //if( thesemenuitems[j] == contextmenupath[i] )
-                    //{
-                      //  bAlreadyCreated = true;
-                        //thesemenuitems = thesemenuitems[j].MenuItems;
-                    //}
-                }
-                if( !bAlreadyCreated )
-                {
-                    MenuItem newitem = new MenuItem( contextmenupath[i] );
-                    thesemenuitems.Add( newitem );
-                    thesemenuitems = newitem.MenuItems;
-                }
-            }
-            MenuItem commanditem = new MenuItem( contextmenupath[ contextmenupath.GetUpperBound(0) ]);
-            thesemenuitems.Add( commanditem );
-            return commanditem;
-        }
-        */
     }
 }

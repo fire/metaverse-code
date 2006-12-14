@@ -32,7 +32,7 @@ namespace OSMP
     public delegate void MainMenuCallback();
         
     public interface IRenderer
-    {        
+    {
         int WindowWidth{ get; }
         int WindowHeight{ get; }
         
