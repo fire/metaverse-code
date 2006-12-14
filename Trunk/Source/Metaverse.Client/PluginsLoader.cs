@@ -43,7 +43,9 @@ namespace OSMP
 
             ImportExportPrimBlender.GetInstance();
 
-            //ChatController.GetInstance();
+            EntityDelete.GetInstance();
+
+            ChatController.GetInstance();
 
             HelpAbout.GetInstance();
 

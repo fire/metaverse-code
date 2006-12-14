@@ -26,9 +26,9 @@ public class ObjectReplicationClientToServer_ClientProxy : OSMP.NetworkInterface
    {
       rpc.SendRpc( connection, "OSMP.NetworkInterfaces.IObjectReplicationClientToServer", "ObjectModified",  new object[]{ reference, entitytypename, attributebitmap, entitydata } );
    }
-   public void ObjectDeleted( System.Int32 reference )
+   public void ObjectDeleted( System.Int32 reference, System.String entitytypename )
    {
-      rpc.SendRpc( connection, "OSMP.NetworkInterfaces.IObjectReplicationClientToServer", "ObjectDeleted",  new object[]{ reference } );
+      rpc.SendRpc( connection, "OSMP.NetworkInterfaces.IObjectReplicationClientToServer", "ObjectDeleted",  new object[]{ reference, entitytypename } );
    }
 }
 }

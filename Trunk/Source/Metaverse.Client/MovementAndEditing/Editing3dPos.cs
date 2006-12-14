@@ -129,6 +129,7 @@ namespace OSMP
             
             entity.pos = editing3d.startpos + entitymoveworldaxes;
             //Test.Debug(  "pobjectpos: " + entity.pos ); // Test.Debug
+            MetaverseClient.GetInstance().worldstorage.OnModifyEntity(entity);
         }
         
         public void InteractiveFreeEdit( bool bAltAxes, int x, int y )
@@ -184,6 +185,7 @@ namespace OSMP
         
             Vector3 PosChangeWorldAxes = translatevector * OurRot.Inverse();
             entity.pos = editing3d.startpos + PosChangeWorldAxes;
+            MetaverseClient.GetInstance().worldstorage.OnModifyEntity(entity);
         }
         
         void DrawSingleEditHandle( Vector3 entityscale, Vector3 handlescale, Axis handleaxis )

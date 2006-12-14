@@ -46,6 +46,16 @@ namespace OSMP
             }
         }
 
+        public Dictionary<int, string> deleted = new Dictionary<int, string>();
+
+        public void MarkDeleted(int reference, string typename)
+        {
+            if (!deleted.ContainsKey(reference ))
+            {
+                deleted.Add(reference, typename);
+            }
+        }
+
         public void MarkDirty(IHasReference targetentity, Type[] dirtytypes)
         {
             if (!DirtyAttributesByEntity.ContainsKey(targetentity))
@@ -70,6 +80,12 @@ namespace OSMP
         {
             //Console.WriteLine("dirtyobjectqueuesingleclient.Tick()");
             Queue<IHasReference> queue = new Queue<IHasReference>();
+            foreach (int reference in deleted.Keys)
+            {
+                parent.netreplicationcontroller.ReplicateDeletionToSingleClient(
+                    connection, reference, deleted[reference]);
+            }
+            deleted.Clear();
             foreach (IHasReference entity in DirtyAttributesByEntity.Keys)
             {
             //    Entity entity = (Entity)dirtyentityobject;

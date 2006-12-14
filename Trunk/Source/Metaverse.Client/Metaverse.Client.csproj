@@ -77,6 +77,7 @@
     <Compile Include="MovementAndEditing\Editing3dPos.cs" />
     <Compile Include="MovementAndEditing\Editing3dRot.cs" />
     <Compile Include="MovementAndEditing\Editing3dScale.cs" />
+    <Compile Include="MovementAndEditing\EntityDelete.cs" />
     <Compile Include="MovementAndEditing\EntityPropertiesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -231,6 +232,7 @@ copy /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Changes.txt" />
     <Content Include="config.xml" />
     <Content Include="NetworkV3\Layer3_PacketAssembly\readme.txt" />
   </ItemGroup>

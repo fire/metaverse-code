@@ -1,0 +1,7 @@
+Next release:
+- renamed "Properties" in context menu to "Edit"
+- activating Edit on an object automatically selects that object
+- added message box on selecting Edit with instructions for editing controls
+- entity modifications are now replicated to other connected clients, ie position,rot,scale,hollow,...
+- entity deletes are now replicated
+- "Delete" added to context menu

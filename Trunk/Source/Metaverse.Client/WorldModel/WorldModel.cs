@@ -133,6 +133,7 @@ namespace OSMP
         public event ClearHandler ClearEvent;
         
         public List<Entity> entities = new List<Entity>();
+        public Dictionary<int, Entity> entitybyreference = new Dictionary<int, Entity>();
 
         bool IReplicatedObjectController.HasEntityForReference(int reference)
         {
@@ -146,6 +147,15 @@ namespace OSMP
             return false;
         }
 
+        IHasReference IReplicatedObjectController.GetEntity(int reference)
+        {
+            if( entitybyreference.ContainsKey( reference ) )
+            {
+                return entitybyreference[ reference ];
+            }
+            return null;
+        }
+
         void IReplicatedObjectController.AssignGlobalReference(IHasReference entitytoassign, int globalreference)
         {
             // first check we dont already have an entity with same reference, but not same object
@@ -156,10 +166,16 @@ namespace OSMP
                {
                    Console.WriteLine("removed duplicate " + globalreference);
                    entities.Remove(entity);
+                   entitybyreference.Remove(globalreference);
                    break;
                }
             }
+            if (entitybyreference.ContainsKey(entitytoassign.Reference))
+            {
+                entitybyreference.Remove(entitytoassign.Reference);
+            }
             entitytoassign.Reference = globalreference;
+            entitybyreference.Add(entitytoassign.Reference, entitytoassign as Entity);
         }
             
         //static WorldModel instance = new WorldModel(); // This is for deserialization (eg load a world from xml).  Not for normal use.
@@ -183,6 +199,7 @@ namespace OSMP
             Console.WriteLine("WorldModel ReplicatedObjectCreated " + e.TargetObject);
             Entity newentity = e.TargetObject as Entity;
             entities.Add( newentity );
+            entitybyreference.Add(newentity.iReference, newentity);
             //if(this.ObjectCreated != null )
             //{
               //  ObjectCreated( this, new ObjectCreatedArgs( DateTime.Now, newentity ) );
@@ -202,19 +219,31 @@ namespace OSMP
         // incoming event from NetReplicationController:
         void IReplicatedObjectController.ReplicatedObjectDeleted(object notifier, ObjectDeletedArgs e)
         {
-            Console.WriteLine("WorldModel ReplicatedObjectDeleted " + e.TargetObject);
+            Console.WriteLine("WorldModel ReplicatedObjectDeleted " + e.Reference + " "  + e.typename);
+            Entity entity = GetEntityByReference(e.Reference);
+            if (entity != null)
+            {
+                entities.Remove(entity);
+                entitybyreference.Remove(e.Reference);
+            }
         }
         
         public Entity GetEntityByReference( int iReference )
         {
-            for( int i = 0; i < entities.Count; i++ )
+            if (entitybyreference.ContainsKey(iReference))
             {
-                if( entities[i].iReference == iReference )
-                {
-                    return entities[i];
-                }
+                return entitybyreference[iReference];
             }
             return null;
+        }
+
+        // call this to signal worldmodel that you modified an entity
+        public void OnModifyEntity(Entity entity)
+        {
+            if (ObjectModified != null)
+            {
+                ObjectModified( this, new ObjectModifiedArgs( DateTime.Now, entity, new Type[]{ typeof(Replicate)}) );
+            }
         }
         
         // fires off events, then does the actual delete
@@ -236,8 +265,13 @@ namespace OSMP
             {
                 return false;
             }
-            
-            entities.Remove( entity );
+
+            if (ObjectDeleted != null)
+            {
+                ObjectDeleted(this, new ObjectDeletedArgs(DateTime.Now, entity.iReference, entity.GetType().ToString() ));
+            }
+            entitybyreference.Remove(entity.iReference);
+            entities.Remove(entity);
             
             if( AfterDelete != null )
             {
@@ -268,10 +302,11 @@ namespace OSMP
             }
             
             entities.Add( entity );
+            entitybyreference.Add(entity.iReference, entity);
 
             if (ObjectCreated != null)
             {
-                Console.WriteLine(entity);
+                //Console.WriteLine(entity);
                 ObjectCreated( this, new ObjectCreatedArgs( DateTime.Now, entity ) );
             }
 

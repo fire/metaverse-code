@@ -100,6 +100,7 @@ namespace OSMP
             Rot rNewRot = OurRot * rRotated;
 
             selectionmodel.GetFirstSelectedEntity().rot = rNewRot;
+            MetaverseClient.GetInstance().worldstorage.OnModifyEntity(selectionmodel.GetFirstSelectedEntity());
         }
         
         double GetRotationAngleForEntityAndMouse( Vector3 EntityVector3, Rot EntityRot, Axis axis, int mousex, int mousey )
@@ -309,6 +310,7 @@ namespace OSMP
             
                 //Test.Debug(  " NewRotation " + NewRotationWorldAxes ); // Test.Debug
                 entity.rot = NewRotation;
+                MetaverseClient.GetInstance().worldstorage.OnModifyEntity(entity);
             }
         }
         

@@ -121,6 +121,7 @@ namespace OSMP
                     WritePropertyInfo( propertyinfo );
                 }
             }
+            MetaverseClient.GetInstance().worldstorage.OnModifyEntity(thisentity);
         }
         
         public void LoadProperty( string name, object value )
@@ -186,7 +187,7 @@ namespace OSMP
             if( thisentity != null )
             {
                 Console.WriteLine("EntityPropertiesDialog registering in contextmenu");
-                ContextMenuController.GetInstance().RegisterContextMenu(new string[]{ "&Properties" }, new ContextMenuHandler( ContextMenuProperties ) );
+                ContextMenuController.GetInstance().RegisterContextMenu(new string[]{ "&Edit" }, new ContextMenuHandler( ContextMenuProperties ) );
             }
            // }
         }
@@ -272,6 +273,9 @@ namespace OSMP
         public void ContextMenuProperties( object source, ContextMenuArgs e )
         {
             Test.WriteOut( "opening context menu...");
+
+            // hack to add a semblance of user-friendliness
+            MessageBox.Show("Hold down z to move the object, z-x to change scale and z-v to rotate.");
             
             PropertyInfos = new ArrayList();
             ControlsIndex = new Hashtable();
@@ -282,6 +286,8 @@ namespace OSMP
             //TopMost = true; // topmost causes horrible lag, better not use this...
             Show();
             Activate();
+            selectionmodel.Clear();
+            selectionmodel.ToggleObjectInSelection(thisentity, true);
             Test.WriteOut( "...opened");
         }  
     }

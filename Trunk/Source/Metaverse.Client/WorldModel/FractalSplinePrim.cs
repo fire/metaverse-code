@@ -37,13 +37,14 @@ namespace OSMP
         public override int NumFaces{
             get{ return primitive.NumFaces; }
         }
-        
-        // for xml serializer
-        public Color[] FaceColors{
+
+        [Replicate]
+        public Color[] FaceColors
+        {
             get{ return facecolors; }
             set{
                 facecolors = value;
-                for( int i = 0; i < facecolors.GetUpperBound(0) + 1; i++ )
+                for( int i = 0; i < facecolors.GetLength(0); i++ )
                 {
                     _SetColor( i, facecolors[i] );
                 }
@@ -52,8 +53,9 @@ namespace OSMP
         
         Color[] facecolors = new Color[ iMaxFaces ];
             
-        // for xml serializer
-        public string[] TextureRelativePaths{
+        [Replicate]
+        public string[] TextureRelativePaths
+        {
             get{
                 return texturerelativepaths;
             }
@@ -62,7 +64,7 @@ namespace OSMP
                 texturerelativepaths = value;
                 for( int i = 0; i < texturerelativepaths.GetUpperBound(0) + 1; i++ )
                 {
-                    if( texturerelativepaths[i] != null )
+                    if( texturerelativepaths[i] != null && texturerelativepaths[i] != "" )
                     {
                         Test.Debug("loading texture " + texturerelativepaths[i] + "..." );
                         Uri uri = ProjectFileController.GetInstance().CreateUriFromRelativePathString( texturerelativepaths[i] );
@@ -72,44 +74,64 @@ namespace OSMP
                 }
             }
         }
-        
-        public int Hollow{
+
+        [Replicate]
+        public int Hollow
+        {
             get{ return primitive.Hollow; }
             set{ primitive.Hollow = value;primitive.UpdateTransforms(); }
         }
-        public int Twist{
+        [Replicate]
+        public int Twist
+        {
             get{ return primitive.Twist; }
             set{ primitive.Twist = value;primitive.UpdateTransforms(); }
         }
-        public double Shear{
+        [Replicate]
+        public double Shear
+        {
             get{ return primitive.Shear; }
             set{ primitive.Shear = value;primitive.UpdateTransforms(); }
         }
-        public int CutStart{
+        [Replicate]
+        public int CutStart
+        {
             get{ return primitive.CutStart; }
             set{ primitive.CutStart = value; primitive.UpdateTransforms();}
         }
-        public int CutEnd{
+        [Replicate]
+        public int CutEnd
+        {
             get{ return primitive.CutEnd; }
             set{ primitive.CutEnd = value;primitive.UpdateTransforms(); }
         }
-        public int AdvancedCutStart{
+        [Replicate]
+        public int AdvancedCutStart
+        {
             get{ return primitive.AdvancedCutStart; }
             set{ primitive.AdvancedCutStart = value; primitive.UpdateTransforms();}
         }
-        public int AdvancedCutEnd{
+        [Replicate]
+        public int AdvancedCutEnd
+        {
             get{ return primitive.AdvancedCutEnd; }
             set{ primitive.AdvancedCutEnd = value; primitive.UpdateTransforms();}
         }
-        public double TopSizeX{
+        [Replicate]
+        public double TopSizeX
+        {
             get{ return primitive.TopSizeX; }
             set{ primitive.TopSizeX = value;primitive.UpdateTransforms();}
         }
-        public double TopSizeY{
+        [Replicate]
+        public double TopSizeY
+        {
             get{ return primitive.TopSizeY; }
             set{ primitive.TopSizeY = value; primitive.UpdateTransforms();}
         }
-        public double TextureOffsetX{
+        [Replicate]
+        public double TextureOffsetX
+        {
             get{ return primitive.TextureOffset[0]; }
             set{
                 double[] offset = primitive.TextureOffset;
@@ -117,7 +139,9 @@ namespace OSMP
                 primitive.TextureOffset = offset;
             }
         }
-        public double TextureOffsetY{
+        [Replicate]
+        public double TextureOffsetY
+        {
             get{ return primitive.TextureOffset[1];}
             set{
                 double[] offset = primitive.TextureOffset;
@@ -125,7 +149,9 @@ namespace OSMP
                 primitive.TextureOffset = offset;
             }
         }
-        public double TextureScaleX{
+        [Replicate]
+        public double TextureScaleX
+        {
             get{ return primitive.TextureScale[0]; }
             set{
                 double[] scale = primitive.TextureScale;
@@ -133,7 +159,9 @@ namespace OSMP
                 primitive.TextureScale = scale;
             }
         }
-        public double TextureScaleY{
+        [Replicate]
+        public double TextureScaleY
+        {
             get{ return primitive.TextureScale[1]; }
             set{
                 double[] scale = primitive.TextureScale;
@@ -141,7 +169,9 @@ namespace OSMP
                 primitive.TextureScale = scale;
             }
         }
-        public double TextureRotate{
+        [Replicate]
+        public double TextureRotate
+        {
             get{ return primitive.TextureRotate; }
             set{ primitive.TextureRotate = value; }
         }
@@ -244,6 +274,14 @@ namespace OSMP
         public FractalSplinePrim()
         {
             Test.Debug( "FractalSplinePrim::FractalSplinePrim" );
+            for (int i = 0; i < facecolors.GetLength(0); i++)
+            {
+                facecolors[i] = new Color();
+            }
+            for (int i = 0; i < texturerelativepaths.GetLength(0); i++)
+            {
+                texturerelativepaths[i] = "";
+            }
         }
         public override void Draw()
         {
