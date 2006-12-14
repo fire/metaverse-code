@@ -14,6 +14,7 @@ namespace RpcProxyGenerator
             new NetworkProxyBuilder().Go(dllname, "OSMP.NetworkInterfaces", "ILockRpcToServer");
             new NetworkProxyBuilder().Go(dllname, "OSMP.NetworkInterfaces", "IObjectReplicationClientToServer");
             new NetworkProxyBuilder().Go(dllname, "OSMP.NetworkInterfaces", "IObjectReplicationServerToClient");
+            new NetworkProxyBuilder().Go(dllname, "OSMP.NetworkInterfaces", "IWorldControl");
         }
     }
 }

@@ -5,3 +5,7 @@ Next release:
 - entity modifications are now replicated to other connected clients, ie position,rot,scale,hollow,...
 - entity deletes are now replicated
 - "Delete" added to context menu
+- added ServerInfo dialog to obtain server port number
+- added "-serverport 1234" commandline option to change server port number (works with both client and server)
+- added "nochat" option to run without irc chat dialog
+- added Connect to Server dialog to connect to a different server
