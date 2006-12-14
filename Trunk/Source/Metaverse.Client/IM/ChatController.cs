@@ -122,8 +122,8 @@ namespace OSMP
         TextBox chathistory;
         TextBox chatentry;
         
-        static ChatController instance = new ChatController();
-        public static ChatController GetInstance(){ return instance; }
+        //static ChatController instance = new ChatController();
+        //public static ChatController GetInstance(){ return instance; }
         
         public ChatController()
         {

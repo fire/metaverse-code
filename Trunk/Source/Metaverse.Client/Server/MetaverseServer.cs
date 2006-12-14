@@ -37,11 +37,18 @@ namespace OSMP
         {
         }
 
+        // Access these via server singleton:
+
         public NetworkLevel2Controller network;
         public RpcController rpc;
         public NetReplicationController netreplicationcontroller;
-
         public WorldModel World;                    //!< The World and container for all objects in it (except the hardcoded land)
+
+        public WorldReplication worldreplication = new WorldReplication();
+
+        public int ServerPort;
+
+        public bool Running = false;
 
         //public const int iTicksPerFrame = 17;         //!< we assume the server is running at around 75fps, and if the server hasnothing better to do, it'll sleep this number of milliseconds
         //public int LastTickCount = 0;   //!< tickcount of last frame
@@ -118,9 +125,17 @@ namespace OSMP
 
             Test.Info("*** Server starting ***");
 
+            Running = true;
+
             network = new NetworkLevel2Controller();
             Test.Debug("Creating Metaverse Client listener on port " + config.ServerPort);
-            network.ListenAsServer(config.ServerPort);
+            ServerPort = config.ServerPort;
+
+            if (arguments.Named.Contains("serverport"))
+            {
+                ServerPort = Convert.ToInt32(arguments.Named["serverport"]);
+            }
+            network.ListenAsServer(ServerPort);
 
             network.NewConnection += new Level2NewConnectionHandler(network_NewConnection);
             network.Disconnection += new Level2DisconnectionHandler(network_Disconnection);

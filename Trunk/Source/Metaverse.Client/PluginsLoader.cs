@@ -18,6 +18,8 @@
 // http://www.opensource.org/licenses/gpl-license.php
 //
 
+using System;
+
 namespace OSMP
 {
     // Note to self : might be cool to (a) use Reflection and/or (b) use the config file
@@ -29,8 +31,14 @@ namespace OSMP
             return instance;
         }
 
-        public void LoadClientPlugins()
+        public void LoadClientPlugins( Arguments arguments )
         {
+            Console.WriteLine("unnamed args: ");
+            foreach (string unnamed in arguments.Unnamed)
+            {
+                Console.WriteLine("unnamed: " + unnamed);
+            }
+
             LoadGlobalPlugins();
 
             KeyHandlerQuit.GetInstance();
@@ -45,8 +53,6 @@ namespace OSMP
 
             EntityDelete.GetInstance();
 
-            ChatController.GetInstance();
-
             HelpAbout.GetInstance();
 
             //SimpleCube.Register();  // SimpleCube and SimpleCone are for testing primarily
@@ -58,6 +64,9 @@ namespace OSMP
             FractalSplineTube.Register();
             FractalSplineRing.Register();
             FractalSplineTorus.Register();
+
+            ServerInfo.GetInstance();
+            ConnectServer.GetInstance();
         }
 
         public void LoadServerPlugins()

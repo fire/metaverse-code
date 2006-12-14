@@ -47,6 +47,11 @@ namespace OSMP
             network.Disconnection += new Level2DisconnectionHandler(network_Disconnection);
         }
 
+        public void ReplicateAll(IPEndPoint connection)
+        {
+            remoteclientdirtyqueues[connection].MarkAllDirty();
+        }
+
         void network_Disconnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
             remoteclientdirtyqueues.Remove(net2con.connectioninfo.Connection);

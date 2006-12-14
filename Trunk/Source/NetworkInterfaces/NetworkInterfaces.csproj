@@ -39,6 +39,7 @@
     <Compile Include="IObjectReplication.cs" />
     <Compile Include="IReplicated.cs" />
     <Compile Include="ITestInterface.cs" />
+    <Compile Include="IWorldControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

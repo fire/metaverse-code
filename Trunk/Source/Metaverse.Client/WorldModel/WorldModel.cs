@@ -302,7 +302,10 @@ namespace OSMP
             }
             
             entities.Add( entity );
-            entitybyreference.Add(entity.iReference, entity);
+            if (entity.iReference != 0)
+            {
+                entitybyreference.Add(entity.iReference, entity);
+            }
 
             if (ObjectCreated != null)
             {
@@ -333,6 +336,7 @@ namespace OSMP
                 ClearEvent( this );
             }
             entities.Clear();
+            entitybyreference.Clear();
         }
     }
 }

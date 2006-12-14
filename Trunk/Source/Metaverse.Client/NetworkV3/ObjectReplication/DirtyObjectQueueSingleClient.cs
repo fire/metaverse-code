@@ -38,12 +38,7 @@ namespace OSMP
             this.parent = parent;
             this.connection = connection;
 
-            // note to self: this is a hack
-            foreach (IHasReference entity in MetaverseServer.GetInstance().World.entities)
-            {
-                DirtyAttributesByEntity.Add(entity, new List<Type>());
-                DirtyAttributesByEntity[entity].Add( typeof(Replicate) );
-            }
+            MarkAllDirty();
         }
 
         public Dictionary<int, string> deleted = new Dictionary<int, string>();
@@ -53,6 +48,24 @@ namespace OSMP
             if (!deleted.ContainsKey(reference ))
             {
                 deleted.Add(reference, typename);
+            }
+        }
+
+        public void MarkAllDirty()
+        {
+            Console.WriteLine("MarkAllDirty() client " + connection);
+            // note to self: this is a hack
+            foreach (IHasReference entity in MetaverseServer.GetInstance().World.entities)
+            {
+                if (!DirtyAttributesByEntity.ContainsKey(entity))
+                {
+                    Console.WriteLine("Marking dirty " + entity.GetType().ToString() + " " + entity.Reference );
+                    DirtyAttributesByEntity.Add(entity, new List<Type>());
+                }
+                if (!DirtyAttributesByEntity[entity].Contains(typeof(Replicate)))
+                {
+                    DirtyAttributesByEntity[entity].Add(typeof(Replicate));
+                }
             }
         }
 

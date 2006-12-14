@@ -20,6 +20,8 @@
 using System;
 using System.Collections;
 using System.Threading;
+using System.Net;
+using System.Windows.Forms;
 using OSMP;
 
 namespace OSMP
@@ -81,11 +83,17 @@ namespace OSMP
         }
     
         //! Gets world state from server
-        void InitializeWorld()
+        void InitializePlayermovement()
         {
             playermovement.avatarpos = new Vector3( -5, 0, 0 );
             playermovement.avatarzrot = 0;
             playermovement.avataryrot = 0;
+        }
+
+        public ChatController chatcontroller = null;
+        void LoadChat()
+        {
+            chatcontroller = new ChatController();
         }
 
         public bool waitingforserverconnection = true;
@@ -94,55 +102,84 @@ namespace OSMP
             Arguments arguments = new Arguments(args);
 
             config = Config.GetInstance();
-            string serverip = "";
+
+            string serverip = config.ServerIPAddress;
+            int port = config.ServerPort;
+
             if (arguments.Named.ContainsKey("serverip"))
             {
                 serverip = arguments.Named["serverip"];
             }
-
-            if (serverip == "")
+            if( arguments.Named.ContainsKey("serverport") )
             {
-                serverip = config.ServerIPAddress;
+                port = Convert.ToInt32(arguments.Named["serverport"]);
             }
 
             network = new NetworkLevel2Controller();
             network.NewConnection += new Level2NewConnectionHandler(network_NewConnection);
 
-            network.ConnectAsClient(serverip, config.ServerPort);
+            network.ConnectAsClient(serverip, port);
 
             rpc = new RpcController(network);
             netreplicationcontroller = new NetReplicationController(rpc);
 
-            while (waitingforserverconnection)
+            playermovement = PlayerMovement.GetInstance();
+            worldstorage = new WorldModel(netreplicationcontroller);
+
+            InitializePlayermovement();
+
+            myavatar = new Avatar();
+            worldstorage.AddEntity(myavatar);
+
+            PluginsLoader.GetInstance().LoadClientPlugins(arguments);
+            if (!arguments.Unnamed.Contains("nochat"))
             {
-                network.Tick();
-                if (Tick != null)
-                {
-                    Tick();
-                }
-                Thread.Sleep(50);
+                LoadChat();
             }
 
+            renderer = RendererFactory.GetInstance();
+            renderer.RegisterMainLoopCallback(new MainLoopDelegate(this.MainLoop));
+            renderer.StartMainLoop();
+
             return 0;
+        }
+
+        public void ConnectToServer(string ipaddressstring, int port)
+        {
+            IPAddress[] addresses = System.Net.Dns.GetHostAddresses(ipaddressstring);
+            if (addresses.GetLength(0) == 0)
+            {
+                return;
+            }
+            IPAddress ipaddress = addresses[0];
+            Console.WriteLine("Resolved server address to : " + ipaddressstring);
+
+            try
+            {
+                network.ConnectAsClient(ipaddress.ToString(), port);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Failed to connect to server");
+                Console.WriteLine(e.ToString());
+            }
+
+            SelectionModel.GetInstance().Clear();
+            worldstorage.Clear();
         }
 
         void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
             Console.WriteLine("client connected to server");
             waitingforserverconnection = false;
-            playermovement = PlayerMovement.GetInstance();
-            worldstorage = new WorldModel(netreplicationcontroller);
 
-            InitializeWorld();
-
-            PluginsLoader.GetInstance().LoadClientPlugins();
+            InitializePlayermovement();
 
             myavatar = new Avatar();
             worldstorage.AddEntity(myavatar);
 
-            renderer = RendererFactory.GetInstance();
-            renderer.RegisterMainLoopCallback(new MainLoopDelegate(this.MainLoop));
-            renderer.StartMainLoop();
+            new NetworkInterfaces.WorldControl_ClientProxy(rpc, connectioninfo.Connection)
+                .RequestResendWorld();
         }
     }
 }
