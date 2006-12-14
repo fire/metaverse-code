@@ -40,23 +40,25 @@ namespace OSMP
     {
         public DateTime TimeStamp;
         public IHasReference TargetObject;
-        public int ModificationBitmask;
-        public ObjectModifiedArgs(DateTime timestamp, IHasReference TargetObject, int ModificationBitmask)
+        public Type[] modificationtypeattributes;
+        public ObjectModifiedArgs(DateTime timestamp, IHasReference TargetObject, Type[]modificationtypeattributes)
         {
             TimeStamp = timestamp;
             this.TargetObject = TargetObject;
-            this.ModificationBitmask = ModificationBitmask;
+            this.modificationtypeattributes = modificationtypeattributes;
         }
     }
     
     public class ObjectDeletedArgs : EventArgs
     {
         public DateTime TimeStamp;
-        public IHasReference TargetObject;
-        public ObjectDeletedArgs(DateTime timestamp, IHasReference TargetObject)
+        public int Reference;
+        public string typename;
+        public ObjectDeletedArgs(DateTime timestamp, int Reference, string typename )
         {
             TimeStamp = timestamp;
-            this.TargetObject = TargetObject;
+            this.Reference = Reference;
+            this.typename = typename;
         }
     }
     
@@ -88,6 +90,7 @@ namespace OSMP
 
         bool HasEntityForReference(int reference);
         void AssignGlobalReference( IHasReference entity, int globalreference );
+        IHasReference GetEntity(int reference);
     }
 
     public interface IReferenceGenerator
@@ -112,10 +115,10 @@ namespace OSMP
                 reference, typename, attributebitmap, entity);
         }
 
-        public void ObjectDeleted( int reference)
+        public void ObjectDeleted(int reference, string typename)
         {
             MetaverseServer.GetInstance().netreplicationcontroller.ObjectDeletedRpc(connection,
-                reference );
+                reference, typename );
         }
     }
 
@@ -142,10 +145,10 @@ namespace OSMP
                 reference, typename, attributebitmap, entity);
         }
 
-        public void ObjectDeleted(int reference)
+        public void ObjectDeleted(int reference, string typename)
         {
             MetaverseClient.GetInstance().netreplicationcontroller.ObjectDeletedRpc(connection,
-                reference );
+                reference, typename );
         }
     }
 
@@ -219,8 +222,27 @@ namespace OSMP
             //Console.WriteLine(Encoding.UTF8.GetString(entitydatatotransmit));
 
             new NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy(
-                rpc, connection).ObjectCreated(
+                rpc, connection).ObjectModified(
                 entity.Reference, entity.GetType().ToString(), bitmap, entitydatatotransmit);
+        }
+
+        public void ReplicateDeletionToSingleClient(IPEndPoint connection, int reference, string typename)
+        {
+            Console.WriteLine("ReplicateDeletionToSingleClient " + reference + " to " + connection);
+            new NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy(rpc, connection)
+                .ObjectDeleted(reference, typename );
+        }
+
+        IReplicatedObjectController GetControllerForType(Type type)
+        {
+            foreach (Type replicatedtype in objectcontrollers.Keys)
+            {
+                if ( type.IsSubclassOf( replicatedtype ))
+                {
+                    return objectcontrollers[replicatedtype];
+                }
+            }
+            return null;
         }
 
         IReplicatedObjectController GetControllerForObject(IHasReference entity)
@@ -238,10 +260,44 @@ namespace OSMP
         // events for incoming changes from object controllers
         void controller_ObjectModified(object source, ObjectModifiedArgs e)
         {
+            Console.WriteLine("netreplicationcontroller controller_ObjectModified " + e.TargetObject.GetType());
+            if (this.rpc.IsServer)
+            {
+                //Console.WriteLine("controller_ObjectCreated() " + e.TargetObject);
+                //NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy objectreplicationproxy = new OSMP.NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy( rpc, 
+                // handled by something like DirtyCacheController
+                dirtyobjectcontroller.MarkDirty(e.TargetObject, e.modificationtypeattributes );
+            }
+            else
+            {
+                int bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap(e.modificationtypeattributes);
+
+                byte[] entitydata = new byte[4096];
+                int nextposition = 0;
+                new BinaryPacker().PackObjectUsingSpecifiedAttributes(entitydata, ref nextposition,
+                    e.TargetObject, e.modificationtypeattributes);
+
+                byte[] entitydatatotransmit = new byte[nextposition];
+                Buffer.BlockCopy(entitydata, 0, entitydatatotransmit, 0, nextposition);
+
+                //Console.WriteLine(Encoding.UTF8.GetString(entitydatatotransmit));
+
+                NetworkInterfaces.ObjectReplicationClientToServer_ClientProxy objectreplicationproxy = new OSMP.NetworkInterfaces.ObjectReplicationClientToServer_ClientProxy(rpc, null);
+                objectreplicationproxy.ObjectModified(e.TargetObject.Reference, e.TargetObject.GetType().ToString(), bitmap, entitydatatotransmit);
+            }
         }
 
         void controller_ObjectDeleted(object source, ObjectDeletedArgs e)
         {
+            if (rpc.isserver)
+            {
+                dirtyobjectcontroller.MarkDeleted(e.Reference, e.typename);
+            }
+            else
+            {
+                new NetworkInterfaces.ObjectReplicationClientToServer_ClientProxy(rpc, null).ObjectDeleted(
+                    e.Reference, e.typename);
+            }
         }
 
         void controller_ObjectCreated(object source, ObjectCreatedArgs e)
@@ -392,12 +448,94 @@ namespace OSMP
 
         public void ObjectModifiedRpc(IPEndPoint connection, int reference, string typename, int attributebitmap, byte[] entity)
         {
-            Console.WriteLine("ObjectModifiedRpc " + entity.GetType());
+            if (rpc.isserver)
+            {
+                Type modifiedobjecttype = Type.GetType(typename);
+
+                IReplicatedObjectController replicatedobjectcontroller = GetControllerForType(modifiedobjecttype);
+                if (replicatedobjectcontroller == null)
+                {
+                    Console.WriteLine("ObjectModifiedRpc. Error: no controller for received type " + typename);
+                    return;
+                }
+
+                List<Type> AttributeTypeList = new ReplicateAttributeHelper().BitmapToAttributeTypeArray(attributebitmap);
+
+                IHasReference thisobject = replicatedobjectcontroller.GetEntity(reference);
+                if (thisobject == null)
+                {
+                    Console.WriteLine("ObjectModifiedRpc received for unknown object " + reference);
+                    return;
+                }
+                int nextposition = 0;
+                new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes(entity, ref nextposition,
+                    thisobject, new Type[] { typeof(Replicate) });
+
+                Console.WriteLine("server received replicated modified object: " + thisobject);
+                replicatedobjectcontroller.ReplicatedObjectModified(this,
+                    new ObjectModifiedArgs(DateTime.Now, thisobject, AttributeTypeList.ToArray()));
+                dirtyobjectcontroller.MarkDirty(thisobject, AttributeTypeList.ToArray());
+            }
+            else
+            {
+                Console.WriteLine("ObjectModifiedRpcServerToClient " + typename);
+
+                Type modifiedobjecttype = Type.GetType(typename);
+
+                IReplicatedObjectController replicatedobjectcontroller = GetControllerForType(modifiedobjecttype);
+                if (replicatedobjectcontroller == null)
+                {
+                    Console.WriteLine("ObjectModifiedRpc. Error: no controller for received type " + typename);
+                    return;
+                }
+
+                List<Type> AttributeTypeList = new ReplicateAttributeHelper().BitmapToAttributeTypeArray(attributebitmap);
+
+                IHasReference thisobject = replicatedobjectcontroller.GetEntity(reference);
+                bool objectisnew = false;
+                if (thisobject == null)
+                {
+                    Console.WriteLine("Creating new object");
+                    thisobject = Activator.CreateInstance(modifiedobjecttype) as IHasReference;
+                    objectisnew = true;
+                }
+                int nextposition = 0;
+                new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes(entity, ref nextposition,
+                    thisobject, new Type[] { typeof(Replicate) });
+
+                Console.WriteLine("client received replicated modified object: " + thisobject);
+                if (objectisnew)
+                {
+                    replicatedobjectcontroller.ReplicatedObjectCreated(this,
+                        new ObjectCreatedArgs(DateTime.Now, thisobject));
+                }
+                else
+                {
+                    replicatedobjectcontroller.ReplicatedObjectModified(this,
+                        new ObjectModifiedArgs(DateTime.Now, thisobject, AttributeTypeList.ToArray()));
+                }
+            }
         }
 
-        public void ObjectDeletedRpc(IPEndPoint connection, int reference)
+        public void ObjectDeletedRpc(IPEndPoint connection, int reference, string typename)
         {
             Console.WriteLine("ObjectDeletedRpc " + reference);
+            Type type = Type.GetType( typename );
+            IReplicatedObjectController replicatedobjectcontroller = GetControllerForType(type);
+            if (replicatedobjectcontroller == null)
+            {
+                Console.WriteLine("Warning: no replicatedobjectcontroller found for type " + typename);
+                return;
+            }
+
+            if (rpc.isserver)
+            {
+                dirtyobjectcontroller.MarkDeleted(reference, typename);
+            }
+            else
+            {
+                replicatedobjectcontroller.ReplicatedObjectDeleted(this, new ObjectDeletedArgs(DateTime.Now, reference, typename));
+            }
         }        
 
         // tick is going to prepare/send some packets to replicate dirty/new objects

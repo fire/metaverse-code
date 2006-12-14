@@ -25,6 +25,6 @@ namespace OSMP
     public class ImImplementationFactory
     {
         static IImImplementation instance = new IrcController();
-        public static IImImplementation GetInstance() { throw new Exception(); return instance; }
+        public static IImImplementation GetInstance() { return instance; }
     }
 }

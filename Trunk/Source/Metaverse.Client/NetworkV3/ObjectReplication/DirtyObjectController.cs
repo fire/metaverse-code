@@ -60,8 +60,14 @@ namespace OSMP
         {
             foreach (DirtyObjectQueueSingleClient remoteclientdirtyqueue in remoteclientdirtyqueues.Values)
             {
-                //RemoteClient remoteclient = (RemoteClient)remoteclientobject;
                 remoteclientdirtyqueue.MarkDirty(targetobject, dirtytypes);
+            }
+        }
+        public void MarkDeleted(int reference, string typename)
+        {
+            foreach (DirtyObjectQueueSingleClient remoteclientdirtyqueue in remoteclientdirtyqueues.Values)
+            {
+                remoteclientdirtyqueue.MarkDeleted(reference, typename);
             }
         }
 

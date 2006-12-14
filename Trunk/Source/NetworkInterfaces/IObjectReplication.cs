@@ -9,7 +9,7 @@ namespace OSMP.NetworkInterfaces
     {
         void ObjectCreated( int remoteclientreference, string entitytypename, int attributebitmap, byte[] entitydata);
         void ObjectModified(int reference, string entitytypename, int attributebitmap, byte[] entitydata);
-        void ObjectDeleted( int reference);
+        void ObjectDeleted(int reference, string entitytypename);
     }
 
     [AuthorizedRpcInterface]
@@ -18,6 +18,6 @@ namespace OSMP.NetworkInterfaces
         void ObjectCreatedServerToCreatorClient(int clientreference, int globalreference);
         void ObjectCreated(int reference, string entitytypename, int attributebitmap, byte[] entitydata);
         void ObjectModified(int reference, string entitytypename, int attributebitmap, byte[] entitydata);
-        void ObjectDeleted(int reference);
+        void ObjectDeleted( int reference, string entitytypename );
     }
 }

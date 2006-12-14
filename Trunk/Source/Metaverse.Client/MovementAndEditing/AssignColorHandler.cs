@@ -91,6 +91,7 @@ namespace OSMP
             if( entity is FractalSplinePrim )
             {
                 ((FractalSplinePrim)entity).SetColor( FaceNumber, color );
+                MetaverseClient.GetInstance().worldstorage.OnModifyEntity(entity);
             }
         }
         

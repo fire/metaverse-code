@@ -136,6 +136,7 @@ namespace OSMP
             
             // scale is defined in entity local axes, so no need to transform into world axes
             entity.scale = newscale;
+            MetaverseClient.GetInstance().worldstorage.OnModifyEntity(entity);
         }
         
         public void InteractiveFreeEdit( int mousex, int mousey )
@@ -202,6 +203,7 @@ namespace OSMP
                 //        Vector3 vTranslate;
                 //        vTranslate = ( Vector3( vNewScale ) - Vector3( editing3d.startscale ) ) * 0.5f;        
                 entity.scale = vNewScale;
+                MetaverseClient.GetInstance().worldstorage.OnModifyEntity(entity);
             }
             //   DEBUG(  "InteractiveHandleScaleEdit done" ); // DEBUG
         }

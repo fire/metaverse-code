@@ -200,13 +200,13 @@ namespace OSMP
             }
             else if (type.IsClass) // pack public fields from class
             {
-               // Console.WriteLine("Pack class " + type.Name);
+                //Console.WriteLine("Pack class " + type.Name);
                 foreach (FieldInfo fieldinfo in type.GetFields())
                 {
                     //if (allowedattributes == null || HasAllowedAttribute(fieldinfo))
                     //{
                         object fieldvalue = fieldinfo.GetValue(value);
-                       // Console.WriteLine("packing " + fieldinfo.Name + " " + fieldvalue + " ...");
+                  //      Console.WriteLine("packing " + fieldinfo.Name + " " + fieldvalue + " ...");
                         WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
                     //}
                 }
@@ -215,7 +215,7 @@ namespace OSMP
                     //if (allowedattributes == null || HasAllowedAttribute(propertyinfo))
                     //{
                         object fieldvalue = propertyinfo.GetValue(value, null);
-                        //Console.WriteLine("packing " + propertyinfo.Name + " " + fieldvalue + " ...");
+                    //    Console.WriteLine("packing " + propertyinfo.Name + " " + fieldvalue + " ...");
                         WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
                     //}
                 }

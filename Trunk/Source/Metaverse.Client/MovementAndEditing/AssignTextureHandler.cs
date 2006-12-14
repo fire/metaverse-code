@@ -62,6 +62,7 @@ namespace OSMP
             if( entity is FractalSplinePrim )
             {
                 ((FractalSplinePrim)entity).SetTexture( FaceNumber, uri );
+                MetaverseClient.GetInstance().worldstorage.OnModifyEntity(entity);
             }
         }
         
