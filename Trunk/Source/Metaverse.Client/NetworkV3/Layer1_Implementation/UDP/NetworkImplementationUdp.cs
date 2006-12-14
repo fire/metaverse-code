@@ -56,8 +56,8 @@ namespace OSMP
         Dictionary<IPEndPoint,Level1ConnectionInfo> connections = new Dictionary<IPEndPoint,Level1ConnectionInfo>(); // used by server
         Level1ConnectionInfo connectiontoserver = new Level1ConnectionInfo( null, new ConnectionInfo( null, null, 0 ) ); // used by client
         
-        public int ConnectionTimeOutSeconds = 10;
-        public int KeepaliveIntervalSeconds = 2;
+        public int ConnectionTimeOutSeconds = 30;
+        public int KeepaliveIntervalSeconds = 5;
         
         class Level1ConnectionInfo
         {
@@ -79,14 +79,14 @@ namespace OSMP
             }
         }
 
-        public IPAddress GetIPAddressForConnection(object connection)
+        public IPAddress GetIPAddressForConnection(IPEndPoint connection)
         {
-            return ((IPEndPoint)connection).Address;
+            return connection.Address;
         }
 
-        public int GetPortForConnection(object connection)
+        public int GetPortForConnection(IPEndPoint connection)
         {
-            return ((IPEndPoint)connection).Port;
+            return connection.Port;
         }
         
         bool isserver;
@@ -140,6 +140,7 @@ namespace OSMP
             get{ return isserver;}
         }
         
+        /*
         class Receive
         {
             UdpClient udpclient;
@@ -171,7 +172,7 @@ namespace OSMP
                 }
             }
         }
-        
+        */
         void Init()
         {
             if( isserver )
@@ -209,12 +210,12 @@ namespace OSMP
                 {
                     receiveddata = udpclient.Receive(ref endpoint);
                     //   Console.WriteLine("received: " + Encoding.UTF8.GetString(receiveddata, 0, receiveddata.Length));
+                    ProcessReceivedPacket(endpoint, receiveddata);
                 }
                 catch //(Exception e)
                 {
                   //  Console.WriteLine(e);
                 }
-                ProcessReceivedPacket(endpoint, receiveddata);
             }
         }
 
@@ -241,7 +242,7 @@ namespace OSMP
         }
         
         // for server
-        public void Send( object connection, byte[] data, int length )
+        public void Send(IPEndPoint connection, byte[] data, int length)
         {
             if (isserver)
             {
@@ -255,7 +256,7 @@ namespace OSMP
             }
         }
 
-        public void Send(object connection, byte[] data )
+        public void Send(IPEndPoint connection, byte[] data)
         {
             Send(connection, data, data.Length);
         }
@@ -278,7 +279,7 @@ namespace OSMP
             {
                 foreach( KeyValuePair<IPEndPoint,Level1ConnectionInfo> kvp in connections )
                 {
-                    object connection = kvp.Key;
+                    IPEndPoint connection = kvp.Key;
                     Level1ConnectionInfo connectioninfo = kvp.Value;
                     if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                     {

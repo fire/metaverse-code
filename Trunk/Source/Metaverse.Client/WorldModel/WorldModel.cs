@@ -115,14 +115,17 @@ namespace OSMP
     
     public class WorldModel : IReplicatedObjectController
     {
+        // from IReplicatedObjectController
         public event ObjectCreatedHandler ObjectCreated;
         public event ObjectModifiedHandler ObjectModified;
         public event ObjectDeletedHandler ObjectDeleted;
 
+        // for filtering etc
         public event BeforeCreateHandler BeforeCreate;
         public event BeforeDeleteHandler BeforeDelete;
         public event BeforeModifyHandler BeforeModify;
-            
+
+        // for filtering etc
         public event AfterCreateHandler AfterCreate;
         public event AfterDeleteHandler AfterDelete;
         public event AfterModifyHandler AfterModify;
@@ -130,6 +133,34 @@ namespace OSMP
         public event ClearHandler ClearEvent;
         
         public List<Entity> entities = new List<Entity>();
+
+        bool IReplicatedObjectController.HasEntityForReference(int reference)
+        {
+            foreach (Entity entity in entities)
+            {
+                if (entity.iReference == reference)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void IReplicatedObjectController.AssignGlobalReference(IHasReference entitytoassign, int globalreference)
+        {
+            // first check we dont already have an entity with same reference, but not same object
+            // if we do it is duplicate, so delete
+            foreach (Entity entity in entities)
+            {
+               if (entity.iReference == globalreference && entity != entitytoassign )
+               {
+                   Console.WriteLine("removed duplicate " + globalreference);
+                   entities.Remove(entity);
+                   break;
+               }
+            }
+            entitytoassign.Reference = globalreference;
+        }
             
         //static WorldModel instance = new WorldModel(); // This is for deserialization (eg load a world from xml).  Not for normal use.
         //public static WorldModel GetInstance()
@@ -150,6 +181,16 @@ namespace OSMP
         void IReplicatedObjectController.ReplicatedObjectCreated(object notifier, ObjectCreatedArgs e)
         {
             Console.WriteLine("WorldModel ReplicatedObjectCreated " + e.TargetObject);
+            Entity newentity = e.TargetObject as Entity;
+            entities.Add( newentity );
+            //if(this.ObjectCreated != null )
+            //{
+              //  ObjectCreated( this, new ObjectCreatedArgs( DateTime.Now, newentity ) );
+            //}
+            if (AfterCreate != null)
+            {
+                AfterCreate(this, new CreateEntityEventArgs(newentity));
+            }
         }
         
         // incoming event from NetReplicationController:

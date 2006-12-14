@@ -105,7 +105,7 @@ namespace OSMP
                 short packetref = (short)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(short));
                 char packetcode = (char)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(char));
                 
-                Console.WriteLine( "Packet key: " + packetkey.ToString() + " packetref: " + packetref.ToString() + " packetcode: " + packetcode );
+                //Console.WriteLine( "Packet key: " + packetkey.ToString() + " packetref: " + packetref.ToString() + " packetcode: " + packetcode );
 
                 if( unsafepackethandlers.Contains( packetcode ) )
                 {

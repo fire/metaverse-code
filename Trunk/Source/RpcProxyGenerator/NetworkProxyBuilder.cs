@@ -142,6 +142,10 @@ namespace RpcProxyGenerator
             WriteHeaderComments(clientproxy);
             //WriteHeaderComments(serverproxy);
 
+            clientproxy.WriteLine("using System;");
+            clientproxy.WriteLine("using System.Net;");
+            clientproxy.WriteLine();
+
             // client implements interface, server cannot because will accept array of objects as parameters
             if (namespacename != "")
             {
@@ -151,9 +155,9 @@ namespace RpcProxyGenerator
             clientproxy.WriteLine("public class " + clientproxyclassname + " : " + targettypename);
             clientproxy.WriteLine("{");
             clientproxy.WriteLine("   RpcController rpc;");
-            clientproxy.WriteLine("   object connection;");
+            clientproxy.WriteLine("   IPEndPoint connection;");
             clientproxy.WriteLine("");
-            clientproxy.WriteLine("   public " + clientproxyclassname + "( RpcController rpc, object connection )");
+            clientproxy.WriteLine("   public " + clientproxyclassname + "( RpcController rpc, IPEndPoint connection )");
             clientproxy.WriteLine("   {");
             clientproxy.WriteLine("      this.rpc = rpc;");
             clientproxy.WriteLine("      this.connection = connection;");
@@ -190,7 +194,7 @@ namespace RpcProxyGenerator
             //serverproxy.Close();
 
             Console.WriteLine("");
-            Console.WriteLine("Generation completed.");
+            Console.WriteLine(clientproxyfilepath + " generated");
         }
     }
 }

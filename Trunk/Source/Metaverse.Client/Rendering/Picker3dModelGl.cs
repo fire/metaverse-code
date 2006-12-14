@@ -87,7 +87,7 @@ namespace OSMP
         {
             if( bAddingNames )
             {
-                Test.Debug("adding name " + hittarget.ToString() );
+                //Test.Debug("adding name " + hittarget.ToString() );
                 hittargets.Add( hittarget );
                 Gl.glLoadName( hittargets.Count );  // note: this isnt quite the index; it is index + 1
             }

@@ -43,19 +43,14 @@ namespace OSMP
         {
         }
 
-        /// <summary>
-        /// When packing/unpacking classes, only fields and properties with an attribute matching allowedattributes
-        /// will be packed
-        /// </summary>
-        /// <param name="allowedattributes"></param>
-        public BinaryPacker(Type[] allowedattributes)
-        {
-            this.allowedattributes = allowedattributes;
-        }
+        //public BinaryPacker(Type[] allowedattributes)
+        //{
+            //this.allowedattributes = allowedattributes;
+        //}
 
-        public Type[] allowedattributes;
+        //public Type[] allowedattributes;
 
-        bool HasAllowedAttribute(MemberInfo memberinfo)
+        bool HasAllowedAttribute( Type[] allowedattributes, MemberInfo memberinfo)
         {
             object[] attributes = memberinfo.GetCustomAttributes(false);
             foreach (object attribute in attributes)
@@ -73,7 +68,53 @@ namespace OSMP
             return false;
         }
 
-        public void WriteValueToBuffer( byte[] buffer, ref int nextposition, object value )
+        public void PackObjectUsingSpecifiedAttributes(byte[] buffer, ref int nextposition, object value, Type[] allowedattributes)
+        {
+            Type type = value.GetType();
+            foreach (FieldInfo fieldinfo in type.GetFields())
+            {
+                if ( HasAllowedAttribute(allowedattributes, fieldinfo))
+                {
+                    object fieldvalue = fieldinfo.GetValue(value);
+                    // Console.WriteLine("packing " + fieldinfo.Name + " " + fieldvalue + " ...");
+                    WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
+                }
+            }
+            foreach (System.Reflection.PropertyInfo propertyinfo in type.GetProperties())
+            {
+                if ( HasAllowedAttribute(allowedattributes, propertyinfo))
+                {
+                    object fieldvalue = propertyinfo.GetValue(value, null);
+                    //Console.WriteLine("packing " + propertyinfo.Name + " " + fieldvalue + " ...");
+                    WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
+                }
+            }
+        }
+
+        public void UnpackIntoObjectUsingSpecifiedAttributes(byte[] buffer, ref int nextposition, object targetobject, Type[] allowedattributes)
+        {
+            Type type = targetobject.GetType();
+            foreach (FieldInfo fieldinfo in type.GetFields())
+            {
+                if (HasAllowedAttribute(allowedattributes, fieldinfo))
+                {
+                        object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, fieldinfo.FieldType);
+                       // Console.WriteLine("unpacking " + fieldinfo.Name + " value " + fieldvalue + " ...");
+                        fieldinfo.SetValue(targetobject, fieldvalue);
+                }
+            }
+            foreach (System.Reflection.PropertyInfo propertyinfo in type.GetProperties())
+            {
+                if (HasAllowedAttribute(allowedattributes, propertyinfo))
+                {
+                        object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, propertyinfo.PropertyType);
+                       // Console.WriteLine("unpacking " + propertyinfo.Name + "  value " + fieldvalue + " ...");
+                        propertyinfo.SetValue(targetobject, fieldvalue, null);
+                }
+            }
+        }
+
+        public void WriteValueToBuffer(byte[] buffer, ref int nextposition, object value)
         {
             //Console.WriteLine(value + " " + value.GetType());
             if (value == null)
@@ -162,21 +203,21 @@ namespace OSMP
                // Console.WriteLine("Pack class " + type.Name);
                 foreach (FieldInfo fieldinfo in type.GetFields())
                 {
-                    if (allowedattributes == null || HasAllowedAttribute(fieldinfo))
-                    {
+                    //if (allowedattributes == null || HasAllowedAttribute(fieldinfo))
+                    //{
                         object fieldvalue = fieldinfo.GetValue(value);
                        // Console.WriteLine("packing " + fieldinfo.Name + " " + fieldvalue + " ...");
                         WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
-                    }
+                    //}
                 }
                 foreach (System.Reflection.PropertyInfo propertyinfo in type.GetProperties())
                 {
-                    if (allowedattributes == null || HasAllowedAttribute(propertyinfo))
-                    {
+                    //if (allowedattributes == null || HasAllowedAttribute(propertyinfo))
+                    //{
                         object fieldvalue = propertyinfo.GetValue(value, null);
                         //Console.WriteLine("packing " + propertyinfo.Name + " " + fieldvalue + " ...");
                         WriteValueToBuffer(buffer, ref nextposition, fieldvalue);
-                    }
+                    //}
                 }
             }
             else
@@ -261,21 +302,21 @@ namespace OSMP
                 object newobject = Activator.CreateInstance(type);
                 foreach (FieldInfo fieldinfo in type.GetFields())
                 {
-                    if (allowedattributes == null || HasAllowedAttribute(fieldinfo))
-                    {
+                 //   if (allowedattributes == null || HasAllowedAttribute(fieldinfo))
+                   // {
                         object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, fieldinfo.FieldType);
                        // Console.WriteLine("unpacking " + fieldinfo.Name + " value " + fieldvalue + " ...");
                         fieldinfo.SetValue(newobject, fieldvalue);
-                    }
+                    //}
                 }
                 foreach (System.Reflection.PropertyInfo propertyinfo in type.GetProperties())
                 {
-                    if (allowedattributes == null || HasAllowedAttribute(propertyinfo))
-                    {
+                    //if (allowedattributes == null || HasAllowedAttribute(propertyinfo))
+                    //{
                         object fieldvalue = ReadValueFromBuffer(buffer, ref nextposition, propertyinfo.PropertyType);
                        // Console.WriteLine("unpacking " + propertyinfo.Name + "  value " + fieldvalue + " ...");
                         propertyinfo.SetValue(newobject, fieldvalue, null);
-                    }
+                    //}
                 }
                 return newobject;
             }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Net;
 
 namespace OSMP.Testing
 {
     class TestInterface : ITestInterface
     {
-        object connection;
+        IPEndPoint connection;
 
-        public TestInterface( object connection)
+        public TestInterface(IPEndPoint connection)
         {
             this.connection = connection;
         }

@@ -21,6 +21,7 @@
 using System;
 using System.Collections;
 using System.Threading;
+using System.Net;
 
 namespace OSMP
 {
@@ -38,14 +39,14 @@ namespace OSMP
 
             }
 
-            public void SayHello( object connection )
+            public void SayHello(IPEndPoint connection)
             {
                 Console.WriteLine("Hello!");
                 Testing.TestInterface_ClientProxy testinterfaceclientproxy = new OSMP.Testing.TestInterface_ClientProxy( rpc, connection );
                 testinterfaceclientproxy.SayMessage("Hello sent via SayMessage!");
             }
 
-            public void SayMessage(object connection, string message)
+            public void SayMessage(IPEndPoint connection, string message)
             {
                 Console.WriteLine("Message: " + message);
                 Testing.TestInterface_ClientProxy testinterfaceclientproxy = new OSMP.Testing.TestInterface_ClientProxy(rpc, connection);
@@ -56,7 +57,7 @@ namespace OSMP
                 testinterfaceclientproxy.SendObject(testobject);
             }
 
-            public void SendObject(object connection, Testing.TestClass testobject)
+            public void SendObject(IPEndPoint connection, Testing.TestClass testobject)
             {
                 Console.WriteLine("testobject name: " + testobject.name);
             }
