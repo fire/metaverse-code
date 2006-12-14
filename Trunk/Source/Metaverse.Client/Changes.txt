@@ -1,4 +1,6 @@
 Next release:
+- migrated context menu to GTK#
+- migrated entity properties box to GTK#
 
 Release December 12 2006:
 - renamed "Properties" in context menu to "Edit"

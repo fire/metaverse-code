@@ -109,7 +109,15 @@ namespace OSMP
         {
             glControl.Focus();
         }
-        
+
+        //public Point WindowTopLeftScreenCoords
+        //{
+          //  get
+            //{
+              //  return PointToScreen(new Point(0, 0));
+            //}
+        //}
+
         void InitializeComponent()
         {
             SuspendLayout();
@@ -142,11 +150,13 @@ namespace OSMP
             impanel.Bounds = new Rectangle( 0, 87, 100, 13 );
             impanel.TabStop = false;
             renderermainwindowlayout.Controls.Add( impanel );
-            
+
             Menu = new MainMenu();
-            ContextMenu = new ContextMenu();
-            
-            ContextMenu.Popup += new EventHandler( _ContextMenuPopup );
+            //ContextMenu = new ContextMenu();
+
+          //  this.LocationChanged += new EventHandler(RendererSdlCtrl_LocationChanged);
+
+            //ContextMenu.Popup += new EventHandler( _ContextMenuPopup );
             
           //  Controls.Add( glControl );
             //glControl.Location = new Point( 20, 20 );
@@ -166,9 +176,14 @@ namespace OSMP
             Top=0;
             Size=new Size(screenworkingarea.Width,screenworkingarea.Height );
             WindowState = FormWindowState.Maximized;
-    
+
             ResumeLayout(false);
         }
+
+        //void RendererSdlCtrl_LocationChanged(object sender, EventArgs e)
+        //{
+          //  Console.WriteLine("new location: " + this.Location.X + " " + this.Location.Y);
+        //}
         
         protected override void OnLoad( EventArgs e )
         {

@@ -155,7 +155,11 @@
     <Compile Include="Server\MetaverseServer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\DialogHelpers.cs" />
+    <Compile Include="UI\Dialogs\ChatWindow.cs" />
     <Compile Include="UI\Dialogs\UIContextMenu.cs" />
+    <Compile Include="UI\Dialogs\UIEntitiesPropertiesDialog.cs">
+    </Compile>
     <Compile Include="UI\UIController.cs" />
     <Compile Include="WorldModel\Avatar.cs" />
     <Compile Include="WorldModel\Entity.cs" />
