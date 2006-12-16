@@ -1,8 +1,8 @@
 /*
  * Created by SharpDevelop.
  * User: Administrator
- * Date: 12/14/2006
- * Time: 1:41 AM
+ * Date: 12/16/2006
+ * Time: 12:35 PM
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
@@ -14,15 +14,17 @@ using System.Collections;
 namespace Metaverse.Scripting.Testing
 {
 	/// <summary>
-	/// Description of WorldModel.
+	/// Description of DummyClientController.
 	/// </summary>
-	public class WorldModel : IWorldModel
+	public class DummyClientController : IClientController
 	{
-		private int _data = 0;
+		public DummyClientController()
+		{
+		}
 		
-		public int Data {
-			get { return _data; }
-			set { _data = value; }
+		public void FileInsertNewSingleFileScript(string filename, string file)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

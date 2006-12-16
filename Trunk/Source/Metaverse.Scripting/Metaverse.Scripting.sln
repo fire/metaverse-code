@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Scripting", "Meta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Scripting.Testing", "..\Metaverse.Scripting.Testing\Metaverse.Scripting.Testing.csproj", "{19AF96A4-C8F9-4131-9A8A-69EA468EC969}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Common", "..\Metaverse.Common\Metaverse.Common\Metaverse.Common.csproj", "{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Common", "..\Metaverse.Common\Metaverse.Common.csproj", "{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

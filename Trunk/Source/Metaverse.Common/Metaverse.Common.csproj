@@ -29,13 +29,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IScript.cs" />
-    <Compile Include="AGenericScript.cs" />
     <Compile Include="IScriptExecutor.cs" />
     <Compile Include="ISim.cs" />
-    <Compile Include="MetaverseController.cs" />
     <Compile Include="IMetaverseServer.cs" />
-    <Compile Include="SimController.cs" />
-    <Compile Include="WorldModel.cs" />
+    <Compile Include="IWorldModel.cs" />
+    <Compile Include="IClientController.cs" />
+    <Compile Include="IMetaverseController.cs" />
+    <Compile Include="ISimController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

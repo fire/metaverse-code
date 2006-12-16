@@ -19,19 +19,19 @@ namespace Metaverse.Scripting.Testing
 	public class SingleSimServer : IMetaverseServer
 	{
 		ArrayList _scripts;
-		public WorldModel Model;
+		public IWorldModel Model;
 
 		public void Initialize()
 		{
 			Model = new WorldModel();
 			Model.Data = 1;
 			_scripts = new ArrayList();
-			MetaverseController.Singleton.RegisterMetaverseServer( this );
+			Controller.Metaverse.RegisterMetaverseServer( this );
 		}
 		
 		public MiniSimulator CreateSimulator() {
 			MiniSimulator sim = new MiniSimulator();
-			MetaverseController.Singleton.AttachSimulator( sim );
+			Controller.Metaverse.AttachSimulator( sim );
 			return sim;
 		}
 		
@@ -45,7 +45,7 @@ namespace Metaverse.Scripting.Testing
 			_scripts.Add( script );
 		}
 		
-		public WorldModel GetWorldModel(ISim simulator)
+		public IWorldModel GetWorldModel(ISim simulator)
 		{
 			return Model;
 		}

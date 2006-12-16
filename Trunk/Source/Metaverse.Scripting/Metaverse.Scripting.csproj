@@ -45,7 +45,7 @@
     <Compile Include="IScriptController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Metaverse.Common\Metaverse.Common\Metaverse.Common.csproj">
+    <ProjectReference Include="..\Metaverse.Common\Metaverse.Common.csproj">
       <Project>{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}</Project>
       <Name>Metaverse.Common</Name>
     </ProjectReference>

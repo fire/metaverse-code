@@ -8,8 +8,9 @@
  */
 
 using System;
+using Metaverse.Common;
 
-namespace Metaverse.Common
+namespace Metaverse.Scripting.Testing
 {
 	/// <summary>
 	/// Description of AGenericScript.

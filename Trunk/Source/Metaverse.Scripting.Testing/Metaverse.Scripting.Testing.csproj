@@ -32,13 +32,22 @@
   <ItemGroup>
     <Compile Include="SingleFileProjectScriptingTest.cs" />
     <Compile Include="MiniSimulator.cs" />
+    <Compile Include="DummyMetaverseController.cs" />
+    <Compile Include="DummyClientController.cs" />
+    <Compile Include="DummySimController.cs" />
+    <Compile Include="WorldModel.cs" />
+    <Compile Include="ClientController.cs" />
+    <Compile Include="SimController.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="MetaverseController.cs" />
+    <Compile Include="AGenericScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Metaverse.Scripting\Metaverse.Scripting.csproj">
       <Project>{595D7439-A81F-46BE-AD7E-BD1BA3265B84}</Project>
       <Name>Metaverse.Scripting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Metaverse.Common\Metaverse.Common\Metaverse.Common.csproj">
+    <ProjectReference Include="..\Metaverse.Common\Metaverse.Common.csproj">
       <Project>{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}</Project>
       <Name>Metaverse.Common</Name>
     </ProjectReference>
