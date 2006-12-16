@@ -28,26 +28,41 @@ using System;
 
 namespace MathGl
 {
-    //!column major matrix class for OpenGL
+   
+	/// <summary>
+	/// A 4D matrix for math calculations
+	/// </summary>
+	
     public class GLMatrix4d
     {
         double[]m = new double[16];
         
-        //!Create an uninitialised matrix
+		/// <summary>
+		/// Create an uninitialized matrix
+		/// </summary>
         public GLMatrix4d()
         { }
     
-        //!Create an initialised matrix
+		/// <summary>
+		/// Create an initialised matrix
+		/// </summary>
+		/// <param name="val">A value to initialize all fields of the matrix</param>
         public GLMatrix4d(double val)
         { m[0]=m[1]=m[2]=m[3]=m[4]=m[5]=m[6]=m[7]=m[8]=m[9]=m[10]=m[11]=m[12]=m[13]=m[14]=m[15]=val; }
     
-        //!Create a matrix from an array
+		/// <summary>
+		/// Create a matrix from an array
+		/// </summary>
+		/// <param name="val">Array of values to initialize the matrix with</param>
         public GLMatrix4d( double[] val)
         {
             Buffer.BlockCopy( val, 0, m, 0, Buffer.ByteLength( val ) );
         }
     
-        //!Copy a matrix
+		/// <summary>
+		/// Copy a matrix
+		/// </summary>
+		/// <param name="mat">Source matrix to copy from</param>
         public GLMatrix4d(GLMatrix4d mat)
         { 
             Buffer.BlockCopy( mat.m, 0, m, 0, Buffer.ByteLength( mat.m ) );
