@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
 
 //! \file
 //! \brief Manages 3d Scale editing
@@ -326,7 +325,7 @@ namespace OSMP
         {
             graphics.PushMatrix();
             graphics.SetMaterialColor( editing3d.GetEditHandleColor( handleaxis ) );
-            RendererFactory.GetInstance().GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( new Axis( handleaxis ) ) );
+            RendererFactory.GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( new Axis( handleaxis ) ) );
             double fTranslateAmount = ( handleaxis.GetAxisComponentIgnoreAxisDirection( entityscale ) + handleaxis.GetAxisComponentIgnoreAxisDirection( handlescale ) ) / 2;
             graphics.Translate( fTranslateAmount * handleaxis.ToVector() );
             graphics.Scale( handlescale );

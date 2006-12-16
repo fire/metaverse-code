@@ -27,25 +27,21 @@ namespace OSMP
         public Vector3 pos;
         public Rot rot;
         public Vector3 scale;
-        
-        public EntityCreationProperties( int screenx, int screeny )
+
+        public EntityCreationProperties(int screenx, int screeny)
         {
+            Console.WriteLine("create entity screen pos : " + screenx + " " + screeny);
+
             IGraphicsHelper graphics = GraphicsHelperFactory.GetInstance();
+
             Camera camera = Camera.GetInstance();
-            if( camera.bRoamingCameraEnabled )
-            {
-                Vector3 mousevector = new Vector3();
-                pos = camera.RoamingCameraPos + 3.0 * mousevector.Normalize();
-                rot = new Rot();
-            }
-            else
-            {
-                PlayerMovement playermovement = PlayerMovement.GetInstance();
-                Vector3 mousevector = graphics.GetMouseVector( playermovement.avatarpos, playermovement.avatarrot, screenx, screeny );
-                pos = playermovement.avatarpos + 3.0 * mousevector.Normalize();
-                rot = new Rot();
-            }
-            scale = new Vector3( 1,1,1);
+            Vector3 mousevector = graphics.GetMouseVector(
+                camera.CameraPos, camera.CameraRot, screenx, screeny);
+            pos = camera.CameraPos + 3.0 * mousevector.Normalize();
+            Console.WriteLine("mousevector: " + mousevector);
+
+            rot = new Rot();
+            scale = new Vector3(1, 1, 1);
         }
         public void WriteToEntity( Entity entity, string name )
         {

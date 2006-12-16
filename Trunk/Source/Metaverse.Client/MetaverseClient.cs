@@ -21,7 +21,6 @@ using System;
 using System.Collections;
 using System.Threading;
 using System.Net;
-using System.Windows.Forms;
 using OSMP;
 
 namespace OSMP
@@ -132,13 +131,24 @@ namespace OSMP
             worldstorage.AddEntity(myavatar);
 
             PluginsLoader.GetInstance().LoadClientPlugins(arguments);
+            //UIController.GetInstance();
             if (!arguments.Unnamed.Contains("nochat"))
             {
                 LoadChat();
             }
 
+            //while (true)
+            //{
+              //  if (Tick != null)
+                //{
+                  //  Tick();
+                //}
+            //}
+
             renderer = RendererFactory.GetInstance();
-            renderer.RegisterMainLoopCallback(new MainLoopDelegate(this.MainLoop));
+            renderer.Tick += new OSMP.TickHandler(MainLoop);
+            //renderer.RegisterMainLoopCallback(new MainLoopDelegate(this.MainLoop));
+            renderer.Init();
             renderer.StartMainLoop();
 
             return 0;
@@ -160,7 +170,7 @@ namespace OSMP
             }
             catch (Exception e)
             {
-                MessageBox.Show("Failed to connect to server");
+                DialogHelpers.ShowErrorMessage( null, "Failed to connect to server");
                 Console.WriteLine(e.ToString());
             }
 

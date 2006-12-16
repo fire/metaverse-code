@@ -1,4 +1,5 @@
 // Copyright Hugh Perkins 2004,2005,2006
+// hughperkins@gmail.com http://manageddreams.com
 //
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the
@@ -37,43 +38,44 @@ namespace OSMP
 {
     interface IGraphicsHelper
     {
-        void PrintText( string text );
-        void ScreenPrintText(int x, int y, string text );
-        double GetScalingFrom3DToScreen( double fDepth );
-        Vector3 GetMouseVector( Vector3 OurPos, Rot rOurRot, int imousex, int imousey );
-        Vector3 GetScreenPos( Vector3 ObserverPos, Rot ObserverRot, Vector3 TargetPos3D );
-        
-        void DrawWireframeBox( int iNumSlices );
+        void PrintText(string text);
+        void ScreenPrintText(int x, int y, string text);
+        Vector3 GetMouseVector(Vector3 OurPos, Rot rOurRot, int imousex, int imousey);
+        double GetScalingFrom3DToScreen(double fDepth);
+        Vector3 GetScreenPos(Vector3 ObserverPos, Rot ObserverRot, Vector3 TargetPos3D);
+
+        void DrawWireframeBox(int iNumSlices);
         void DrawCone();
         void DrawCube();
         void DrawSphere();
         void DrawCylinder();
-        void DrawWireSphere();        
+        void DrawWireSphere();
         void DrawSquareXYPlane();
-        void DrawParallelSquares( int iNumSlices );
-        
-        void RenderHeightMap( int[,] HeightMap, int iMapSize );
-        void RenderTerrain(  int[,] HeightMap, int iMapSize );
-        
-        
-        void Translate( double x, double y, double z );
-        void Translate( Vector3 pos );
-        
-        void Rotate( double fAngleDegrees, double fX, double fY, double fZ);
-        void Rotate( Rot rot );
-        
-        void Scale( double x, double y, double z );
-        void Scale( Vector3 scale );
-        
-        void Bind2DTexture( int iTextureID );
+        void DrawParallelSquares(int iNumSlices);
+
+        void RenderHeightMap(int[,] HeightMap, int iMapSize);
+        void RenderTerrain(int[,] HeightMap, int iMapSize);
+
+        void Vertex(Vector3 vertex);
+
+        void Translate(double x, double y, double z);
+        void Translate(Vector3 pos);
+
+        void Rotate(double fAngleDegrees, double fX, double fY, double fZ);
+        void Rotate(Rot rot);
+
+        void Scale(double x, double y, double z);
+        void Scale(Vector3 scale);
+
+        void Bind2DTexture(int iTextureID);
         void PopMatrix();
         void PushMatrix();
         //void SetColor( double r, double g, double b );
         //void SetColor( Color color );
-        void SetMaterialColor( double[] mcolor );
-        void SetMaterialColor( Color color );
-        void RasterPos3f(double x, double y, double z );
-        
-        void LoadMatrix( double[] matrix );
+        void SetMaterialColor(double[] mcolor);
+        void SetMaterialColor(Color color);
+        void RasterPos3f(double x, double y, double z);
+
+        void LoadMatrix(double[] matrix);
     };
 }

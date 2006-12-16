@@ -1,4 +1,5 @@
-// Copyright Hugh Perkins 2006
+﻿// Copyright Hugh Perkins 2004,2005,2006
+// hughperkins@gmail.com http://manageddreams.com
 //
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License version 2 as published by the
@@ -18,19 +19,16 @@
 //
 
 using System;
+using System.Collections.Generic;
+using System.Text;
+using Gtk;
 
-namespace OSMP
+// This is strictly for emergencies, ie initialization errors that need to be signalled even before MainUI is available
+public class EmergencyDialog
 {
-    public class RendererFactory
+    public static void WarningMessage(string message)
     {
-        static IRenderer instance = OSMP.RendererSdl.GetInstance();
-        public static IRenderer GetInstance()
-        {
-            return instance;
-        }
-        public static IPicker3dModel GetPicker3dModel()
-        {
-            return Picker3dModelGl.GetInstance();
-        }
+        Application.Init();
+        DialogHelpers.ShowWarningMessage(null, message);
     }
 }

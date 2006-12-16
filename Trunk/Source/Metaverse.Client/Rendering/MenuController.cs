@@ -29,22 +29,22 @@ namespace OSMP
         ArrayList mainmenucommanditems = new ArrayList();
         ArrayList mainmenucallbacks = new ArrayList();
         
-        MainMenu menu;
+       // MainMenu menu;
         
         static MenuController instance = new MenuController();
         public static MenuController GetInstance(){ return instance; }
         
         public void RegisterMainMenu( string[] menupath, MainMenuCallback callback )
         {
-            menu = RendererFactory.GetInstance().Menu;
+         //   menu = RendererFactory.GetInstance().Menu;
             
-            Menu.MenuItemCollection thesemenuitems = menu.MenuItems;
+            //Menu.MenuItemCollection thesemenuitems = menu.MenuItems;
             
-            MenuItem commanditem = MenuHelper.CreateMenuItemInTree( menupath, thesemenuitems );
-            commanditem.Click += new  EventHandler( MainMenuClickHandler );
+            //MenuItem commanditem = MenuHelper.CreateMenuItemInTree( menupath, thesemenuitems );
+            //commanditem.Click += new  EventHandler( MainMenuClickHandler );
             
-            mainmenucommanditems.Add( commanditem );
-            mainmenucallbacks.Add( callback );
+            //mainmenucommanditems.Add( commanditem );
+            //mainmenucallbacks.Add( callback );
         }
         
         public void MainMenuClickHandler( object source, EventArgs e )

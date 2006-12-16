@@ -39,8 +39,11 @@ namespace OSMP
     // responsible for picking, which in OpenGl means essentially using a glSelect buffer to decide what you clicked on.
     // This is the OpenGl specific class; you can derive others from IPicker3dModel
     // You can get an instance of this class at runtime by doing RendererFactory().GetInstance().GetPicker3dModel();
-    class Picker3dModelGl : IPicker3dModel
+    public class Picker3dModelGl : IPicker3dModel
     {
+        static Picker3dModelGl instance = new Picker3dModelGl();
+        public static IPicker3dModel GetInstance() { return instance; }
+
         ArrayList hittargets = new ArrayList();  // ArrayList is not really fast; might consider using a normal array
         
         bool bAddingNames; // we set this to true if we are adding names to hittargets, otherwise to false to gain speed
@@ -123,7 +126,7 @@ namespace OSMP
             Gl.glPushMatrix();   // save old matrix, we restore it at end         
             Gl.glLoadIdentity();        
             Glu.gluPickMatrix( (float)MouseX, (float) (renderer.WindowHeight - MouseY ), 1.0f, 1.0f, viewport);        
-            Glu.gluPerspective(45.0f, (float)renderer.WindowWidth / (float)renderer.WindowHeight, 0.5f, 100.0f);
+            Glu.gluPerspective(renderer.FieldOfView, (float)renderer.WindowWidth / (float)renderer.WindowHeight, renderer.NearClip, renderer.FarClip);
             
             Gl.glMatrixMode(Gl.GL_MODELVIEW);   
             

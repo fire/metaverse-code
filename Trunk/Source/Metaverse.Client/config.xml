@@ -1,7 +1,8 @@
 <root>
 
-<client>
-<worldboundingboxmin x="-50" y="-50" z="-50" />
+	<client>
+		<display width="1024" height="768" />
+		<worldboundingboxmin x="-50" y="-50" z="-50" />
 <worldboundingboxmax x="50" y="50" z="50" />
 <movement acceleration="3" verticalmovespeed="2" movespeed="4" deceleration="1" turnspeed="0.25"/>
   <keymappings description="keyboard mappings">
@@ -13,10 +14,10 @@ uparrow, leftarrow, rightarrow, downarrow,
 spacebar, shift, alt, ctrl, delete, enter
     </keyreference>
     <key command="quit" keycode="escape"/>
-    
-    <key command="mouselook" keycode="ctrl"/>
-    
-    <key command="moveleft" keycode="a"/>
+
+	  <key command="mouselook" keycode="leftmousebutton" />
+
+	  <key command="moveleft" keycode="a"/>
     <key command="moveleft" keycode="leftarrow"/>
     <key command="moveright" keycode="d"/>
     <key command="moveright" keycode="rightarrow"/>
@@ -27,27 +28,27 @@ spacebar, shift, alt, ctrl, delete, enter
     <key command="moveup" keycode="e"/>
     <key command="movedown" keycode="c"/>
     
-    <key command="fly" keycode="F"/>
-    <key command="jump" keycode="spacebar"/>
+	  <key command="contextmenu" keycode="rightmousebutton" />
+
+	  <key command="camerazoom" keycode="alt" />
+	  <key command="cameraorbit" keycode="alt-ctrl"/>
+    <key command="camerapan" keycode="alt-shift-ctrl"/>
     
-    <key command="cameramode" keycode="alt"/>
-    <key command="cameraorbit" keycode="ctrl"/>
-    <key command="camerapan" keycode="shift"/>
-    
-    <key command="editmode" keycode="z"/>
+    <key command="editposition" keycode="z"/>
     <key command="editscale" keycode="x"/>
     <key command="editrotation" keycode="v"/>
-    <key command="editalternativeaxes" keycode="c"/>
     
-    <key command="selectobject" keycode="shift"/>
-    <key command="selectindividual" keycode="ctrl"/>
+    <key command="selectobject" keycode="shift-leftmousebutton"/>
+    <key command="selectindividual" keycode="ctrl-leftmousebutton"/>
     
     <key command="delete" keycode="delete"/>
     
     <key command="help" keycode="f1"/>
     <key command="toggleviewpoint" keycode="f9"/>
     
-    <key command="activatechat" keycode="enter"/>
+	  <key command="activatechat" keycode="enter"/>
+
+	  <key command="leftmousebutton" keycode="leftmousebutton" />
   </keymappings>
 </client>
 <config debuglevel="3">

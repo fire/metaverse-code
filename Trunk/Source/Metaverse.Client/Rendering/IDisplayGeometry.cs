@@ -1,12 +1,14 @@
-// Copyright Hugh Perkins 2006
+﻿// Copyright Hugh Perkins 2006
+// hughperkins@gmail.com http://manageddreams.com
 //
 // This program is free software; you can redistribute it and/or modify it
-// under the terms of the GNU General Public License version 2 as published by the
-// Free Software Foundation;
+// under the terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful, but
 // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+// or FITNESS FOR A PARTICULAR PURVector3E. See the GNU General Public License for
 //  more details.
 //
 // You should have received a copy of the GNU General Public License along
@@ -18,19 +20,11 @@
 //
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace OSMP
-{
-    public class RendererFactory
+    public interface IDisplayGeometry
     {
-        static IRenderer instance = OSMP.RendererSdl.GetInstance();
-        public static IRenderer GetInstance()
-        {
-            return instance;
-        }
-        public static IPicker3dModel GetPicker3dModel()
-        {
-            return Picker3dModelGl.GetInstance();
-        }
+        int WindowWidth{ get; }
+        int WindowHeight{ get; }
     }
-}

@@ -19,7 +19,8 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
+//using System.Windows.Forms;
+using SdlDotNet;
 
 namespace OSMP
 {
@@ -80,27 +81,49 @@ namespace OSMP
         Editing3dRot editing3drot;
         
         SelectionModel selectionmodel;
-        
-        IMouseFilterMouseCache mousefiltermousecache;
+
+        MouseCache mousefiltermousecache;
+
+        string CMD_EDITPOSITION = "editposition";
+        string CMD_EDITSCALE = "editscale";
+        string CMD_EDITROTATION = "editrotation";
         
         public Editing3d()
         {
             selectionmodel = SelectionModel.GetInstance();
-            mousefiltermousecache = MouseFilterMouseCacheFactory.GetInstance();
-            KeyFilterComboKeys.GetInstance().RegisterCombo(
-                new string[]{"editmode"}, new string[]{"editalternativeaxes"}, new KeyComboHandler( PosEditModeKeyEvent ) );
-            KeyFilterComboKeys.GetInstance().RegisterCombo(
-                new string[]{"editmode","editrotation"}, new string[]{"editalternativeaxes"}, new KeyComboHandler( RotEditModeKeyEvent ) );
-            KeyFilterComboKeys.GetInstance().RegisterCombo(
-                new string[]{"editmode","editscale"}, new string[]{"editalternativeaxes"}, new KeyComboHandler( ScaleEditModeKeyEvent ) );
+            mousefiltermousecache = MouseCache.GetInstance();
+
+            CommandCombos.GetInstance().RegisterCommandGroup(
+                new string[] { CMD_EDITPOSITION, CMD_EDITSCALE, CMD_EDITROTATION }, new KeyCommandHandler(EditModeKeyEvent));
+            //CommandCombos.GetInstance().RegisterCommand(
+              //  "editscale", new string[] { "leftmousebutton" }, new KeyCommandHandler(ScaleEditModeKeyEvent));
+            //CommandCombos.GetInstance().RegisterCommand(
+              //  "editrotation", new string[] { "leftmousebutton" }, new KeyCommandHandler(RotEditModeKeyEvent));
+
+            CommandCombos.GetInstance().RegisterCommand(
+                "leftmousebutton", new KeyCommandHandler(MouseDown));
+
+            //KeyFilterComboKeys.GetInstance().RegisterCombo(
+                //new string[]{"editmode"}, new string[]{"editalternativeaxes"}, new KeyComboHandler( PosEditModeKeyEvent ) );
+            //KeyFilterComboKeys.GetInstance().RegisterCombo(
+              //  new string[]{"editmode","editrotation"}, new string[]{"editalternativeaxes"}, new KeyComboHandler( RotEditModeKeyEvent ) );
+            //KeyFilterComboKeys.GetInstance().RegisterCombo(
+              //  new string[]{"editmode","editscale"}, new string[]{"editalternativeaxes"}, new KeyComboHandler( ScaleEditModeKeyEvent ) );
                 
-            mousefiltermousecache.MouseDown += new MouseEventHandler( MouseDown );
-            mousefiltermousecache.MouseMove += new MouseEventHandler( MouseMove );
-            mousefiltermousecache.MouseUp += new MouseEventHandler( MouseUp );
+            //mousefiltermousecache.MouseDown += new MouseButtonEventHandler( MouseDown );
+            mousefiltermousecache.MouseMove += new MouseMoveHandler( MouseMove );
+            //mousefiltermousecache.MouseUp += new MouseButtonEventHandler(MouseUp);
                 
             editing3dpos = new Editing3dPos( this );
             editing3drot = new Editing3dRot( this );
             editing3dscale = new Editing3dScale( this );
+
+            RendererFactory.GetInstance().WriteNextFrameEvent += new WriteNextFrameCallback(Editing3d_WriteNextFrameEvent);
+        }
+
+        void Editing3d_WriteNextFrameEvent(Vector3 camerapos)
+        {
+            DrawEditBarsToOpenGL();
         }
 
         public bool IsHandleEdit()
@@ -120,7 +143,7 @@ namespace OSMP
                 if( IsHandleEdit() && mousefiltermousecache.LeftMouseDown &&
                     currentaxis.IsXAxis )
                 {
-                    edithandlecolor = new Color( 1.0, 0.1, 0.1, 0.5 );
+                    edithandlecolor = new Color( 1.0, 0.5, 0.5, 0.5 );
                 }
                 else
                 {
@@ -132,7 +155,7 @@ namespace OSMP
                 if( IsHandleEdit() && mousefiltermousecache.LeftMouseDown &&
                     currentaxis.IsYAxis )
                 {
-                    edithandlecolor = new Color( 0.2, 1.0, 0.2, 0.5 );
+                    edithandlecolor = new Color( 0.5, 1.0, 0.5, 0.5 );
                 }
                 else
                 {
@@ -144,7 +167,7 @@ namespace OSMP
                 if( IsHandleEdit() && mousefiltermousecache.LeftMouseDown &&
                     currentaxis.IsZAxis )
                 {
-                    edithandlecolor = new Color( 0.1, 0.1, 1.0, 0.5 );
+                    edithandlecolor = new Color( 0.5, 0.5, 1.0, 0.5 );
                 }
                 else
                 {
@@ -154,59 +177,107 @@ namespace OSMP
             return edithandlecolor;
         }
 
-        public void MouseDown( object source, MouseEventArgs e )
+        bool InEditDrag = false;
+
+        public void MouseDown( string command, bool down )
         {
-            if( e.Button == MouseButtons.Left )
+            if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.Edit3d)
             {
-                if( editbartype == EditBarType.Pos )
+                InEditDrag = down;
+                if (down)
                 {
-                    InitiateTranslateEdit( e.X, e.Y );
+                    if (editbartype == EditBarType.Pos)
+                    {
+                        InitiateTranslateEdit(mousefiltermousecache.MouseX, mousefiltermousecache.MouseY);
+                    }
+                    else if (editbartype == EditBarType.Rot)
+                    {
+                        InitiateRotateEdit(mousefiltermousecache.MouseX, mousefiltermousecache.MouseY);
+                    }
+                    else if (editbartype == EditBarType.Scale)
+                    {
+                        InitiateScaleEdit(mousefiltermousecache.MouseX, mousefiltermousecache.MouseY);
+                    }
                 }
-                else if( editbartype == EditBarType.Rot )
+                else
                 {
-                    InitiateRotateEdit( e.X, e.Y );
-                }
-                else if( editbartype == EditBarType.Scale )
-                {
-                    InitiateScaleEdit( e.X, e.Y );
+                    if (editbartype != EditBarType.None)
+                    {
+                        EditDone();
+                    }
                 }
             }
-        }
-                        
-        public void MouseMove( object source, MouseEventArgs e )
-        {
-            if( e.Button == MouseButtons.Left )
+            else
             {
-                if( editbartype == EditBarType.Pos )
-                {
-                    UpdateTranslateEdit( false, e.X, e.Y );
-                }
-                else if( editbartype == EditBarType.Rot )
-                {
-                    UpdateRotateEdit( false, e.X, e.Y );
-                }
-                else if( editbartype == EditBarType.Scale )
-                {
-                    UpdateScaleEdit( false, e.X, e.Y );
-                }
-            }
-        }
-                        
-        public void MouseUp( object source, MouseEventArgs e )
-        {
-            if( e.Button == MouseButtons.Left )
-            {
-                if( editbartype != EditBarType.None )
+                if (editbartype != EditBarType.None)
                 {
                     EditDone();
                 }
+                InEditDrag = false;
             }
         }
                         
-        public void PosEditModeKeyEvent( object source, ComboKeyEventArgs e )
+        public void MouseMove()
         {
-            Test.Debug("PosEditModeKeyEvent " + e.IsComboDown.ToString() );
-            if( e.IsComboDown )
+            if (InEditDrag)
+            {
+                //if( e.Button == MouseButtons.Left )
+                //{
+                if (editbartype == EditBarType.Pos)
+                {
+                    UpdateTranslateEdit(false, mousefiltermousecache.MouseX, mousefiltermousecache.MouseY);
+                }
+                else if (editbartype == EditBarType.Rot)
+                {
+                    UpdateRotateEdit(false, mousefiltermousecache.MouseX, mousefiltermousecache.MouseY);
+                }
+                else if (editbartype == EditBarType.Scale)
+                {
+                    UpdateScaleEdit(false, mousefiltermousecache.MouseX, mousefiltermousecache.MouseY);
+                }
+            }
+            //}
+        }
+
+        //public void MouseUp(object source, MouseButtonEventArgs e)
+        //{
+            //if( e.Button == MouseButtons.Left )
+            //{
+                //if( editbartype != EditBarType.None )
+                //{
+              //      EditDone();
+            //    }
+          //  }
+        //}
+
+        public void EditModeKeyEvent(string command, bool down)
+        {
+            if (down)
+            {
+                ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.Edit3d;
+            }
+            else
+            {
+                ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.None;
+            }
+            if (command == CMD_EDITPOSITION)
+            {
+                PosEditModeKeyEvent(command, down);
+            }
+            else if (command == CMD_EDITROTATION)
+            {
+                RotEditModeKeyEvent(command, down);
+            }
+            else if (command == CMD_EDITSCALE)
+            {
+                ScaleEditModeKeyEvent(command, down);
+            }
+        }
+
+        public void PosEditModeKeyEvent( string command, bool down )
+        {
+            Test.Debug("PosEditModeKeyEvent " + down);
+            if (down)
             {
                 ShowEditPosBars();
             }
@@ -215,11 +286,11 @@ namespace OSMP
                 HideEditBars();
             }
         }
-        
-        public void RotEditModeKeyEvent( object source, ComboKeyEventArgs e )
+
+        public void RotEditModeKeyEvent(string command, bool down)
         {
-            Test.Debug("RotEditModeKeyEvent " + e.IsComboDown.ToString() );
-            if( e.IsComboDown )
+            Test.Debug("RotEditModeKeyEvent " + down);
+            if (down)
             {
                 ShowEditRotBars();
             }
@@ -228,11 +299,11 @@ namespace OSMP
                 HideEditBars();
             }
         }
-        
-        public void ScaleEditModeKeyEvent( object source, ComboKeyEventArgs e )
+
+        public void ScaleEditModeKeyEvent(string command, bool down)
         {
-            Test.Debug("ScaleEditModeKeyEvent " + e.IsComboDown.ToString() );
-            if( e.IsComboDown )
+            Test.Debug("ScaleEditModeKeyEvent " + down);
+            if (down)
             {
                 ShowEditScaleBars();
             }
@@ -251,7 +322,7 @@ namespace OSMP
         {
             EditingPreliminaries();
         
-            HitTarget hittarget =RendererFactory.GetInstance().GetPicker3dModel().GetClickedHitTarget( mousex, mousey );
+            HitTarget hittarget =RendererFactory.GetPicker3dModel().GetClickedHitTarget( mousex, mousey );
             //Test.Debug(  "Clicked target type: " + hittarget.TargetType ); // Test.Debug
         
             if( hittarget is HitTargetEditHandle )
@@ -272,7 +343,7 @@ namespace OSMP
         
             //  mvKeyboardAndMouse::bDragging = true;
             
-            HitTarget hittarget =RendererFactory.GetInstance().GetPicker3dModel().GetClickedHitTarget( mousex, mousey );
+            HitTarget hittarget =RendererFactory.GetPicker3dModel().GetClickedHitTarget( mousex, mousey );
             //Test.Debug(  "Clicked target type: " + hittarget.TargetType ); // Test.Debug
         
             if( hittarget is HitTargetEditHandle )
@@ -293,7 +364,7 @@ namespace OSMP
         
             //  mvKeyboardAndMouse::bDragging = true;
         
-            HitTarget hittarget =RendererFactory.GetInstance().GetPicker3dModel().GetClickedHitTarget( mousex, mousey );
+            HitTarget hittarget =RendererFactory.GetPicker3dModel().GetClickedHitTarget( mousex, mousey );
             //Test.Debug(  "Clicked target type: " + hittarget.TargetType ); // Test.Debug
         
             if( hittarget is HitTargetEditHandle )

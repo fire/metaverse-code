@@ -22,7 +22,7 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 using System.Xml;
 
 namespace OSMP
@@ -65,36 +65,31 @@ namespace OSMP
             return instance;
         }
         
-        public void MoveLeft( object source, ComboKeyEventArgs e )
+        public void MoveLeft( string command, bool down )
         {
             Test.WriteOut("playermovement.moveleft");
-            kMovingLeft = e.IsComboDown;
+            kMovingLeft = down;
         }
-        public void MoveRight( object source, ComboKeyEventArgs e )
+        public void MoveRight(string command, bool down)
         {
-            kMovingRight = e.IsComboDown;
+            kMovingRight = down;
         }
-        public void MoveForwards( object source, ComboKeyEventArgs e )
+        public void MoveForwards(string command, bool down)
         {
-            kMovingForwards = e.IsComboDown;
+            kMovingForwards = down;
         }
-        public void MoveBackwards( object source, ComboKeyEventArgs e )
+        public void MoveBackwards(string command, bool down)
         {
-            kMovingBackwards = e.IsComboDown;
+            kMovingBackwards = down;
         }
-        public void MoveUp( object source, ComboKeyEventArgs e )
+        public void MoveUp(string command, bool down)
         {
-            kMovingUpZAxis = e.IsComboDown;
+            kMovingUpZAxis = down;
         }
-        public void MoveDown( object source, ComboKeyEventArgs e )
+        public void MoveDown(string command, bool down)
         {
-            kMovingDownZAxis = e.IsComboDown;
+            kMovingDownZAxis = down;
         }
-        public void ActivateMouseLook( object source, ComboKeyEventArgs e )
-        {
-            bcapturing = e.IsComboDown;
-        }
-        
         public PlayerMovement()
         {
             Test.Debug("instantiating PlayerMovement()");
@@ -115,64 +110,122 @@ namespace OSMP
             fDeceleration = Convert.ToDouble( movementnode.GetAttribute("deceleration") );
 
             camera = Camera.GetInstance();
-            KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
-            
-            keyfiltercombokeys.RegisterCombo( new string[]{"moveleft"},new string[]{"ANY"}, new KeyComboHandler( this.MoveLeft ) );
-            keyfiltercombokeys.RegisterCombo( new string[]{"moveright"},new string[]{"ANY"}, new KeyComboHandler( this.MoveRight ) );
-            keyfiltercombokeys.RegisterCombo( new string[]{"movebackwards"},new string[]{"ANY"}, new KeyComboHandler( this.MoveBackwards ) );
-            keyfiltercombokeys.RegisterCombo( new string[]{"moveforwards"},new string[]{"ANY"}, new KeyComboHandler( this.MoveForwards ) );
-            keyfiltercombokeys.RegisterCombo( new string[]{"moveup"},new string[]{"ANY"},new KeyComboHandler( this.MoveUp ) );
-            keyfiltercombokeys.RegisterCombo( new string[]{"movedown"},new string[]{"ANY"}, new KeyComboHandler( this.MoveDown ) );
+            //KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
 
-            keyfiltercombokeys.RegisterCombo( new string[]{"none"},new string[]{"moveleft","moveright","movebackwards","moveforwards","moveup","movedown"}, new KeyComboHandler( this.ActivateMouseLook ) );
+            CommandCombos.GetInstance().RegisterCommand(
+                "moveleft", new KeyCommandHandler(MoveLeft));
+            CommandCombos.GetInstance().RegisterCommand(
+                "moveright", new KeyCommandHandler(MoveRight));
+            CommandCombos.GetInstance().RegisterCommand(
+                "movebackwards", new KeyCommandHandler(MoveBackwards));
+            CommandCombos.GetInstance().RegisterCommand(
+                "moveforwards", new KeyCommandHandler(MoveForwards));
+            CommandCombos.GetInstance().RegisterCommand(
+                "moveup", new KeyCommandHandler(MoveUp));
+            CommandCombos.GetInstance().RegisterCommand(
+                "movedown", new KeyCommandHandler(MoveDown));
+
+            CommandCombos.GetInstance().RegisterCommand(
+              "mouselook", new KeyCommandHandler(ActivateMouseLook));
+
+            CommandCombos.GetInstance().RegisterCommand(
+              "leftmousebutton", new KeyCommandHandler(MouseDown));
+
+            MouseCache.GetInstance().MouseMove += new MouseMoveHandler(PlayerMovement_MouseMove);
+
+            //keyfiltercombokeys.RegisterCombo( new string[]{"moveleft"},new string[]{"ANY"}, new KeyComboHandler( this.MoveLeft ) );
+            //keyfiltercombokeys.RegisterCombo( new string[]{"moveright"},new string[]{"ANY"}, new KeyComboHandler( this.MoveRight ) );
+            //keyfiltercombokeys.RegisterCombo( new string[]{"movebackwards"},new string[]{"ANY"}, new KeyComboHandler( this.MoveBackwards ) );
+            //keyfiltercombokeys.RegisterCombo( new string[]{"moveforwards"},new string[]{"ANY"}, new KeyComboHandler( this.MoveForwards ) );
+            //keyfiltercombokeys.RegisterCombo( new string[]{"moveup"},new string[]{"ANY"},new KeyComboHandler( this.MoveUp ) );
+            //keyfiltercombokeys.RegisterCombo( new string[]{"movedown"},new string[]{"ANY"}, new KeyComboHandler( this.MoveDown ) );
+
+            //keyfiltercombokeys.RegisterCombo( new string[]{"none"},new string[]{"moveleft","moveright","movebackwards","moveforwards","moveup","movedown"}, new KeyComboHandler( this.ActivateMouseLook ) );
             
-            RendererFactory.GetInstance().MouseDown += new MouseEventHandler( MouseDown );
-            RendererFactory.GetInstance().MouseMove += new MouseEventHandler( MouseMove );
-            RendererFactory.GetInstance().MouseUp += new MouseEventHandler( MouseUp );
+            // note to self: to do:
+            //RendererFactory.GetInstance().MouseDown += new MouseEventHandler( MouseDown );
+            //RendererFactory.GetInstance().MouseMove += new MouseEventHandler( MouseMove );
+            //RendererFactory.GetInstance().MouseUp += new MouseEventHandler( MouseUp );
             
             timekeeper = new TimeKeeper();
             
             Test.Debug("PlayerMovement instantiated");
         }
-        
+
+        //bool bcapturing = false; // if someone else filtered our MouseDown (ie SelectionModel, Camera,etc...), we shouldnt be processing MouseMove
+        //bool _bcapturing;
+
         int istartmousex;
         int istartmousey;
         double startavatarzrot;
         double startavataryrot;
-        
-        bool bcapturing = true; // if someone else filtered our MouseDown (ie SelectionModel, Camera,etc...), we shouldnt be processing MouseMove
-        bool _bcapturing;
-        
-        public void MouseDown( object source, MouseEventArgs e )
+
+        public void ActivateMouseLook(string command, bool down)
         {
-            //Test.Debug("Playermovement MouseDown " + e.ToString() );
-            if( e.Button == MouseButtons.Left && bcapturing )
+            Console.WriteLine("PlayerMovement.ActivateMouseLook " + down);
+            //bcapturing = down;
+
+            if (down)
             {
-                istartmousex = e.X;
-                istartmousey = e.Y;
+                istartmousex = MouseCache.GetInstance().MouseX;
+                istartmousey = MouseCache.GetInstance().MouseY;
                 startavatarzrot = avatarzrot;
                 startavataryrot = avataryrot;
-                _bcapturing = true;
+
+                //ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.Mouselook;
+            }
+            else
+            {
+                //ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.None;
+                InMouseMoveDrag = false;
             }
         }
 
-        public void MouseMove( object source, MouseEventArgs e )
+        bool InMouseMoveDrag = false;
+
+        void PlayerMovement_MouseMove()
         {
-            //Test.Debug("Playermovement MouseMove " + e.ToString() );
-            if( e.Button == MouseButtons.Left && _bcapturing )
+            //Console.WriteLine("PlayerMovement.MouseMove " + bcapturing);
+            if ( InMouseMoveDrag &&
+                ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.None)
             {
-                avatarzrot = startavatarzrot - (double)( e.X - istartmousex ) * fAvatarTurnSpeed;
-                avataryrot = Math.Min( Math.Max( startavataryrot + (double)( e.Y - istartmousey ) * fAvatarTurnSpeed, - 90 ), 90 );
+                avatarzrot = startavatarzrot - (double)(MouseCache.GetInstance().MouseX - istartmousex) * fAvatarTurnSpeed;
+                avataryrot = Math.Min(Math.Max(startavataryrot + (double)(MouseCache.GetInstance().MouseY - istartmousey) * fAvatarTurnSpeed, -90), 90);
                 UpdateAvatarObjectRotAndPos();
             }
         }
 
-        public void MouseUp( object source, MouseEventArgs e )
+        public void MouseDown(string command, bool down)
         {
+            //Test.Debug("Playermovement MouseDown " + e.ToString() );
+            //Console.WriteLine("PlayerMovement.MouseDown " + down + " " + bcapturing);
+            if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.None)
+            {
+                InMouseMoveDrag = down;
+            }
+            else
+            {
+                InMouseMoveDrag = false;
+            }
+        }
+
+        //public void MouseMove( object source, MouseEventArgs e )
+        //{
+            //Test.Debug("Playermovement MouseMove " + e.ToString() );
+          //  if( _bcapturing )
+            //{
+              //  avatarzrot = startavatarzrot - (double)( e.X - istartmousex ) * fAvatarTurnSpeed;
+                //avataryrot = Math.Min( Math.Max( startavataryrot + (double)( e.Y - istartmousey ) * fAvatarTurnSpeed, - 90 ), 90 );
+                //UpdateAvatarObjectRotAndPos();
+            //}
+        //}
+
+        //public void MouseUp( object source, MouseEventArgs e )
+        //{
             //Test.Debug("Playermovement MouseUp " + e.ToString() );
             //bcapturing = false;
-            _bcapturing = false;
-        }
+          //  _bcapturing = false;
+        //}
 
         public void UpdateAvatarObjectRotAndPos()
         {
@@ -231,7 +284,7 @@ namespace OSMP
                 switch( camera.viewpoint )
                 {
                     case Camera.Viewpoint.MouseLook:
-                    case Camera.Viewpoint.BehindPlayer:
+                    //case Camera.Viewpoint.BehindPlayer:
                         Vector3 accelerationavaxes = new Vector3( fForward, - fRight, 0 )  * fTimeSlotMultiplier * fAvatarAcceleration;
                         Vector3 accelerationvectorworldaxes = accelerationavaxes * MetaverseClient.GetInstance().myavatar.rot.Inverse();
                     
@@ -254,10 +307,10 @@ namespace OSMP
                                 
                         break;
         
-                    case Camera.Viewpoint.ThirdParty:
-                        camera.fThirdPartyViewZoom += fForward;
-                        camera.fThirdPartyViewRotate += fRight * 3.0;
-                        break;
+                    //case Camera.Viewpoint.ThirdParty:
+                      //  camera.fThirdPartyViewZoom += fForward;
+                        //camera.fThirdPartyViewRotate += fRight * 3.0;
+                        //break;
                 }
                 UpdateAvatarObjectRotAndPos();
             }

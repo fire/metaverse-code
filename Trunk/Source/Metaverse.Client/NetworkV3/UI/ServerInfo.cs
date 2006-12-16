@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
 
 namespace OSMP
 {
@@ -40,7 +39,7 @@ namespace OSMP
 
         void ServerInfoDialog(object source, ContextMenuArgs e)
         {
-            MessageBox.Show("Server listening on port: " + MetaverseServer.GetInstance().ServerPort, "Server info");
+            DialogHelpers.ShowInfoMessage( null, "Server listening on port: " + MetaverseServer.GetInstance().ServerPort );
         }
     }
 }

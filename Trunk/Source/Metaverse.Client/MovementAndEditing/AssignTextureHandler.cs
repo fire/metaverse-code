@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
 using System.IO;
 
 namespace OSMP
@@ -74,15 +73,15 @@ namespace OSMP
             }
             
             int FaceNumber = Picker3dController.GetInstance().GetClickedFace( entity as Prim, iMouseX, iMouseY );
-            
-            OpenFileDialog openfiledialog = new OpenFileDialog();
+
+            System.Windows.Forms.OpenFileDialog openfiledialog = new System.Windows.Forms.OpenFileDialog();
         
             openfiledialog.InitialDirectory = "DefaultWorld" ;
             openfiledialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.TGA)|*.BMP;*.JPG;*.GIF;*.TGA|All files (*.*)|*.*" ;
             openfiledialog.FilterIndex = 1;
             openfiledialog.RestoreDirectory = true ;
-        
-            if(openfiledialog.ShowDialog() == DialogResult.OK)
+
+            if (openfiledialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string filename = openfiledialog.FileName;
                 Console.WriteLine ( filename );

@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 namespace OSMP
 {
@@ -29,19 +29,6 @@ namespace OSMP
     public class ContextMenuController
     {
         public event ContextMenuHandler ContextMenuPopup;
-        //public event ContextMenuHandler ContextMenuClick;
-        
-        //thissegmentContextMenu contextmenu;
-        
-        //int iMouseX;
-        //int iMouseY;
-        //Entity entity;
-        
-        //ArrayList contextmenucommanditems = new ArrayList();
-        //ArrayList contextmenucallbacks = new ArrayList();
-                
-        //ArrayList persistentcontextmenupaths = new ArrayList();
-        //ArrayList persistentcontextmenucallbacks = new ArrayList();
                 
         static ContextMenuController instance = new ContextMenuController();
         public static ContextMenuController GetInstance()
@@ -49,23 +36,21 @@ namespace OSMP
             return instance;
         }
 
+        ContextMenuController()
+        {
+        }
+
         // This context menu function is for ContextMenuPopup events
         // It will not persist.  Use this for menu items which are context dependent, like entity properties (doesnt display if no entity selected)
         public void RegisterContextMenu(string[] contextmenupath, ContextMenuHandler callback)
         {
             UIController.GetInstance().contextmenu.RegisterContextMenu(contextmenupath, callback);
-            //_RegisterContextMenu( contextmenupath, callback );
         }
 
         // This context menu function creates a persistent contextmenu.  This is good for things like Quit
         public void RegisterPersistentContextMenu(string[] contextmenupath, ContextMenuHandler callback)
         {
             UIController.GetInstance().contextmenu.RegisterPersistentContextMenu(contextmenupath, callback);
-
-            //  persistentcontextmenupaths.Add( contextmenupath );
-            //            persistentcontextmenucallbacks.Add( callback );
-
-            //          return;
         }
 
         // hook for uicontextmenu to call event
@@ -73,71 +58,5 @@ namespace OSMP
         {
             ContextMenuPopup(source, e);
         }
-
-        public ContextMenuController()
-        {
-            //IRenderer renderer = RendererFactory.GetInstance();
-            //contextmenu = renderer.ContextMenu;
-            //renderer.ContextMenuPopup += new EventHandler( _ContextMenuPopup );
-        }
-
-        /*
-        void _RegisterContextMenu( string[] contextmenupath, ContextMenuHandler handler )
-        {
-            Menu.MenuItemCollection thesemenuitems = contextmenu.MenuItems;
-            
-            MenuItem commanditem = MenuHelper.CreateMenuItemInTree( contextmenupath, thesemenuitems );
-            commanditem.Click += new  EventHandler( _ContextMenuClick );
-            
-            contextmenucommanditems.Add( commanditem );
-            contextmenucallbacks.Add( handler );
-            
-            return;
-        }
-
-        void AddPersistentItems()
-        {
-            for( int i = 0; i < persistentcontextmenupaths.Count; i++ )
-            {
-                _RegisterContextMenu( (string[])persistentcontextmenupaths[i], (ContextMenuHandler)persistentcontextmenucallbacks[i] );
-            }
-        }
-    */
-        /*
-        public void _ContextMenuPopup( object source, EventArgs e )
-        {
-            if( ContextMenuPopup == null )
-            {
-                return;
-            }
-            
-            IMouseFilterMouseCache mousefiltermousecache = MouseFilterMouseCacheFactory.GetInstance();
-            iMouseX = mousefiltermousecache.MouseX;
-            iMouseY = mousefiltermousecache.MouseY;
-            
-            entity = Picker3dController.GetInstance().GetClickedEntity( iMouseX, iMouseY );
-            
-            contextmenu.MenuItems.Clear();
-            contextmenucommanditems = new ArrayList();
-            contextmenucallbacks = new ArrayList();
-            
-            ContextMenuPopup( source, new ContextMenuArgs( iMouseX, iMouseY, entity ) );
-
-            AddPersistentItems();
-        }
-        */
-
-        /*
-        public void _ContextMenuClick( object o, EventArgs e )
-        {
-            for( int i = 0; i < contextmenucallbacks.Count; i++ )
-            {
-                if( contextmenucommanditems[i] == o )
-                {
-                    ((ContextMenuHandler)contextmenucallbacks[i])( o, new ContextMenuArgs( iMouseX, iMouseY, entity ) );
-                }
-            }
-        }
-        */
     }
 }

@@ -192,7 +192,7 @@ namespace OSMP
         {
             graphics.PushMatrix();
             graphics.SetMaterialColor( editing3d.GetEditHandleColor( handleaxis ) );
-            RendererFactory.GetInstance().GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( new Axis( handleaxis ) ) );
+            RendererFactory.GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( new Axis( handleaxis ) ) );
             double fTranslateAmount = ( handleaxis.GetAxisComponentIgnoreAxisDirection( entityscale ) + handleaxis.GetAxisComponentIgnoreAxisDirection( handlescale ) ) / 2;
             graphics.Translate( fTranslateAmount * handleaxis.ToVector() );
             graphics.Scale( handlescale );

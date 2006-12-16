@@ -18,7 +18,6 @@
 //
 
 using System;
-using System.Windows.Forms;
 
 namespace OSMP
 {
@@ -39,7 +38,7 @@ namespace OSMP
         }
         public void About()
         {
-            DialogHelper.GetInstance().ShowInfoMessage("About OSMP C#",
+            DialogHelpers.ShowInfoMessage(null,
                 "OSMP C# written by Hugh Perkins hughperkins@gmail.com"  + Environment.NewLine +
                 "Website at http://metaverse.sf.net by Zenaphex" + Environment.NewLine +
                 "Forums designed by Nick Merrill" + Environment.NewLine +

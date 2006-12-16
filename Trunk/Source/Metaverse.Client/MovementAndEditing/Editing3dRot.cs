@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
 using Tao.OpenGl;
 
 namespace OSMP
@@ -412,7 +411,7 @@ namespace OSMP
             // + x
             graphics.SetMaterialColor( editing3d.GetEditHandleColor( Axis.PosX ) );
             //graphics.SetMaterialColor( new double[]{ 1.0, 0.0, 0.0, 0.5 } );
-            RendererFactory.GetInstance().GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( Axis.PosX ) );
+            RendererFactory.GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( Axis.PosX ) );
             graphics.PushMatrix();
             graphics.Scale( entityscale );
             graphics.Rotate( 90f, 0f, 1f, 0f );
@@ -421,7 +420,7 @@ namespace OSMP
         
             // + y
             graphics.SetMaterialColor( editing3d.GetEditHandleColor( Axis.PosY ) );
-            RendererFactory.GetInstance().GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( Axis.PosY ) );
+            RendererFactory.GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( Axis.PosY ) );
             graphics.PushMatrix();
             graphics.Scale( entityscale );
             graphics.Rotate( 90, 1, 0, 0 );
@@ -430,7 +429,7 @@ namespace OSMP
         
             // + z
             graphics.SetMaterialColor( editing3d.GetEditHandleColor( Axis.PosZ ) );
-            RendererFactory.GetInstance().GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( Axis.PosZ ) );
+            RendererFactory.GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( Axis.PosZ ) );
             graphics.PushMatrix();
             graphics.Scale( entityscale );
             //Gl.glRotatef( 90, 0, 1, 0 );
