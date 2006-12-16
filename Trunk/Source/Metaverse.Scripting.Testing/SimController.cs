@@ -8,18 +8,20 @@
  */
 
 using System;
+using Metaverse.Common;
 using System.Collections;
 
-namespace Metaverse.Common
+
+namespace Metaverse.Scripting.Testing
 {
 	/// <summary>
 	/// Description of SimController.
 	/// </summary>
-	public class SimController
+	public class SimController : DummySimController
 	{
 		private static SimController _singleton = null;
 		
-		public static SimController Singleton {
+		public static ISimController Singleton {
 			get 
 			{
 				lock( _singleton ) {
@@ -31,9 +33,9 @@ namespace Metaverse.Common
 			}
 		}
 		
-		public ISim GetScriptGenericSimInterface( IScript script ) {
+		new public ISim GetScriptGenericSimInterface( IScript script ) {
 			
-			ArrayList simulators = MetaverseController.Singleton.GetSimulators();
+			ArrayList simulators = Controller.Metaverse.GetSimulators();
 			
 			ISim sim = (ISim)simulators[0];
 			
@@ -45,17 +47,17 @@ namespace Metaverse.Common
 		}
 		
 		
-		public ArrayList GetSimulatorScripts( ISim simulator ) 
+		new public ArrayList GetSimulatorScripts( ISim simulator ) 
 		{
-			return MetaverseController.Singleton.GetSimServer( simulator ).GetScripts();
+			return Controller.Metaverse.GetSimServer( simulator ).GetScripts();
 		}
 		
-		public void InsertScript( ISim simulator, IScript script )
+		new public void InsertScript( ISim simulator, IScript script )
 		{
 			MetaverseController.Singleton.GetSimServer( simulator ).InsertScript( script );
 		}
 		
-		public WorldModel GetSimulatorWorldModel( ISim simulator ) {
+		new public IWorldModel GetSimulatorWorldModel( ISim simulator ) {
 			return MetaverseController.Singleton.GetSimServer( simulator ).GetWorldModel( simulator );
 		}
 	}

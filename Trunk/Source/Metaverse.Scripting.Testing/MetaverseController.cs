@@ -9,13 +9,14 @@
 
 using System;
 using System.Collections;
+using Metaverse.Common;
 
-namespace Metaverse.Common
+namespace Metaverse.Scripting.Testing
 {
 	/// <summary>
 	/// Description of ServerController.
 	/// </summary>
-	public class MetaverseController
+	public class MetaverseController: DummyMetaverseController
 	{
 		private static MetaverseController _singleton = null;
 		private static ISim _simulator;
@@ -37,7 +38,7 @@ namespace Metaverse.Common
 			
 		}
 		
-		public void RegisterMetaverseServer( IMetaverseServer server ) {
+		new public void RegisterMetaverseServer( IMetaverseServer server ) {
 			
 			
 			_server = server;
@@ -45,16 +46,16 @@ namespace Metaverse.Common
 			return;
 		}
 		
-		public IMetaverseServer GetSimServer( ISim simulator ) {
+		new public IMetaverseServer GetSimServer( ISim simulator ) {
 			
 			return _server;
 		}
 		
-		public void AttachSimulator( ISim simulator ) {
+		new public void AttachSimulator( ISim simulator ) {
 			_simulator = simulator;
 		}
 		
-		public ArrayList GetSimulators() {
+		new public ArrayList GetSimulators() {
 			return new ArrayList( new ISim[]{ _simulator } );
 		}
 	}

@@ -19,6 +19,6 @@ namespace Metaverse.Common
 	{
 		ArrayList GetScripts();
 		void InsertScript( IScript script );
-		WorldModel GetWorldModel( ISim simulator );
+		IWorldModel GetWorldModel( ISim simulator );
 	}
 }

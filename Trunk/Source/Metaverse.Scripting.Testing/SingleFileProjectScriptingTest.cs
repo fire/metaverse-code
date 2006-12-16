@@ -57,7 +57,7 @@ namespace Metaverse.Scripting.Testing
     
     public void SimulateClientUploadingScript() {
     	
-    	CSScriptFile file = new CSScriptFile( "/Simulation0.cs",
+    	Controller.Client.FileInsertNewSingleFileScript( "/Simulation0.cs",
     	    @"
     	    	using System;
     	    	
@@ -74,14 +74,6 @@ namespace Metaverse.Scripting.Testing
 					}
     	    	}
     	    " );
-    	
-    	SingleFileScriptPackage package = new SingleFileScriptPackage( file );
-    	IScriptGenerator generator = package.ExecuteCompiler( new SingleFileProjectCompiler() );
-    	
-    	ArrayList simulators = MetaverseController.Singleton.GetSimulators();
-    	ISim sim = (ISim)simulators[0];
-    	
-    	SimController.Singleton.InsertScript( sim, generator.Generate() );
     }
   }
 }
