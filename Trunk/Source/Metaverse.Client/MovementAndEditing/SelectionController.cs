@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
 
 namespace OSMP
 {
@@ -30,8 +29,8 @@ namespace OSMP
     {
         SelectionModel selectionmodel;
         
-        bool bSelectIndividualOn;
-        bool bSelectObjectOn;
+        //bool bSelectIndividualOn;
+        //bool bSelectObjectOn;
         
         static SelectionController instance = new SelectionController();
         public static SelectionController GetInstance()
@@ -43,56 +42,70 @@ namespace OSMP
         {
             selectionmodel = SelectionModel.GetInstance();
             
-            KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
-            keyfiltercombokeys.RegisterCombo( new string[]{"selectobject"},null, new KeyComboHandler( SelectObjectKeyDown ) );
-            keyfiltercombokeys.RegisterCombo( new string[]{"selectindividual"},null, new KeyComboHandler( SelectIndividualKeyDown ) );
+            //KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
+            CommandCombos.GetInstance().RegisterCommand("selectobject",
+                new KeyCommandHandler(SelectObjectKeyDown));
+            CommandCombos.GetInstance().RegisterCommand("selectindividual",
+                new KeyCommandHandler(SelectIndividualKeyDown));
+
+            //keyfiltercombokeys.RegisterCombo( new string[]{"selectobject"},null, new KeyComboHandler( SelectObjectKeyDown ) );
+            //keyfiltercombokeys.RegisterCombo( new string[]{"selectindividual"},null, new KeyComboHandler( SelectIndividualKeyDown ) );
         }
 
-        public void SelectObjectKeyDown( object source, ComboKeyEventArgs e )
+        public void SelectObjectKeyDown( string command, bool down )
         {
-            bSelectObjectOn = e.IsComboDown;
-            if( bSelectObjectOn )
+            if (down)
             {
-                Test.Debug("adding capture");
+                selectionmodel.ToggleClickedInSelection(true, MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
+            }
+
+          //  bSelectObjectOn = down;
+            //if( bSelectObjectOn )
+            //{
+              //  Test.Debug("adding capture");
                 //keyandmousehandler.MouseDown += new MouseCallback( MouseDown );
-                MouseFilterMouseCacheFactory.GetInstance().MouseDown += new MouseEventHandler( MouseDown );
-            }
-            else
-            {
-                Test.Debug("removing capture");
+//                MouseFilterMouseCacheFactory.GetInstance().MouseDown += new MouseEventHandler( MouseDown );
+  //          }
+    //        else
+      //      {
+        //        Test.Debug("removing capture");
                 //keyandmousehandler.MouseDown -= new MouseCallback( MouseDown );
-                MouseFilterMouseCacheFactory.GetInstance().MouseDown -= new MouseEventHandler( MouseDown );
-            }
+          //      MouseFilterMouseCacheFactory.GetInstance().MouseDown -= new MouseEventHandler( MouseDown );
+            //}
         }
 
-        public void SelectIndividualKeyDown( object source, ComboKeyEventArgs e )
+        public void SelectIndividualKeyDown( string command, bool down )
         {
-            bSelectIndividualOn = e.IsComboDown;
-            if( bSelectIndividualOn )
+            if (down)
             {
-                Test.Debug("adding capture");
+                selectionmodel.ToggleClickedInSelection(false, MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
+            }
+            //bSelectIndividualOn = down;
+            //if( bSelectIndividualOn )
+            //{
+              //  Test.Debug("adding capture");
                 //keyandmousehandler.MouseDown += new MouseHandler( MouseDown );
-                MouseFilterMouseCacheFactory.GetInstance().MouseDown += new MouseEventHandler( MouseDown );
-            }
-            else
-            {
-                Test.Debug("removing capture");
+                //MouseFilterMouseCacheFactory.GetInstance().MouseDown += new MouseEventHandler( MouseDown );
+            //}
+            //else
+            //{
+              //  Test.Debug("removing capture");
                 //keyandmousehandler.MouseDown -= new MouseHandler( MouseDown );
-                MouseFilterMouseCacheFactory.GetInstance().MouseDown -= new MouseEventHandler( MouseDown );
-            }
+//                MouseFilterMouseCacheFactory.GetInstance().MouseDown -= new MouseEventHandler( MouseDown );
+  //          }
         }
         
-        public void MouseDown( object source, MouseEventArgs e )
-        {
-            Test.Debug("mousedown");
-            if( bSelectObjectOn && e.Button == MouseButtons.Left )
-            {
-                selectionmodel.ToggleClickedInSelection( true,  e.X, e.Y );
-            }
-            else if( bSelectIndividualOn && e.Button == MouseButtons.Left )
-            {
-                selectionmodel.ToggleClickedInSelection( false, e.X, e.Y );
-            }
-        }
+        //public void MouseDown( object source, MouseEventArgs e )
+        //{
+            //Test.Debug("mousedown");
+            //if( bSelectObjectOn && e.Button == MouseButtons.Left )
+            //{
+              //  selectionmodel.ToggleClickedInSelection( true,  e.X, e.Y );
+            //}
+            //else if( bSelectIndividualOn && e.Button == MouseButtons.Left )
+            //{
+            //    selectionmodel.ToggleClickedInSelection( false, e.X, e.Y );
+          //  }
+        //}
     }
 }

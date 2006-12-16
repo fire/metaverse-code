@@ -19,6 +19,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 
 namespace OSMP
 {
@@ -30,6 +31,8 @@ namespace OSMP
         {
             return instance;
         }
+
+        List<object> plugins = new List<object>();
 
         public void LoadClientPlugins( Arguments arguments )
         {
@@ -65,7 +68,12 @@ namespace OSMP
             FractalSplineRing.Register();
             FractalSplineTorus.Register();
 
+            WorldView.GetInstance();
+
             UIController.GetInstance();
+
+            //plugins.Add(new DrawAxes());
+            FrustrumCulling.GetInstance();
 
             ServerInfo.GetInstance();
             ConnectServer.GetInstance();

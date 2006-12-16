@@ -19,7 +19,7 @@
 //
 
 using System;
-using System.Windows.Forms;
+using SdlDotNet;
 
 namespace OSMP
 {
@@ -27,38 +27,56 @@ namespace OSMP
     {
         void Render();
     }
-        
-    public delegate void MainLoopDelegate();
+
+    //public delegate void MainLoopDelegate();
+    public delegate void WriteNextFrameCallback(Vector3 camerapos);
+    public delegate void PreDrawCallback();
+    public delegate void TickHandler();
     public delegate void MainMenuCallback();
-        
+
     public interface IRenderer
     {
-        int WindowWidth{ get; }
-        int WindowHeight{ get; }
-        
+        int OuterWindowWidth { get; }
+        int OuterWindowHeight { get; }
+
+        /// <summary>
+        /// inner window width
+        /// </summary>
+        int WindowWidth { get; }
+        /// <summary>
+        /// inner window height
+        /// </summary>
+        int WindowHeight { get; }
+
+        int ScreenDistanceScreenCoords { get; }
+        double FieldOfView { get; }
+        double FarClip { get; }
+        double NearClip { get; }
+
         //void SetupAxes( Entity entity );
-        void ApplyViewingMatrixes();
-        
-        ContextMenu ContextMenu{ get; }
-        MainMenu Menu{ get; }
-        Panel IMPanel{ get; }
-        
-        IPicker3dModel GetPicker3dModel();
-    
-        event KeyEventHandler KeyUp;
-        event KeyEventHandler KeyDown;
-        event MouseEventHandler MouseUp;
-        event MouseEventHandler MouseDown;
-        event MouseEventHandler MouseMove;
-        event EventHandler ContextMenuPopup; 
-        
+        //void ApplyViewingMatrixes();
+
         // void RegisterMainMenu( string[] contextmenupath, MainMenuCallback callback );
-        
-        void MakeRendererActiveControl();
-        
-        void RegisterMainLoopCallback(MainLoopDelegate mainloop );
-        
-        void StartMainLoop();
+
+        event TickHandler Tick;
+        event WriteNextFrameCallback WriteNextFrameEvent;
+        event PreDrawCallback PreDrawEvent;
+
+        event MouseMotionEventHandler MouseMotion;
+        event MouseButtonEventHandler MouseDown;
+        event MouseButtonEventHandler MouseUp;
+        event KeyboardEventHandler KeyUp;
+        event KeyboardEventHandler KeyDown;
+
         void DrawWorld();
+
+        void Init();
+        void Shutdown();
+
+        void ApplyViewingMatrices();
+        //void RegisterMainLoopCallback(MainLoopDelegate mainloop );
+
+        void StartMainLoop();
+        //void DrawWorld();
     }
 }

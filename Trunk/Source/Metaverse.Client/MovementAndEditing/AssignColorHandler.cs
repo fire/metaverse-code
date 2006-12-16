@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 
@@ -104,25 +104,12 @@ namespace OSMP
             
             int FaceNumber = Picker3dController.GetInstance().GetClickedFace( entity as Prim, iMouseX, iMouseY );
             
-            /*
-            // failed attempt to get asynchronous color change
-            AsyncColorDialog asynccolordialog = new AsyncColorDialog();
-            Thread colordialogthread = new Thread( new ThreadStart( asynccolordialog.Run ) );
-            colordialogthread.Start();
-            
-            while( true )
-            {
-                Test.WriteOut( asynccolordialog.Color );
-                Thread.Sleep( 100 );
-            }
-            */
-            
-            ColorDialog colordialog = new ColorDialog();
+            System.Windows.Forms.ColorDialog colordialog = new System.Windows.Forms.ColorDialog();
             colordialog.AllowFullOpen = true;
             colordialog.FullOpen = true;
             colordialog.AnyColor = true;
 
-            if (colordialog.ShowDialog() == DialogResult.OK)
+            if (colordialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 AssignColor( FaceNumber, new Color( (double)colordialog.Color.R/255, (double)colordialog.Color.G/255, (double)colordialog.Color.B/255 ) );
             }

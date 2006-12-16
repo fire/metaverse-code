@@ -50,13 +50,19 @@ namespace OSMP
         {
             worldmodel = MetaverseClient.GetInstance().worldstorage;
             graphics = GraphicsHelperFactory.GetInstance();
+            RendererFactory.GetInstance().WriteNextFrameEvent += new WriteNextFrameCallback(WorldView_WriteNextFrameEvent);
+        }
+
+        void WorldView_WriteNextFrameEvent(Vector3 camerapos)
+        {
+            Render();
         }
 
         //! Draws hardcoded platern that we start over
         //! This is a temporary function since land will be migrated to the databse
         void DrawLandscape()
         {
-            IPicker3dModel picker3dmodel = RendererFactory.GetInstance().GetPicker3dModel();
+            IPicker3dModel picker3dmodel = RendererFactory.GetPicker3dModel();
             
             int i, iy;
     
@@ -93,12 +99,13 @@ namespace OSMP
             Picker3dController picker3dcontroller = Picker3dController.GetInstance();
 
             for( int i = 0; i < worldmodel.entities.Count; i++ )
-            {            
+            {
                 if( worldmodel.entities[i].iParentReference == 0 )
                 {
                     // dont draw own avatar in mouselook mode
                     if( worldmodel.entities[i] != myavatar )
                     {
+                        //Console.WriteLine("render entity " + i);
                         Gl.glRasterPos3f((float)worldmodel.entities[i].pos.x, (float)worldmodel.entities[i].pos.y, (float)worldmodel.entities[i].pos.z);
                         picker3dcontroller.AddHitTarget( worldmodel.entities[i] );
                         worldmodel.entities[i].Draw();
@@ -122,6 +129,7 @@ namespace OSMP
         
         public void Render()
         {
+            //Console.WriteLine("render");
             DrawLandscape();
             DrawEntities();
             SelectionView.GetInstance().Render();

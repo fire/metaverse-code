@@ -1,4 +1,5 @@
-// Copyright Hugh Perkins 2006
+// Copyright Hugh Perkins 2004,2005,2006
+// hughperkins@gmail.com http://manageddreams.com
 //
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License version 2 as published by the
@@ -18,19 +19,31 @@
 //
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace OSMP
 {
-    public class RendererFactory
+    // holds viewer state, ie are we editing 3d, or mouse look, etc
+    // we dont want mouse look running whilst we're editing 3d, etc
+    public class ViewerState
     {
-        static IRenderer instance = OSMP.RendererSdl.GetInstance();
-        public static IRenderer GetInstance()
+        static ViewerState instance = new ViewerState();
+        public static ViewerState GetInstance() { return instance; }
+
+        public enum ViewerStateEnum
         {
-            return instance;
-        }
-        public static IPicker3dModel GetPicker3dModel()
+            None,
+            Edit3d,
+            RoamingCamera
+        };
+
+        public ViewerStateEnum CurrentViewState = ViewerStateEnum.None;
+
+        //public const ViewerStateEnum defaultstate = ViewerStateEnum.Mouselook;
+
+        ViewerState()
         {
-            return Picker3dModelGl.GetInstance();
         }
     }
 }

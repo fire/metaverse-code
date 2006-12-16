@@ -1,4 +1,25 @@
+// Copyright Hugh Perkins 2006
+// hughperkins@gmail.com http://manageddreams.com
+//
+// This program is free software; you can redistribute it and/or modify it
+// under the terms of the GNU General Public License version 2 as published by the
+// Free Software Foundation;
+//
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+//  more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program in the file licence.txt; if not, write to the
+// Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-
+// 1307 USA
+// You can find the licence also on the web at:
+// http://www.opensource.org/licenses/gpl-license.php
+//
+
 using System;
+using Tao.OpenGl;
 
 namespace OSMP
 {
@@ -19,13 +40,17 @@ namespace OSMP
             }
             public void Render()
             {
+                Console.WriteLine("singlefacedrawer.render");
                 IRenderer renderer = RendererFactory.GetInstance();
-                Camera.GetInstance().ApplyCamera();
+                Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+                Gl.glLoadIdentity();
+                renderer.ApplyViewingMatrices();
                 for( int i = 0; i < prim.NumFaces; i++ )
                 {
+                    Console.WriteLine("face " + i);
                     HitTarget thishittarget = new HitTargetEntityFace( prim, i );
                     Console.WriteLine( "Renderering " + thishittarget.ToString() );
-                    renderer.GetPicker3dModel().AddHitTarget( thishittarget );
+                    Picker3dModelGl.GetInstance().AddHitTarget( thishittarget );
                     if( prim.Parent != null )
                     {
                         ( prim.Parent as EntityGroup ).ApplyTransforms();
@@ -69,7 +94,8 @@ namespace OSMP
         
         public Picker3dController()
         {
-            picker3dmodel = RendererFactory.GetInstance().GetPicker3dModel();
+            //picker3dmodel = RendererFactory.GetInstance().GetPicker3dModel();
+            picker3dmodel = Picker3dModelGl.GetInstance();
         }
         
         public void AddHitTarget( Entity entity )
@@ -96,6 +122,7 @@ namespace OSMP
         // we run another selection, with only a single prim, making each face a single pick target
         public int GetClickedFace( Prim prim, int iMouseX, int iMouseY )
         {
+            Console.WriteLine("picker3dcontroller.getclickedface " + prim + " " +  iMouseX + " " + iMouseY);
             HitTarget hittarget = picker3dmodel.GetClickedHitTarget( new SinglePrimFaceDrawer( prim as Prim ), iMouseX, iMouseY );
             if( hittarget == null || !( hittarget is HitTargetEntityFace ) )
             {

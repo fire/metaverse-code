@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SdlDotNet;
 using Gtk;
 using Glade;
 
@@ -53,35 +54,69 @@ namespace OSMP
 
         public UIContextMenu()
         {
+            MouseCache.GetInstance().MouseDown += new MouseButtonEventHandler(UIContextMenu_MouseDown);
+            MouseCache.GetInstance().MouseUp += new MouseButtonEventHandler(UIContextMenu_MouseUp);
+            //MouseFilterSdlMouseCache.GetInstance().MouseMove += new MouseMoveHandler(UIContextMenu_MouseMove);
+
             //RendererFactory.GetInstance().ContextMenuPopup += new EventHandler(ContextMenu_ContextMenuPopup);
             //UIController.GetInstance().contextmenu.RegisterContextMenu(contextmenupath, callback);
-            MouseFilterFormsMouseCache.GetInstance().MouseDown += new System.Windows.Forms.MouseEventHandler(GtkContextMenu_MouseDown);
-            MouseFilterFormsMouseCache.GetInstance().MouseUp += new System.Windows.Forms.MouseEventHandler(UIContextMenu_MouseUp);
+
+            //KeyFilterConfigMappingsFactory.GetInstance().RegisterCommand("contextmenu", new KeyCommandHandler(
+                //OpenContextMenu));
+            //MouseFilterMouseCacheFactory.GetInstance().MouseDown += new SdlDotNet.MouseButtonEventHandler(UIContextMenu_MouseDown);
+            //MouseFilterMouseCacheFactory.GetInstance().MouseUp += new SdlDotNet.MouseButtonEventHandler(UIContextMenu_MouseUp);
+
+            //MouseFilterFormsMouseCache.GetInstance().MouseDown += new System.Windows.Forms.MouseEventHandler(GtkContextMenu_MouseDown);
+            //MouseFilterFormsMouseCache.GetInstance().MouseUp += new System.Windows.Forms.MouseEventHandler(UIContextMenu_MouseUp);
         }
 
-        void UIContextMenu_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        void UIContextMenu_MouseUp(object sender, MouseButtonEventArgs e)
         {
         }
 
-        void GtkContextMenu_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        void UIContextMenu_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (e.Button == MouseButton.SecondaryButton)
+            {
+                OpenContextMenu();
+                MouseCache.GetInstance().OnRightMouseUp();
+            }
+        }
+
+        //void UIContextMenu_MouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //}
+
+        //void UIContextMenu_MouseDown(object sender, MouseButtonEventArgs e)
+        //void OpenContextMenu(string command, bool down)
+        //{
             //Console.WriteLine(e.Button + " " + MouseFilterFormsMouseCache.GetInstance().RightMouseDown);
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-            {
-                if (contextmenu != null)
-                {
+            //if (e. == System.Windows.Forms.MouseButtons.Left)
+            //{
+              //  if (contextmenu != null)
+                //{
                   //  contextmenu.Destroy();
-                }
-            }
-            if (e.Button == System.Windows.Forms.MouseButtons.Right)
-            {
-                ContextMenu_ContextMenuPopup(sender, e);
-            }
-        }
+                //}
+            //}
+            //if (e.Button == System.Windows.Forms.MouseButtons.Right)
+          //  if( down )
+           // {
+            //}
+        //}
 
         Menu contextmenu;
 
-        void ContextMenu_ContextMenuPopup(object sender, EventArgs e)
+        void OpenContextMenu(string command, bool down)
+        {
+            Console.WriteLine("opencontextmenu " + down);
+            if (!down)
+            {
+                return;
+            }
+            OpenContextMenu();
+        }
+
+        void OpenContextMenu()
         {
             if (contextmenu != null)
             {
@@ -95,7 +130,7 @@ namespace OSMP
             //contextmenu.Add(submenuitem);
             //contextmenu.Add(new MenuItem("item3"));
 
-            IMouseFilterMouseCache mousefiltermousecache = MouseFilterMouseCacheFactory.GetInstance();
+            MouseCache mousefiltermousecache = MouseCache.GetInstance();
             iMouseX = mousefiltermousecache.MouseX;
             iMouseY = mousefiltermousecache.MouseY;
 
@@ -110,6 +145,7 @@ namespace OSMP
 
             contextmenu.ShowAll();
             contextmenu.Popup(null,null,null,IntPtr.Zero,3, Gtk.Global.CurrentEventTime);
+
         }
 
         //void _menupositionfunc( Menu menu, out int x, out int y, out bool pushin )

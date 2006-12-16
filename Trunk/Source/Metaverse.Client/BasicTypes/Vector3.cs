@@ -99,8 +99,13 @@ namespace OSMP
             vR.z = v1.x * v2.y - v1.y * v2.x;
             return vR;
         }
-        
-        public static double DotProduct( Vector3 v1, Vector3 v2 )
+
+        public static Vector3 operator *(Vector3 v1, Vector3 v2)
+        {
+            return CrossProduct(v1, v2);
+        }
+
+        public static double DotProduct(Vector3 v1, Vector3 v2)
         {
             return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
         }

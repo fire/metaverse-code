@@ -65,7 +65,7 @@ namespace OSMP
                 Console.WriteLine ( filename );
                 Store( filename );
             }
-            DialogHelper.GetInstance().ShowInfoMessage( "World save completed", "World save completed" );
+            DialogHelpers.ShowInfoMessage(null, "World save completed");
         }
         
         public void ContextMenuLoad( object source, ContextMenuArgs e )
@@ -88,7 +88,7 @@ namespace OSMP
                 Console.WriteLine ( filename );
                 Restore( filename );
             }
-            DialogHelper.GetInstance().ShowInfoMessage( "World load completed", "World load completed" );
+            DialogHelpers.ShowInfoMessage(null, "World load completed");
         }
         
         public void Store( string filename )

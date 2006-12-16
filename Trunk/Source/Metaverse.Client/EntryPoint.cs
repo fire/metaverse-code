@@ -37,6 +37,8 @@ namespace OSMP
                 //new TestReplicationAttributes().Go();
                 //return;
 
+                LogFile.GetInstance().Init("osmplog_" + new Random().Next(1000) + ".log");
+
                 Arguments arguments = new Arguments(args);
 
                 if( arguments.Unnamed.Contains("clientonly") )

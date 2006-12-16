@@ -18,7 +18,6 @@
 //
 
 using System;
-using System.Windows.Forms;
 
 namespace OSMP
 {
@@ -35,8 +34,9 @@ namespace OSMP
         public KeyHandlerQuit()
         {
             Console.WriteLine("instantiating keyhandlerquit" );
-            KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
-            keyfiltercombokeys.RegisterCombo( new string[]{"quit"},null, new KeyComboHandler( QuitKeyDown ) );
+            CommandCombos.GetInstance().RegisterCommand("quit", new KeyCommandHandler(QuitKeyDown));
+            //KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
+            //keyfiltercombokeys.RegisterCombo( new string[]{"quit"},null, new KeyComboHandler( QuitKeyDown ) );
             
            //RendererFactory.GetInstance().RegisterContextMenu(new string[]{ "Quit","&Quit" }, new ContextMenuCallback( ContextMenuQuit ) );
             ContextMenuController.GetInstance().RegisterPersistentContextMenu(new string[]{ "Quit","&Quit" }, new ContextMenuHandler( ContextMenuQuit ) );
@@ -51,9 +51,12 @@ namespace OSMP
         {
             Quit();
         }
-        public void QuitKeyDown( object source, ComboKeyEventArgs e )
+        public void QuitKeyDown( string command, bool down )
         {
-            Quit();
+            if (down)
+            {
+                Quit();
+            }
         }
     }
 }

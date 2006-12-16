@@ -1,6 +1,16 @@
 Next release:
 - migrated context menu to GTK#
 - migrated entity properties box to GTK#
+- migrated renderer to standard SDL window
+- migrated chat box to GTK#
+- migrated chat login to GTK#
+- migrated many info/error dialog boxes to GTK#
+- improved keyboard processing algos
+- improved camera
+- added FrustrumCulling class
+- updated SDL dlls in Libraries folder
+- added SDL_imaging.dll to Libraries folder
+- added Metaverse.ico icon to SDL window
 
 Release December 12 2006:
 - renamed "Properties" in context menu to "Edit"

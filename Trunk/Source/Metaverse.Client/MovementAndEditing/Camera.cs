@@ -22,8 +22,8 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
 using MathGl;
+using SdlDotNet;
 
 namespace OSMP
 {
@@ -39,9 +39,9 @@ namespace OSMP
         
         public enum Viewpoint
         {
-            MouseLook,
-            BehindPlayer,
-            ThirdParty
+            MouseLook
+            //BehindPlayer,
+            //ThirdParty
         }
         
         public Viewpoint viewpoint = Viewpoint.MouseLook;
@@ -51,9 +51,26 @@ namespace OSMP
         public bool bRoamingCameraEnabled;  //!< if camera is enabled (otherwise, just normal avatar view)
         public Vector3 RoamingCameraPos = new Vector3();  //!< position of camera
         public Rot RoamingCameraRot = new Rot();  //!< rotation of camera
-            
-        public Vector3 CameraPos;
-        public Rot CameraRot;
+
+        public Vector3 CameraPos
+        {
+            get
+            {
+                UpdateCamera();
+                return camerapos;
+            }
+        }
+        public Rot CameraRot
+        {
+            get
+            {
+                UpdateCamera();
+                return camerarot;
+            }
+        }
+
+        Vector3 camerapos;
+        Rot camerarot;
             
         int iDragStartx;
         int iDragStarty;
@@ -76,52 +93,136 @@ namespace OSMP
         {
             return instance;
         }
-        
+
+        const string CMD_ZOOM = "camerazoom";
+        const string CMD_PAN = "camerapan";
+        const string CMD_ORBIT = "cameraorbit";
+
         public Camera()
         {
-            IMouseFilterMouseCache mousefiltermousecache = MouseFilterMouseCacheFactory.GetInstance();
-            KeyFilterComboKeys.GetInstance().RegisterCombo(
-                new string[]{"cameramode"}, null, new KeyComboHandler( CameraModeZoomHandler ) );
-            KeyFilterComboKeys.GetInstance().RegisterCombo(
-                new string[]{"cameramode","cameraorbit"}, null, new KeyComboHandler( CameraModeOrbitHandler ) );
-            KeyFilterComboKeys.GetInstance().RegisterCombo(
-                new string[]{"cameramode","camerapan"}, null, new KeyComboHandler( CamerModePanHandler ) );
+            MouseCache mousefiltermousecache = MouseCache.GetInstance();
+            CommandCombos.GetInstance().RegisterCommandGroup(
+                new string[]{ CMD_ZOOM, CMD_PAN, CMD_ORBIT }, new KeyCommandHandler(CameraModeHandler));
+            //CommandCombos.GetInstance().RegisterCommand(
+              //  "cameraorbit", new KeyCommandHandler(CameraModeOrbitHandler));
+            //CommandCombos.GetInstance().RegisterCommand(
+              //  "camerapan", new KeyCommandHandler(CamerModePanHandler));
+            CommandCombos.GetInstance().RegisterCommand(
+                "toggleviewpoint", new KeyCommandHandler(ToggleViewpointHandler));
+            CommandCombos.GetInstance().RegisterCommand(
+                "leftmousebutton", new KeyCommandHandler(MouseDown));
+            MouseCache.GetInstance().MouseMove += new MouseMoveHandler(Camera_MouseMove);
+              
+            RendererFactory.GetInstance().PreDrawEvent += new PreDrawCallback(Camera_PreDrawEvent);
+        }
 
-            KeyFilterComboKeys.GetInstance().RegisterCombo(
-                new string[]{"toggleviewpoint"}, null, new KeyComboHandler( ToggleViewpointHandler ) );
-                
-            mousefiltermousecache.MouseDown += new MouseEventHandler( MouseDown );
-            mousefiltermousecache.MouseMove += new MouseEventHandler( MouseMove );
-            mousefiltermousecache.MouseUp += new MouseEventHandler( MouseUp );
-        }
-        
-        public void CameraModeZoomHandler( object source, ComboKeyEventArgs e )
+        void Camera_PreDrawEvent()
         {
+            ApplyCamera();
         }
-        public void CameraModeOrbitHandler( object source, ComboKeyEventArgs e )
+
+        public void CameraModeHandler(string command, bool down)
         {
+            if (command == CMD_ORBIT)
+            {
+                CameraModeOrbitHandler(command, down);
+            }
+            else if (command == CMD_PAN)
+            {
+                CameraModePanHandler(command, down);
+            }
+            else if (command == CMD_ZOOM)
+            {
+                CameraModeZoomHandler(command, down);
+            }
+            if (down)
+            {
+                ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.RoamingCamera;
+            }
+            else
+            {
+                ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.None;
+            }
         }
-        public void CamerModePanHandler( object source, ComboKeyEventArgs e )
+
+        public void CameraModeZoomHandler( string command, bool down )
         {
+            if (down)
+            {
+                CurrentMove = CameraMoveType.AltZoom;
+            }
+            else
+            {
+                CurrentMove = CameraMoveType.None;
+            }
         }
-        public void ToggleViewpointHandler( object source, ComboKeyEventArgs e )
+        public void CameraModeOrbitHandler(string command, bool down)
         {
-            if( e.IsComboDown )
+            if (down)
+            {
+                CurrentMove = CameraMoveType.Orbit;
+            }
+            else
+            {
+                CurrentMove = CameraMoveType.None;
+            }
+        }
+        public void CameraModePanHandler(string command, bool down)
+        {
+            if (down)
+            {
+                CurrentMove = CameraMoveType.Pan;
+            }
+            else
+            {
+                CurrentMove = CameraMoveType.None;
+            }
+        }
+        public void ToggleViewpointHandler(string command, bool down)
+        {
+            if( down )
             {
                 Test.Debug(  "toggling viewpoint..." ); // Test.Debug
                 // viewpoint = (Viewpoint)(( (int)viewpoint + 1 ) % 3 );
-                viewpoint = (Viewpoint)(( (int)viewpoint + 1 ) % 2 );  // disactivating third viewpoint for now (since we cant see avatar at moment...)
+                viewpoint = (Viewpoint)(( (int)viewpoint + 1 ) % 1 );  // disactivating third viewpoint for now (since we cant see avatar at moment...)
             }
         }
         
-        public void MouseDown( object source, MouseEventArgs e )
+        public void MouseDown( string command, bool down )
         {
+            if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.RoamingCamera)
+            {
+                switch (CurrentMove)
+                {
+                    case CameraMoveType.AltZoom:
+                        InitiateZoomCamera(MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
+                        break;
+                    case CameraMoveType.Orbit:
+                        InitiateOrbitCamera(MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
+                        break;
+                    case CameraMoveType.Pan:
+                        InitiatePanCamera(MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
+                        break;
+                }
+            }
         }
-        public void MouseMove( object source, MouseEventArgs e )
+        void Camera_MouseMove()
         {
-        }
-        public void MouseUp( object source, MouseEventArgs e )
-        {
+            if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.RoamingCamera)
+            {
+                switch (CurrentMove)
+                {
+                    case CameraMoveType.AltZoom:
+                        UpdateAltZoomCamera(MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
+                        break;
+                    case CameraMoveType.Orbit:
+                        UpdateOrbitCamera(MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
+                        break;
+                    case CameraMoveType.Pan:
+                        UpdatePanCamera(MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
+                        break;
+                }
+            }
         }
     
         public void InitiateOrbitSlashAltZoom( int imousex, int imousey, CameraMoveType eMoveType )
@@ -209,7 +310,7 @@ namespace OSMP
             InitiateOrbitSlashAltZoom( imousex, imousey, CameraMoveType.Orbit );
         }
         
-        public void InitiateAltZoomCamera( int imousex, int imousey )
+        public void InitiateZoomCamera( int imousex, int imousey )
         {
             InitiateOrbitSlashAltZoom( imousex, imousey, CameraMoveType.AltZoom );
         }
@@ -223,54 +324,72 @@ namespace OSMP
         {
             CurrentMove = CameraMoveType.None;
         }
+
+        void UpdateCamera()
+        {
+            PlayerMovement playermovement = PlayerMovement.GetInstance();
+
+            if (bRoamingCameraEnabled)
+            {
+                camerapos = RoamingCameraPos;
+                camerarot = RoamingCameraRot;
+            }
+            else if (viewpoint == Viewpoint.MouseLook)
+            {
+                camerapos = playermovement.avatarpos;
+                camerarot = 
+                    mvMath.AxisAngle2Rot(mvMath.ZAxis, playermovement.avatarzrot * Math.PI / 180) *
+                    mvMath.AxisAngle2Rot(mvMath.YAxis, playermovement.avataryrot * Math.PI / 180)
+                    ;
+                //cameramatrix.applyRotate(-playermovement.avataryrot, 0f, 1f, 0f);
+                //cameramatrix.applyRotate(-playermovement.avatarzrot, 0f, 0f, 1f);
+                //cameramatrix.applyTranslate(-playermovement.avatarpos.x, -playermovement.avatarpos.y, -playermovement.avatarpos.z);
+            }
+                /*
+            else if (viewpoint == Viewpoint.BehindPlayer)
+            {
+                cameramatrix.applyRotate(-18f, 0f, 1f, 0f);
+
+                // Vector3 V = new Vector3( 0, playermovement.avataryrot * mvMath.PiOver180, playermovement.avatarzrot * mvMath.PiOver180 );
+
+                cameramatrix.applyTranslate(3.0f, 0.0f, -1.0f);
+
+                cameramatrix.applyRotate(-(float)playermovement.avataryrot, 0f, 1f, 0f);
+                cameramatrix.applyRotate(-(float)playermovement.avatarzrot, 0f, 0f, 1f);
+
+                cameramatrix.applyTranslate(-playermovement.avatarpos.x, -playermovement.avatarpos.y, -playermovement.avatarpos.z);
+            }
+            else if (viewpoint == Viewpoint.ThirdParty)
+            {
+                cameramatrix.applyRotate(-18f, 0f, 1f, 0f);
+                cameramatrix.applyRotate(-90f, 0f, 0f, 1f);
+
+                cameramatrix.applyTranslate(0.0, -fThirdPartyViewZoom, fThirdPartyViewZoom / 3.0);
+                cameramatrix.applyRotate(-fThirdPartyViewRotate, 0f, 0f, 1f);
+                cameramatrix.applyTranslate(-playermovement.avatarpos.x, -playermovement.avatarpos.y, -playermovement.avatarpos.z);
+            }
+            */
+        }
         
         public void ApplyCamera()
         {
+            UpdateCamera();
+
             // rotate so z axis is up, and x axis is forward
             
             PlayerMovement playermovement = PlayerMovement.GetInstance();
             
-            GLMatrix4d cameramatrix = GLMatrix4d.identity();
-            
-            cameramatrix.applyRotate( 90, 0.0, 0.0, 1.0 );
-            cameramatrix.applyRotate( 90, 0.0, 1.0, 0.0 );
-            
-            if( bRoamingCameraEnabled )
-            {
-                Rot inversecamerarot = RoamingCameraRot.Inverse();
-                mvMath.ApplyRotToGLMatrix4d( ref cameramatrix, inversecamerarot  );
-                cameramatrix.applyTranslate( - RoamingCameraPos.x, - RoamingCameraPos.y, - RoamingCameraPos.z  );
-            }
-            else if( viewpoint == Viewpoint.MouseLook )
-            {
-                cameramatrix.applyRotate( - playermovement.avataryrot, 0f, 1f, 0f );
-                cameramatrix.applyRotate( - playermovement.avatarzrot, 0f, 0f, 1f );
-                cameramatrix.applyTranslate( - playermovement.avatarpos.x, - playermovement.avatarpos.y, - playermovement.avatarpos.z );
-            }
-            else if( viewpoint == Viewpoint.BehindPlayer )
-            {
-                cameramatrix.applyRotate( -18f, 0f, 1f, 0f );
+            GraphicsHelperGl g = new GraphicsHelperGl();
 
-                // Vector3 V = new Vector3( 0, playermovement.avataryrot * mvMath.PiOver180, playermovement.avatarzrot * mvMath.PiOver180 );
+            g.Rotate(90, 0, 0, 1);
+            g.Rotate(90, 0, 1, 0);
 
-                cameramatrix.applyTranslate( 3.0f, 0.0f, -1.0f );
+            Rot inversecamerarot = camerarot.Inverse();
+            //inversecamerarot.Inverse();
+            g.Rotate(inversecamerarot);
+            //g.Rotate(camerarot);
 
-                cameramatrix.applyRotate( - (float)playermovement.avataryrot, 0f, 1f, 0f );
-                cameramatrix.applyRotate( - (float)playermovement.avatarzrot, 0f, 0f, 1f );
-
-                cameramatrix.applyTranslate( -playermovement.avatarpos.x, -playermovement.avatarpos.y, -playermovement.avatarpos.z );
-            }
-            else if( viewpoint == Viewpoint.ThirdParty )
-            {
-                cameramatrix.applyRotate( -18f, 0f, 1f, 0f );
-                cameramatrix.applyRotate( -90f, 0f, 0f, 1f );
-
-                cameramatrix.applyTranslate( 0.0, - fThirdPartyViewZoom, fThirdPartyViewZoom / 3.0 );
-                cameramatrix.applyRotate( - fThirdPartyViewRotate, 0f, 0f, 1f );
-                cameramatrix.applyTranslate( - playermovement.avatarpos.x, - playermovement.avatarpos.y, - playermovement.avatarpos.z );
-            }    
-            
-            GraphicsHelperFactory.GetInstance().LoadMatrix( cameramatrix.ToArray() );
+            g.Translate(-camerapos);
         }
     }    
 }
