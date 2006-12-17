@@ -40,11 +40,32 @@
 					<include name="DevIL.NET.dll" />
 				</fileset>
 			</copy>
+			<nant buildfile="../NetworkInterfaces/default.build" />
 			<copy todir="bin">
-				<fileset basedir="../../Outputs/Metaverse.Client">
+				<fileset basedir="../../Outputs/NetworkInterfaces">
 					<include name="NetworkInterfaces.dll"/>
 				</fileset>
 			</copy>
+			<copy todir="../../Outputs/RpcProxyGenerator">
+				<fileset basedir="../../Outputs/NetworkInterfaces">
+					<include name="NetworkInterfaces.dll"/>
+				</fileset>
+			</copy>
+			<nant buildfile="../RpcProxyGenerator/default.build" />
+            <exec program="../../Outputs/RpcProxyGenerator/RpcProxyGenerator.exe" output="../../Outputs/RpcProxyGenerator/generate.log"
+                workingdir="../../Outputs/RpcProxyGenerator" />
+                
+			<copy todir="NetworkV3\Layer4_Rpc\GeneratedProxies">
+				<fileset basedir="../../Outputs/RpcProxyGenerator">
+					<include name="LockRpcToClient_ClientProxy_Generated.cs"/>
+					<include name="LockRpcToServer_ClientProxy_Generated.cs"/>
+					<include name="ObjectReplicationClientToServer_ClientProxy_Generated.cs"/>
+					<include name="ObjectReplicationServerToClient_ClientProxy_Generated.cs"/>
+					<include name="TestInterface_ClientProxy_Generated.cs"/>
+					<include name="WorldControl_ClientProxy_Generated.cs"/>
+				</fileset>
+			</copy>
+                
 			<csc target="exe" output="bin/MetaverseClient.exe" debug="${debug}">
 				<references>
 					<include name="bin/NetworkInterfaces.dll" />

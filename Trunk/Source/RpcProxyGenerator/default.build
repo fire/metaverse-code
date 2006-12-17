@@ -1,0 +1,14 @@
+<project name="RpcProxyGenerator" default="build" basedir=".">
+    <target name="build" description="compiles the source code">
+        <csc target="exe" output="../../Outputs/RpcProxyGenerator/RpcProxyGenerator.exe" debug="${debug}">
+            <references>
+                <include name="../../Outputs/NetworkInterfaces/NetworkInterfaces.dll" />
+            </references>
+            <sources>
+                <include name="EntryPoint.cs" />
+                <include name="NetworkProxyBuilder.cs" />
+                <include name="RunGenerator.cs" />
+            </sources>
+        </csc>
+    </target>
+</project>
