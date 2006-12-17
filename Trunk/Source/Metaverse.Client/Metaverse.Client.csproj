@@ -276,6 +276,9 @@ xcopy /d /y $(ProjectDir)metaverse.ico . &gt;&gt; copy.log
     <Content Include="osmpico32.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="metaverse.client.glade" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
 </Project>
