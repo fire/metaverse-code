@@ -1,26 +1,30 @@
 
   <project name="Metaverse.Client" default="build" basedir=".">
         <description>Compiles, cleans and exports the Metaverse.ClientProject</description>
-        <property name="debug" value="false" overwrite="false" />
+        <property name="debug" value="true" overwrite="false" />
         
 		<target name="clean" description="remove all generated files">
+            <nant buildfile="../FractalSpline/default.build" target="clean" />
+            <nant buildfile="../NetworkInterfaces/default.build" target="clean" />
+            <nant buildfile="../RpcProxyGenerator/default.build" target="clean" />
 			<delete failonerror="false">
 				<fileset basedir="bin">
-					<include name="Tao.OpenGl.dll" />
-					<include name="Tao.OpenGl.Glu.dll" />
-					<include name="Tao.OpenGl.ExtensionLoader.dll" />
-					<include name="FractalSpline.dll" />
-					<include name="Tao.Sdl.dll" />
-					<include name="LayoutManager.dll" />
-					<include name="SdlDotNet.dll" />
-					<include name="MathGL.dll" />
-					<include name="DevIL.NET.dll" />
-					<include name="Meebey.SmartIrc4net.dll" />
+					<include name="*" />
+				</fileset>
+			</delete>
+			<delete>
+				<fileset basedir="../../Outputs/Metaverse.Client">
+					<include name="*" />
 				</fileset>
 			</delete>
         </target>
 
-        <target name="build_library" description="compiles the source code">
+        <target name="build" description="compiles the source code">
+			<copy todir="bin">
+				<fileset basedir="../../Libraries">
+					<include name="*.dll"/>
+				</fileset>
+			</copy>
 			<nant buildfile="../FractalSpline/default.build" />
             <copy todir="bin">
 			    <fileset basedir="../FractalSpline/bin/">
@@ -29,15 +33,6 @@
 					<include name="Tao.OpenGl.Glu.dll"/>
 					<include name="Tao.OpenGl.ExtensionLoader.dll"/>
 					<include name="FractalSpline.dll"/>
-				</fileset>
-			</copy>
-			<copy todir="bin">
-				<fileset basedir="../../Libraries">
-					<include name="Meebey.SmartIrc4net.dll"/>
-					<include name="Tao.Sdl.dll"/>
-					<include name="SdlDotNet.dll" />
-					<include name="Tao.FreeGlut.dll" />
-					<include name="DevIL.NET.dll" />
 				</fileset>
 			</copy>
 			<nant buildfile="../NetworkInterfaces/default.build" />
@@ -231,14 +226,12 @@
 			</copy>
 			<copy todir="../../Outputs/Metaverse.Client">	
 				<fileset basedir=".">
+					<include name="metaverse.client.glade"/>
 					<include name="config.xml"/>
+					<include name="metaverse.ico"/>
 					<include name="Meebey.SmartIrc4net.xml"/>
 				</fileset>
 			</copy>
         </target>
-
-		<target name="build" description="remove all generated files">
-			<call target="build_library" />
-		</target>
     </project>
 
