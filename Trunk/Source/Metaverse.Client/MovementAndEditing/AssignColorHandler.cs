@@ -103,15 +103,12 @@ namespace OSMP
             }
             
             int FaceNumber = Picker3dController.GetInstance().GetClickedFace( entity as Prim, iMouseX, iMouseY );
-            
-            System.Windows.Forms.ColorDialog colordialog = new System.Windows.Forms.ColorDialog();
-            colordialog.AllowFullOpen = true;
-            colordialog.FullOpen = true;
-            colordialog.AnyColor = true;
 
-            if (colordialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            Color newcolor = DialogHelpers.GetColor();
+
+            if (newcolor != null)
             {
-                AssignColor( FaceNumber, new Color( (double)colordialog.Color.R/255, (double)colordialog.Color.G/255, (double)colordialog.Color.B/255 ) );
+                AssignColor(FaceNumber, newcolor );
             }
         }
     }

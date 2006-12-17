@@ -22,7 +22,6 @@ using System;
 using System.Collections;
 using System.Xml;
 using System.Xml.Serialization; 
-using System.Windows.Forms;
 using System.IO;
 
 namespace OSMP
@@ -51,21 +50,14 @@ namespace OSMP
         
         public void SaveWorld()
         {
-            SaveFileDialog savefiledialog = new SaveFileDialog();
-        
-            savefiledialog.InitialDirectory = "DefaultWorld" ;
-            savefiledialog.Filter = "Prim Blender Files(*.PRIMS)|*.PRIMS|All files (*.*)|*.*" ;
-            savefiledialog.FilterIndex = 1;
-            savefiledialog.RestoreDirectory = true ;
-        
-            if(savefiledialog.ShowDialog() == DialogResult.OK)
-            {
-                string filename = savefiledialog.FileName;
-                Console.WriteLine ( filename );
-                Store( filename );
-            }
+            string filename = DialogHelpers.GetFilePath("Save Prim Blender file file", "world.PRIMS");
 
-            DialogHelpers.ShowInfoMessage( null, "World save completed" );
+            if (filename != "")
+            {
+                Console.WriteLine(filename);
+                Store(filename);
+                DialogHelpers.ShowInfoMessage(null, "World export to prim blender completed");
+            }
         }
         
         public void ContextMenuLoad( object source, ContextMenuArgs e )
@@ -75,20 +67,14 @@ namespace OSMP
         
         public void LoadWorld()
         {
-            OpenFileDialog openfiledialog = new OpenFileDialog();
-        
-            openfiledialog.InitialDirectory = "DefaultWorld" ;
-            openfiledialog.Filter = "Prim Blender Files(*.PRIMS)|*.PRIMS|All files (*.*)|*.*" ;
-            openfiledialog.FilterIndex = 1;
-            openfiledialog.RestoreDirectory = true ;
-        
-            if(openfiledialog.ShowDialog() == DialogResult.OK)
+            string filename = DialogHelpers.GetFilePath("Open Prim Blender file file", ".PRIMS");
+
+            if (filename != "")
             {
-                string filename = openfiledialog.FileName;
-                Console.WriteLine ( filename );
-                Restore( filename );
+                Console.WriteLine(filename);
+                Restore(filename);
+                DialogHelpers.ShowInfoMessage(null, "World load from prim blender completed");
             }
-            DialogHelpers.ShowInfoMessage(null, "World load completed");
         }
         
         public void Store( string filename )

@@ -52,10 +52,6 @@
     <Compile Include="HelperClasses\Arguments.cs" />
     <Compile Include="HelperClasses\ArrayHelper.cs" />
     <Compile Include="HelperClasses\Config.cs" />
-    <Compile Include="HelperClasses\InputBox\Inputbox.cs" />
-    <Compile Include="HelperClasses\InputBox\InputBoxForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="HelperClasses\LogFile.cs" />
     <Compile Include="HelperClasses\mvMath.cs" />
     <Compile Include="HelperClasses\MyRand.cs" />
@@ -133,7 +129,6 @@
     <Compile Include="NetworkV3\ObjectReplication\NetReplicationController.cs" />
     <Compile Include="NetworkV3\ObjectReplication\ReplicationAttributes.cs" />
     <Compile Include="NetworkV3\ObjectReplication\WorldReplication.cs" />
-    <Compile Include="NetworkV3\UI\ConnectServer.cs" />
     <Compile Include="NetworkV3\UI\ServerInfo.cs" />
     <Compile Include="Persistence\IHasProperties.cs" />
     <Compile Include="Persistence\ImportExportPrimBlender.cs" />
@@ -156,6 +151,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UI\DialogHelpers.cs" />
+    <Compile Include="UI\Dialogs\ConnectToServerDialog.cs" />
     <Compile Include="UI\Dialogs\LoginDialog.cs" />
     <Compile Include="UI\Dialogs\UIContextMenu.cs" />
     <Compile Include="UI\Dialogs\UIEntitiesPropertiesDialog.cs">
@@ -223,9 +219,7 @@
       <HintPath>bin\SdlDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
     <Reference Include="Tao.FreeGlut, Version=2.2.0.0, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d">
       <SpecificVersion>False</SpecificVersion>
