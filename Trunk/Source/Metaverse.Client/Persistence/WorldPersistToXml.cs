@@ -23,7 +23,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization; 
-using System.Windows.Forms;
 using System.IO;
 
 namespace OSMP
@@ -52,20 +51,14 @@ namespace OSMP
         
         public void SaveWorld()
         {
-            SaveFileDialog savefiledialog = new SaveFileDialog();
-        
-            savefiledialog.InitialDirectory = "DefaultWorld" ;
-            savefiledialog.Filter = "World Files(*.OSMP)|*.OSMP|All files (*.*)|*.*" ;
-            savefiledialog.FilterIndex = 1;
-            savefiledialog.RestoreDirectory = true ;
-        
-            if(savefiledialog.ShowDialog() == DialogResult.OK)
+            string filename = DialogHelpers.GetFilePath("Save world file", "world.OSMP");
+
+            if( filename != "" )
             {
-                string filename = savefiledialog.FileName;
                 Console.WriteLine ( filename );
                 Store( filename );
+                DialogHelpers.ShowInfoMessage(null, "World save completed");
             }
-            DialogHelpers.ShowInfoMessage(null, "World save completed");
         }
         
         public void ContextMenuLoad( object source, ContextMenuArgs e )
@@ -75,20 +68,14 @@ namespace OSMP
         
         public void LoadWorld()
         {
-            OpenFileDialog openfiledialog = new OpenFileDialog();
-        
-            openfiledialog.InitialDirectory = "DefaultWorld" ;
-            openfiledialog.Filter = "World Files(*.OSMP)|*.OSMP|All files (*.*)|*.*" ;
-            openfiledialog.FilterIndex = 1;
-            openfiledialog.RestoreDirectory = true ;
-        
-            if(openfiledialog.ShowDialog() == DialogResult.OK)
+            string filename = DialogHelpers.GetFilePath("Open world file", "world.OSMP");
+
+            if (filename != "")
             {
-                string filename = openfiledialog.FileName;
                 Console.WriteLine ( filename );
                 Restore( filename );
+                DialogHelpers.ShowInfoMessage(null, "World load completed");
             }
-            DialogHelpers.ShowInfoMessage(null, "World load completed");
         }
         
         public void Store( string filename )
@@ -125,7 +112,7 @@ namespace OSMP
                 typeof( FractalSplineTube )
                 } );            
             FileStream filestream = new FileStream( filename, FileMode.Open );
-            MessageBox.Show(serializer.Deserialize(filestream).GetType().ToString());
+            DialogHelpers.ShowInfoMessage( null, serializer.Deserialize(filestream).GetType().ToString());
             List<Entity> entities = (List<Entity>)serializer.Deserialize( filestream );
             foreach (Entity entity in entities)
             {

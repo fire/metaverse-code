@@ -76,7 +76,7 @@ namespace OSMP
             FrustrumCulling.GetInstance();
 
             ServerInfo.GetInstance();
-            ConnectServer.GetInstance();
+            ConnectToServerDialog.GetInstance();
         }
 
         public void LoadServerPlugins()

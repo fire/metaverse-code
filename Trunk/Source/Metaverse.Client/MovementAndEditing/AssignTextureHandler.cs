@@ -74,16 +74,9 @@ namespace OSMP
             
             int FaceNumber = Picker3dController.GetInstance().GetClickedFace( entity as Prim, iMouseX, iMouseY );
 
-            System.Windows.Forms.OpenFileDialog openfiledialog = new System.Windows.Forms.OpenFileDialog();
-        
-            openfiledialog.InitialDirectory = "DefaultWorld" ;
-            openfiledialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.TGA)|*.BMP;*.JPG;*.GIF;*.TGA|All files (*.*)|*.*" ;
-            openfiledialog.FilterIndex = 1;
-            openfiledialog.RestoreDirectory = true ;
-
-            if (openfiledialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            string filename = DialogHelpers.GetFilePath("Select image file (*.bmp,*.jpg,*.gif,*.tga):","*.JPG");
+            if( filename != "" )
             {
-                string filename = openfiledialog.FileName;
                 Console.WriteLine ( filename );
                 if( File.Exists( filename ) )
                 {
