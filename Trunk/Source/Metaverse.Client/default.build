@@ -61,7 +61,7 @@
 				</fileset>
 			</copy>
                 
-			<csc target="exe" output="bin/MetaverseClient.exe" debug="${debug}">
+			<csc target="exe" output="bin/Metaverse.Client.exe" debug="${debug}">
 				<references>
 					<include name="bin/NetworkInterfaces.dll" />
                     

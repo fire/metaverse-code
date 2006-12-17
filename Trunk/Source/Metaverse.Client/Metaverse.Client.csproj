@@ -186,10 +186,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\DevIL.NET.dll</HintPath>
     </Reference>
-    <Reference Include="FractalSpline, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\FractalSpline.dll</HintPath>
-    </Reference>
     <Reference Include="gdk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\gdk-sharp.dll</HintPath>
@@ -205,10 +201,6 @@
     <Reference Include="gtk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\gtk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="MathGL, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\MathGL.dll</HintPath>
     </Reference>
     <Reference Include="Meebey.SmartIrc4net, Version=0.3.5.1833, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
@@ -257,6 +249,14 @@ xcopy /d /y $(ProjectDir)metaverse.ico . &gt;&gt; copy.log
 </PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
+      <Project>{5B709283-292D-4BE4-880E-B23C9E7FBE05}</Project>
+      <Name>FractalSpline</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MathGL\MathGL.csproj">
+      <Project>{F1BF78FA-8831-4598-8AD5-40C654B12DB7}</Project>
+      <Name>MathGL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetworkInterfaces\NetworkInterfaces.csproj">
       <Project>{44F0885A-0270-4ACA-8A18-68A786B1E89D}</Project>
       <Name>NetworkInterfaces</Name>
