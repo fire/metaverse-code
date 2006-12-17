@@ -184,7 +184,8 @@ namespace OSMP
                 udpclient = new UdpClient( serveraddress, ServerPort );
             }
 
-            Console.WriteLine("our port: " + ((IPEndPoint)udpclient.Client.LocalEndPoint).Port);
+            receivedelegate = new ReceiveDelegate(udpclient.Receive);
+            //Console.WriteLine("our port: " + ((IPEndPoint)udpclient.Client.LocalEndPoint).Port);
             
             //Receive receive = new Receive( udpclient, ReceivedPackets );
             //receivethread = new Thread( new ThreadStart( receive.Go ) );
@@ -200,23 +201,49 @@ namespace OSMP
             SendKeepalives();
         }
 
+        delegate byte[] ReceiveDelegate( ref IPEndPoint endpoint );
+        ReceiveDelegate receivedelegate;
+        IAsyncResult asyncresult;
+        IPEndPoint endpoint = new IPEndPoint( IPAddress.Any, 0 );
+
         public void ProcessReceivedPackets()
         {
-            while (udpclient.Available > 0)
-            {
-                IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, 0);
-                Byte[] receiveddata = null;
+            //while (udpclient.Available > 0)
+            //{
+                //IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, 0);
+                //Byte[] receiveddata = null;
                 try
                 {
-                    receiveddata = udpclient.Receive(ref endpoint);
-                    //   Console.WriteLine("received: " + Encoding.UTF8.GetString(receiveddata, 0, receiveddata.Length));
-                    ProcessReceivedPacket(endpoint, receiveddata);
+                    //ReceiveDelegate receivedelegate = new ReceiveDelegate( udpclient.Receive );
+                    if (asyncresult == null)
+                    {
+                        //Console.WriteLine("calling BeginInvoke...");
+                        asyncresult = receivedelegate.BeginInvoke(ref endpoint, null, null);
+                      //  Console.WriteLine("asyncresult is completed? " + asyncresult.IsCompleted + " " + asyncresult);
+                    }
+                    //Console.WriteLine("before while, asyncresult is completed? " + asyncresult.IsCompleted + " " + asyncresult);
+                    while (asyncresult.IsCompleted)
+                    {
+                        Console.WriteLine(asyncresult);
+                        Byte[] receiveddata = receivedelegate.EndInvoke(ref endpoint, asyncresult);
+                        //   Console.WriteLine("received: " + Encoding.UTF8.GetString(receiveddata, 0, receiveddata.Length));
+                        try
+                        {
+                            ProcessReceivedPacket(endpoint, receiveddata);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                        asyncresult = receivedelegate.BeginInvoke(ref endpoint, null, null);
+                        //Console.WriteLine("end of while, asyncresult is completed? " + asyncresult.IsCompleted + " " + asyncresult);
+                    }
                 }
-                catch //(Exception e)
+                catch (Exception e)
                 {
-                  //  Console.WriteLine(e);
+                    Console.WriteLine(e);
                 }
-            }
+            //}
         }
 
         // sends received packets up stack
