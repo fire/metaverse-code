@@ -240,6 +240,7 @@
 copy /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies &gt;&gt; prebuild.log
 
 xcopy /d /y $(ProjectDir)..\..\Libraries\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log
+xcopy /d /y $(ProjectDir)..\..\Libraries\Gtk.Net2.0\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log
 </PreBuildEvent>
     <PostBuildEvent>copy /y $(ProjectDir)metaverse.client.glade . &gt;copy.log
 xcopy /d /y $(ProjectDir)\bin\*.dll . &gt;&gt; copy.log

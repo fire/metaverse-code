@@ -12,7 +12,7 @@
 					<include name="*" />
 				</fileset>
 			</delete>
-			<delete>
+			<delete failonerror="false">
 				<fileset basedir="../../Outputs/Metaverse.Client">
 					<include name="*" />
 				</fileset>
@@ -25,6 +25,12 @@
 					<include name="*.dll"/>
 				</fileset>
 			</copy>
+            <if test="${framework::get-target-framework()=='net-2.0'}">
+                <copy todir="bin" >
+                    <fileset basedir="../../Libraries/Gtk.Net2.0">
+                    </fileset>
+                </copy>
+            </if>
 			<nant buildfile="../FractalSpline/default.build" />
             <copy todir="bin">
 			    <fileset basedir="../FractalSpline/bin/">
@@ -67,11 +73,11 @@
 					<include name="bin/FractalSpline.dll" />
 					<include name="bin/MathGL.dll" />
                     
-					<include name="bin/glade-sharp.dll" />
-					<include name="bin/atk-sharp.dll" />
-					<include name="bin/gtk-sharp.dll" />
-					<include name="bin/gdk-sharp.dll" />
-					<include name="bin/glib-sharp.dll" />
+					<include name="bin/glade-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}" />
+					<include name="bin/atk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+					<include name="bin/gtk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+					<include name="bin/gdk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+					<include name="bin/glib-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
                     
 					<include name="bin/Meebey.SmartIrc4net.dll" />
                     
@@ -85,6 +91,10 @@
                     
 					<include name="System.Drawing.dll" />
 				</references>
+                <pkg-references>
+                    <package name="gtk-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
+                    <package name="glade-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
+                </pkg-references>
                 <sources>
             <include name="./EntryPoint.cs" />
             <include name="./MetaverseClient.cs" />
