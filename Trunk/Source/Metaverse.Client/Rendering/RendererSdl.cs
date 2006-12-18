@@ -225,6 +225,8 @@ namespace OSMP
             Gl.glEnable(Gl.GL_LIGHTING);
             Gl.glEnable(Gl.GL_LIGHT0);
 
+            Tao.DevIl.Ilut.ilutRenderer(Tao.DevIl.Ilut.ILUT_OPENGL);
+
             //Gl.glShadeModel(Gl.GL_SMOOTH);
 
             Reshape(iWindowWidth, iWindowHeight);

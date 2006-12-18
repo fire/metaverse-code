@@ -41,7 +41,6 @@ namespace OSMP
             {
                 Console.WriteLine("unnamed: " + unnamed);
             }
-
             LoadGlobalPlugins();
 
             KeyHandlerQuit.GetInstance();
