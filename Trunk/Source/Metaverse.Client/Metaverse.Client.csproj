@@ -182,10 +182,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\atk-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="DevIL.NET, Version=0.0.0.0, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\DevIL.NET.dll</HintPath>
-    </Reference>
     <Reference Include="gdk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\gdk-sharp.dll</HintPath>
@@ -213,6 +209,10 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.XML" />
+    <Reference Include="Tao.DevIl, Version=1.6.7.0, Culture=neutral, PublicKeyToken=7ec4053013524957">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Tao.DevIl.dll</HintPath>
+    </Reference>
     <Reference Include="Tao.FreeGlut, Version=2.2.0.0, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Tao.FreeGlut.dll</HintPath>

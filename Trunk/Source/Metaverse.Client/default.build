@@ -64,30 +64,34 @@
 			<csc target="exe" output="bin/Metaverse.Client.exe" debug="${debug}">
 				<references>
 					<include name="bin/NetworkInterfaces.dll" />
-                    
-					<include name="bin/Tao.OpenGl.dll" />
-					<include name="bin/Tao.OpenGl.Glu.dll" />
-					<include name="bin/Tao.OpenGl.ExtensionLoader.dll" />
 					<include name="bin/FractalSpline.dll" />
-					<include name="bin/Tao.Sdl.dll" />
-					<include name="bin/NetworkInterfaces.dll" />
+					<include name="bin/MathGL.dll" />
+                    
 					<include name="bin/glade-sharp.dll" />
 					<include name="bin/atk-sharp.dll" />
 					<include name="bin/gtk-sharp.dll" />
 					<include name="bin/gdk-sharp.dll" />
 					<include name="bin/glib-sharp.dll" />
-					<include name="bin/Tao.Platform.Windows.dll" />
-					<include name="bin/SdlDotNet.dll" />
-					<include name="bin/MathGL.dll" />
-					<include name="bin/DevIL.NET.dll" />
+                    
 					<include name="bin/Meebey.SmartIrc4net.dll" />
+                    
+					<include name="bin/Tao.DevIl.dll" />
 					<include name="bin/Tao.FreeGlut.dll" />
+					<include name="bin/Tao.OpenGl.dll" />
+					<include name="bin/Tao.OpenGl.Glu.dll" />
+					<include name="bin/Tao.OpenGl.ExtensionLoader.dll" />
+					<include name="bin/Tao.Sdl.dll" />
+					<include name="bin/SdlDotNet.dll" />
+                    
 					<include name="System.Drawing.dll" />
 				</references>
                 <sources>
             <include name="./EntryPoint.cs" />
             <include name="./MetaverseClient.cs" />
             <include name="./PluginsLoader.cs" />
+            
+            <include name="./Server/MetaverseServer.cs" />
+            
             <include name="./MovementAndEditing/PropertyInfoClasses.cs" />
             <include name="./MovementAndEditing/SelectionView.cs" />
             <include name="./MovementAndEditing/Editing3dScale.cs" />
@@ -166,8 +170,6 @@
             <include name="./BasicTypes/Vector2.cs" />
             <include name="./BasicTypes/Vector3.cs" />
             <include name="./BasicTypes/CustomCollections.cs" />
-            
-            <include name="./Server/MetaverseServer.cs" />
             
             <include name="./WorldModel/Entity.cs" />
             <include name="./WorldModel/EntityCreationProperties.cs" />
