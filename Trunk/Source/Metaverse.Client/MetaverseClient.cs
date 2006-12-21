@@ -72,6 +72,11 @@ namespace OSMP
         void MainLoop()
         {
             //Console.WriteLine("Tick");
+            if (targettoload != "")
+            {
+                 WorldPersistToXml.GetInstance().LoadFromUrl( targettoload );
+                 targettoload = "";
+            }
             ProcessWorld();
             if (Tick != null)
             {
@@ -93,6 +98,8 @@ namespace OSMP
         {
             chatcontroller = new ChatController();
         }
+
+        string targettoload = ""; // incoming url from osmp:// or possibly commandline
 
         public bool waitingforserverconnection = true;
         public int Go(string[] args)
@@ -140,9 +147,9 @@ namespace OSMP
                 Console.WriteLine( argument );
                 if (argument.StartsWith( "osmp://" ))
                 {
-                    string target = "http://" + argument.Substring( "osmp://".Length );
-                    Console.WriteLine( "target: " + target );
-                    WorldPersistToXml.GetInstance().LoadFromUrl( target );
+                    targettoload = "http://" + argument.Substring( "osmp://".Length );
+                    Console.WriteLine( "target: " + targettoload );
+                    // WorldPersistToXml.GetInstance().LoadFromUrl( target );
                 }
             }
 
