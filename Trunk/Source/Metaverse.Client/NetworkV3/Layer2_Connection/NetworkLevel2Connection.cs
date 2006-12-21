@@ -188,8 +188,11 @@ namespace OSMP
         }
         
         // primarily for use of NetPacketReferenceController, or equivalent, to resent non-acked sent packets
+        // note that we're still going to rewrite shared key
         public void RawSend( byte[]packet)
         {
+            int offset = 0;
+            new BinaryPacker().WriteValueToBuffer( packet, ref offset, sharedsecretexchange.SharedSecretKey );
             if( isserver )
             {
                 networkimplementation.Send( connectioninfo.Connection, packet );

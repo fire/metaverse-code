@@ -264,7 +264,6 @@ namespace OSMP
 
         void Events_MouseButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine("mousebuttonup " + e);
             if (MouseUp != null)
             {
                 MouseUp(sender, e);
@@ -273,7 +272,6 @@ namespace OSMP
 
         void Events_MouseButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine("mousebuttondown " + e);
             if (MouseDown != null)
             {
                 MouseDown(sender, e);

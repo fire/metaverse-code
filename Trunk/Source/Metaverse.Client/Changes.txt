@@ -12,6 +12,11 @@ Next release:
 - added SDL_imaging.dll to Libraries folder
 - added Metaverse.ico icon to SDL window
 - migrated all windows.forms items to use GTK#
+- migrated DevIl.Net to Tao.DevIl -> can compile on Mono now
+- can load/save worlds correctly now
+- can load worlds from web server url, including textures located on the webserver
+- corrected dirtyobject cache exception on client
+- corrected issue with repeated "received potential spoofed packet" when running integrated client/server
 
 Release December 12 2006:
 - renamed "Properties" in context menu to "Edit"

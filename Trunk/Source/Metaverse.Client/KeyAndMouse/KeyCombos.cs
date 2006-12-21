@@ -106,7 +106,7 @@ namespace OSMP
             {
                 if (!currentcommands.Contains(command))
                 {
-                    Console.WriteLine("combo down: " + command);
+                    //Console.WriteLine("combo down: " + command);
                     combosdown.Add(command);
                 }
             }
@@ -114,7 +114,7 @@ namespace OSMP
             {
                 if (!newcombos.Contains(command))
                 {
-                    Console.WriteLine("combo up: " + command);
+                    //Console.WriteLine("combo up: " + command);
                     combosup.Add(command);
                 }
             }
