@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Tao.OpenGl;
 
 namespace OSMP
@@ -47,8 +48,8 @@ namespace OSMP
         }
         
         WorldModel worldstorage;
-                
-        public EntityArrayList SelectedObjects = new EntityArrayList();
+
+        public List<Entity> SelectedObjects = new List<Entity>();
         
         public delegate void ChangedHandler( object source, ChangedEventArgs e );
         public event ChangedHandler ChangedEvent;

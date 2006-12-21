@@ -197,7 +197,6 @@
             <include name="./WorldModel/Prim.cs" />
             <include name="./WorldModel/FractalSplineTube.cs" />
             <include name="./WorldModel/FractalSplineRing.cs" />
-            <include name="./WorldModel/EntityArrayList.cs" />
             <include name="./WorldModel/WorldModel.cs" />
             
             <include name="./Rendering/DisplayGeometryX11.cs" />
