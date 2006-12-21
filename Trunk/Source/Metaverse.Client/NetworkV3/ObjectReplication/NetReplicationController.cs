@@ -173,7 +173,10 @@ namespace OSMP
         {
             this.rpc = rpc;
             referencecontroller = new NetObjectReferenceController();
-            dirtyobjectcontroller = new DirtyObjectController( this, rpc.network, rpc);
+            if (rpc.isserver)
+            {
+                dirtyobjectcontroller = new DirtyObjectController( this, rpc.network, rpc );
+            }
         }
         
         public bool IsMaster
@@ -541,7 +544,10 @@ namespace OSMP
         // tick is going to prepare/send some packets to replicate dirty/new objects
         public void Tick()
         {
-            dirtyobjectcontroller.Tick();
+            if (rpc.isserver)
+            {
+                dirtyobjectcontroller.Tick();
+            }
         }
     }
 }

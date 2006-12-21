@@ -140,7 +140,7 @@ namespace OSMP
                     }
                     break;
                 case MouseButton.SecondaryButton:
-                    Console.WriteLine("mousedown rightbutton");
+                    //Console.WriteLine("mousedown rightbutton");
                     _rightbuttondown = true;
                     if (MouseDown != null)
                     {
@@ -185,7 +185,7 @@ namespace OSMP
                     }
                     break;
                 case MouseButton.SecondaryButton:
-                    Console.WriteLine("mouseup rightbutton");
+                    //Console.WriteLine("mouseup rightbutton");
                     _rightbuttondown = false;
                     if (MouseUp != null)
                     {

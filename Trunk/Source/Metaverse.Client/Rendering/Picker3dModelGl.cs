@@ -148,7 +148,7 @@ namespace OSMP
             
             if( iNumHits == 0 )
             {
-                Console.WriteLine("no hits");
+                //Console.WriteLine("no hits");
                 return null;
             }
             int hitname = GetNearestBufferName( iNumHits );
@@ -161,7 +161,7 @@ namespace OSMP
 
             FreeSelectBuffer();
 
-            Console.WriteLine(hittargets[hitname - 1]);
+            //Console.WriteLine(hittargets[hitname - 1]);
             return (HitTarget)hittargets[ hitname - 1 ];
         }        
     }

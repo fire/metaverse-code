@@ -73,7 +73,6 @@ namespace OSMP
         {
             //Console.WriteLine("Tick");
             ProcessWorld();
-            //ChatController.GetInstance().CheckMessages();
             if (Tick != null)
             {
                 Tick();

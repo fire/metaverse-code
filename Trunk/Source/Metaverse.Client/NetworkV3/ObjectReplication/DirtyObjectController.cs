@@ -39,6 +39,10 @@ namespace OSMP
 
         public DirtyObjectController( NetReplicationController netreplicationcontroller, NetworkLevel2Controller network, RpcController rpc )
         {
+            if (!network.IsServer)
+            {
+                throw new Exception( "Shouldnt be instantiating dirtyobjectcontroller on client" );
+            }
             this.netreplicationcontroller = netreplicationcontroller;
             this.rpc = rpc;
             this.network = network;
@@ -59,7 +63,11 @@ namespace OSMP
 
         void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
-            remoteclientdirtyqueues.Add(net2con.connectioninfo.Connection, new DirtyObjectQueueSingleClient(this, net2con.connectioninfo.Connection));
+            Console.WriteLine( "isserver: " + net2con.isserver );
+            Console.WriteLine( "net2con: " + net2con );
+            Console.WriteLine( "connectioninfo: " + net2con.connectioninfo );
+            Console.WriteLine( "connection: " + net2con.connectioninfo.Connection );
+            remoteclientdirtyqueues.Add( net2con.connectioninfo.Connection, new DirtyObjectQueueSingleClient( this, net2con.connectioninfo.Connection ) );
         }
         public void MarkDirty(IHasReference targetobject, Type[] dirtytypes)
         {

@@ -40,16 +40,16 @@ namespace OSMP
             }
             public void Render()
             {
-                Console.WriteLine("singlefacedrawer.render");
+                //Console.WriteLine("singlefacedrawer.render");
                 IRenderer renderer = RendererFactory.GetInstance();
                 Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
                 Gl.glLoadIdentity();
                 renderer.ApplyViewingMatrices();
                 for( int i = 0; i < prim.NumFaces; i++ )
                 {
-                    Console.WriteLine("face " + i);
+                  //  Console.WriteLine("face " + i);
                     HitTarget thishittarget = new HitTargetEntityFace( prim, i );
-                    Console.WriteLine( "Renderering " + thishittarget.ToString() );
+                    //Console.WriteLine( "Renderering " + thishittarget.ToString() );
                     Picker3dModelGl.GetInstance().AddHitTarget( thishittarget );
                     if( prim.Parent != null )
                     {
@@ -122,7 +122,7 @@ namespace OSMP
         // we run another selection, with only a single prim, making each face a single pick target
         public int GetClickedFace( Prim prim, int iMouseX, int iMouseY )
         {
-            Console.WriteLine("picker3dcontroller.getclickedface " + prim + " " +  iMouseX + " " + iMouseY);
+            //Console.WriteLine("picker3dcontroller.getclickedface " + prim + " " +  iMouseX + " " + iMouseY);
             HitTarget hittarget = picker3dmodel.GetClickedHitTarget( new SinglePrimFaceDrawer( prim as Prim ), iMouseX, iMouseY );
             if( hittarget == null || !( hittarget is HitTargetEntityFace ) )
             {
