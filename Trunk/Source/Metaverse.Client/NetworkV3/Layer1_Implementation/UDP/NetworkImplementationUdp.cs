@@ -208,42 +208,30 @@ namespace OSMP
 
         public void ProcessReceivedPackets()
         {
-            //while (udpclient.Available > 0)
-            //{
-                //IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, 0);
-                //Byte[] receiveddata = null;
-                try
+            try
+            {
+                if (asyncresult == null)
                 {
-                    //ReceiveDelegate receivedelegate = new ReceiveDelegate( udpclient.Receive );
-                    if (asyncresult == null)
-                    {
-                        //Console.WriteLine("calling BeginInvoke...");
-                        asyncresult = receivedelegate.BeginInvoke(ref endpoint, null, null);
-                      //  Console.WriteLine("asyncresult is completed? " + asyncresult.IsCompleted + " " + asyncresult);
-                    }
-                    //Console.WriteLine("before while, asyncresult is completed? " + asyncresult.IsCompleted + " " + asyncresult);
-                    while (asyncresult.IsCompleted)
-                    {
-                        Console.WriteLine(asyncresult);
-                        Byte[] receiveddata = receivedelegate.EndInvoke(ref endpoint, asyncresult);
-                        //   Console.WriteLine("received: " + Encoding.UTF8.GetString(receiveddata, 0, receiveddata.Length));
-                        try
-                        {
-                            ProcessReceivedPacket(endpoint, receiveddata);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                        }
-                        asyncresult = receivedelegate.BeginInvoke(ref endpoint, null, null);
-                        //Console.WriteLine("end of while, asyncresult is completed? " + asyncresult.IsCompleted + " " + asyncresult);
-                    }
+                    asyncresult = receivedelegate.BeginInvoke( ref endpoint, null, null );
                 }
-                catch (Exception e)
+                while (asyncresult.IsCompleted)
                 {
-                    Console.WriteLine(e);
+                    Byte[] receiveddata = receivedelegate.EndInvoke( ref endpoint, asyncresult );
+                    try
+                    {
+                        ProcessReceivedPacket( endpoint, receiveddata );
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine( e );
+                    }
+                    asyncresult = receivedelegate.BeginInvoke( ref endpoint, null, null );
                 }
-            //}
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine( e );
+            }
         }
 
         // sends received packets up stack

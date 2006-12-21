@@ -80,7 +80,7 @@ namespace OSMP
                 Console.WriteLine ( filename );
                 if( File.Exists( filename ) )
                 {
-                    AssignTexture( FaceNumber, ProjectFileController.GetInstance().CreateUriFromRelativePathString( filename ) );
+                    AssignTexture( FaceNumber, new Uri( filename ) );
                 }
             }
         }

@@ -21,6 +21,8 @@
 
 using System;
 using System.Collections;
+using System.Xml;
+using System.Xml.Serialization;
 
 using FractalSpline;
 
@@ -30,7 +32,7 @@ namespace OSMP
     {
         const int iMaxFaces = 12;
 
-        string[] texturerelativepaths = new string[ iMaxFaces ];
+        Uri[] texturefullpaths = new Uri[ iMaxFaces ];
         
         protected FractalSpline.Primitive primitive;
             
@@ -53,22 +55,50 @@ namespace OSMP
         
         Color[] facecolors = new Color[ iMaxFaces ];
             
-        [Replicate]
-        public string[] TextureRelativePaths
+        [XmlIgnore]
+        public Uri[] TextureFullPaths
         {
             get{
-                return texturerelativepaths;
+                return texturefullpaths;
             }
             set{
                 // Note to self: this should be moved somewhere else really
-                texturerelativepaths = value;
-                for( int i = 0; i < texturerelativepaths.GetUpperBound(0) + 1; i++ )
+                texturefullpaths = value;
+            }
+        }
+
+        // for replication/serialization only
+        [Replicate]
+        public string[] TextureRelativePaths
+        {
+            get
+            {
+                Console.WriteLine( "get texturerelativepaths" );
+                string[] relativepaths = new string[texturefullpaths.GetLength( 0 )];
+                for (int i = 0; i < relativepaths.GetLength( 0 ); i++)
                 {
-                    if( texturerelativepaths[i] != null && texturerelativepaths[i] != "" )
+                    Console.WriteLine( "i: " + i );
+                    if (texturefullpaths[i] != null)
                     {
-                        Test.Debug("loading texture " + texturerelativepaths[i] + "..." );
-                        Uri uri = ProjectFileController.GetInstance().CreateUriFromRelativePathString( texturerelativepaths[i] );
-                        int textureid = (int)TextureController.GetInstance().LoadUri( uri );
+                        relativepaths[i] = ProjectFileController.GetInstance().GetRelativePath( texturefullpaths[i] );
+                    }
+                    else
+                    {
+                        relativepaths[i] = "";
+                    }
+                    Console.WriteLine( relativepaths[i] );
+                }
+                return relativepaths;
+            }
+            set
+            {
+                for (int i = 0; i < value.GetLength( 0 ); i++)
+                {
+                    if (value[i] != null && value[i] != "" )
+                    {
+                        Test.Debug( "loading texture " + value[i] + "..." );
+                        texturefullpaths[i] = ProjectFileController.GetInstance().GetFullPath( value[i] );
+                        int textureid = (int)TextureController.GetInstance().LoadUri( texturefullpaths[i] );
                         _SetTexture( i, textureid );
                     }
                 }
@@ -278,9 +308,9 @@ namespace OSMP
             {
                 facecolors[i] = new Color();
             }
-            for (int i = 0; i < texturerelativepaths.GetLength(0); i++)
+            for (int i = 0; i < texturefullpaths.GetLength(0); i++)
             {
-                texturerelativepaths[i] = "";
+                texturefullpaths[i] = null;
             }
         }
         public override void Draw()
@@ -341,14 +371,14 @@ namespace OSMP
         {
             if( face == FractalSpline.Primitive.AllFaces )
             {
-                for( int i = 0; i < TextureRelativePaths.GetUpperBound(0) + 1; i++ )
+                for( int i = 0; i < TextureFullPaths.GetUpperBound(0) + 1; i++ )
                 {
-                    TextureRelativePaths[i] = ProjectFileController.GetInstance().GetRelativePathString( uri ); // Note to self: fix this dependency, wrong level of abstraction
+                    TextureFullPaths[i] = uri; // Note to self: fix this dependency, wrong level of abstraction
                 }
             }
             else
             {
-                TextureRelativePaths[ face ] = ProjectFileController.GetInstance().GetRelativePathString( uri );
+                TextureFullPaths[ face ] = uri;
             }
             
             int textureid = (int)TextureController.GetInstance().LoadUri( uri );

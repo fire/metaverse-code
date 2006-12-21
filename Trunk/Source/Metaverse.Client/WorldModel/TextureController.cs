@@ -33,18 +33,18 @@ namespace OSMP
         // note to self: currently only support File Uris.
         class TextureProxy
         {
-            public string UriString // this was created specifically for XmlSerializer usage
-            {
-                get
-                {
-                    return ProjectFileController.GetInstance().GetRelativePathString(uri);
-                }
-                set
-                {
-                    this.uri = ProjectFileController.GetInstance().CreateUriFromRelativePathString(value);
-                    idingraphicsengine = _LoadUri(uri);
-                }
-            }
+            //public string UriString // this was created specifically for XmlSerializer usage
+            //{
+              //  get
+                //{
+                  //  return ProjectFileController.GetInstance().GetRelativePathString(uri);
+                //}
+                //set
+                //{
+                  //  this.uri = ProjectFileController.GetInstance().CreateUriFromRelativePathString(value);
+//                    idingraphicsengine = _LoadUri(uri);
+  //              }
+    //        }
 
             // from http://svn.sourceforge.net/viewvc/boogame/trunk/BooGame/src/Texture.cs?view=markup
             // note to self: this is pretty inefficient, should use bit shifting
