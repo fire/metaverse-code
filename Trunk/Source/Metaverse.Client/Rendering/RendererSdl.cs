@@ -184,7 +184,7 @@ namespace OSMP
             //iWindowWidth = SdlDotNet.Video.Screen.Width;// Sdl.GetScreenWidth();
             //iWindowHeight = SdlDotNet.Video.Screen.Height; // Sdl.GetScreenHeight();
 
-            System.Drawing.Icon icon = new System.Drawing.Icon("Metaverse.ico");
+            System.Drawing.Icon icon = new System.Drawing.Icon( EnvironmentHelper.GetExeDirectory() + "/Metaverse.ico");
             SdlDotNet.Video.WindowIcon(icon);
 
             iWindowWidth = Config.GetInstance().windowwidth;

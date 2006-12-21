@@ -1,0 +1,19 @@
+  <project name="Setup" default="build" basedir=".">
+          <target name="build" >
+               <csc target="exe" output="../../Outputs/Metaverse.Client/Setup.exe" debug="true">
+				<references>
+					<include name="System.Windows.Forms.dll" />                
+                </references>
+                <sources>
+                    <include name="./Setup.cs" />                    
+                    <include name="./Common.cs" />
+                    <include name="./Win32.cs" />
+                    <include name="./Linux.cs" />
+                    <include name="./AddOsmpProtocol.cs" />
+                    
+                    <include name="./HelperClasses/EnvironmentHelper.cs" />
+                </sources>
+               </csc>
+        </target>
+  </project>
+  

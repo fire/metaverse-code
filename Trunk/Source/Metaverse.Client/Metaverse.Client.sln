@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FractalSpline", "..\Fractal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathGL", "..\MathGL\MathGL.csproj", "{F1BF78FA-8831-4598-8AD5-40C654B12DB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "..\Setup\Setup.csproj", "{037ACDE6-576A-4D0D-A494-E66EDEEE9C6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{F1BF78FA-8831-4598-8AD5-40C654B12DB7}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{F1BF78FA-8831-4598-8AD5-40C654B12DB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1BF78FA-8831-4598-8AD5-40C654B12DB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{037ACDE6-576A-4D0D-A494-E66EDEEE9C6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{037ACDE6-576A-4D0D-A494-E66EDEEE9C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{037ACDE6-576A-4D0D-A494-E66EDEEE9C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{037ACDE6-576A-4D0D-A494-E66EDEEE9C6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

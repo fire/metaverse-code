@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.IO;
+using System.Diagnostics;
 
 namespace OSMP
 {
@@ -37,7 +39,7 @@ namespace OSMP
                 //new TestReplicationAttributes().Go();
                 //return;
 
-                LogFile.GetInstance().Init("osmplog_" + new Random().Next(1000) + ".log");
+                LogFile.GetInstance().Init( EnvironmentHelper.GetExeDirectory() + "/osmplog_" + new Random().Next(1000) + ".log");
 
                 Arguments arguments = new Arguments(args);
 
@@ -65,7 +67,21 @@ namespace OSMP
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine( e );
+                string errorlogpath = EnvironmentHelper.GetExeDirectory() + "/error.log";
+                StreamWriter sw = new StreamWriter( errorlogpath, false );
+                sw.WriteLine( LogFile.GetInstance().logfilecontents );
+                sw.WriteLine( e.ToString() );
+                sw.Close();
+
+                if (System.Environment.OSVersion.Platform != PlatformID.Unix)
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo( "notepad.exe", errorlogpath );
+                    psi.UseShellExecute = true;
+                    Process process = new Process();
+                    process.StartInfo = psi;
+                    process.Start();
+                }
             }
         }
 

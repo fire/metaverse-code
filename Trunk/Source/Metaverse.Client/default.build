@@ -143,6 +143,7 @@
             <include name="./HelperClasses/MyRand.cs" />
             <include name="./HelperClasses/TimeKeeper.cs" />
             <include name="./HelperClasses/StreamHelper.cs" />
+            <include name="./HelperClasses/EnvironmentHelper.cs" />
             
             <include name="./NetworkV3/ObjectReplication/NetObjectReferenceController.cs" />
             <include name="./NetworkV3/ObjectReplication/ReplicationAttributes.cs" />
@@ -245,6 +246,8 @@
 					<include name="Meebey.SmartIrc4net.xml"/>
 				</fileset>
 			</copy>
+            
+            <nant buildfile="../Setup/default.build" />
         </target>
     </project>
 

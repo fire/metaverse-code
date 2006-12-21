@@ -68,7 +68,7 @@ namespace OSMP
         {
             this.parent = parent;
 
-            Glade.XML app = new Glade.XML("./metaverse.client.glade", "loginwindow", "");
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/metaverse.client.glade", "loginwindow", "" );
             app.Autoconnect(this);
 
             entrypassword.Activated += new EventHandler(entrypassword_Activated);

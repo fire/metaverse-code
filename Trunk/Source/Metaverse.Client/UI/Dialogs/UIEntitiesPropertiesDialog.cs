@@ -237,7 +237,7 @@ namespace OSMP
 
             Test.WriteOut("opening properties box ...");
 
-            Glade.XML app = new Glade.XML("./metaverse.client.glade", "entitypropertiesdialog", "");
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/metaverse.client.glade", "entitypropertiesdialog", "" );
             app.Autoconnect(this);            
             
             PropertyInfos = new List<PropertyInfo>();
