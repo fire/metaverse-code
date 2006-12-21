@@ -80,6 +80,7 @@ namespace OSMP
         
         public void Store( string filename )
         {
+            Console.WriteLine( "store " + filename );
             WorldModel worldmodel = MetaverseClient.GetInstance().worldstorage;
             
             ArrayList types = new ArrayList();
@@ -91,18 +92,21 @@ namespace OSMP
                 }
             }
             
-            XmlSerializer serializer = new XmlSerializer( worldmodel.entities.GetType(), (Type[])types.ToArray( typeof( Type ) ) );
+            //XmlSerializer serializer = new XmlSerializer( worldmodel.entities.GetType(), (Type[])types.ToArray( typeof( Type ) ) );
+            XmlSerializer serializer = new XmlSerializer( typeof( Entity[]), (Type[])types.ToArray( typeof( Type ) ) );
             StreamWriter streamwriter = new StreamWriter( filename );
-            serializer.Serialize( streamwriter, worldmodel.entities );
+            ProjectFileController.GetInstance().SetProjectPath( new Uri( Path.GetDirectoryName( filename ) + "/" ) );
+            serializer.Serialize( streamwriter, worldmodel.entities.ToArray() );
+            streamwriter.Close();
         }
-        
+
         // need to add a publisher/subscriber to this ;-)
         public void Restore( string filename )
         {
             WorldModel worldmodel = MetaverseClient.GetInstance().worldstorage;
             
             // note to self: should make these types a publisher/subscriber thing
-            XmlSerializer serializer = new XmlSerializer( worldmodel.entities.GetType(), new Type[]{
+            XmlSerializer serializer = new XmlSerializer( typeof(Entity[]), new Type[]{
                 typeof( Avatar ),
                 typeof( FractalSplineCylinder ), 
                 typeof( FractalSplineRing ), 
@@ -112,12 +116,16 @@ namespace OSMP
                 typeof( FractalSplineTube )
                 } );            
             FileStream filestream = new FileStream( filename, FileMode.Open );
-            DialogHelpers.ShowInfoMessage( null, serializer.Deserialize(filestream).GetType().ToString());
-            List<Entity> entities = (List<Entity>)serializer.Deserialize( filestream );
+            //DialogHelpers.ShowInfoMessage( null, serializer.Deserialize(filestream).GetType().ToString());
+            ProjectFileController.GetInstance().SetProjectPath( new Uri( Path.GetDirectoryName( filename ) + "/" ) );
+            Entity[] entities = (Entity[])serializer.Deserialize( filestream );
+            worldmodel.Clear();
             foreach (Entity entity in entities)
             {
+                Console.WriteLine( entity );
                 worldmodel.AddEntity(entity);
             }
+            filestream.Close();
         }
     }
 }

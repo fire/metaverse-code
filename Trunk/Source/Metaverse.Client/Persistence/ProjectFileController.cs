@@ -29,18 +29,30 @@ namespace OSMP
         
         static ProjectFileController instance = new ProjectFileController();
         public static ProjectFileController GetInstance(){ return instance; }
+        // This is kindof a hack really
+        // we have a global projectfilecontroller instance so that the texturerelativefilepaths
+        // property in prims can convert paths to/from relative paths during xmlserialization
+        // prior to xmlserialization, we set the project directory to the path of the
+        // world file to be saved/loaded
         public ProjectFileController()
         {
             //ProjectDirectoryUri = new Uri( Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase) + "\\DefaultWorld" );
-            ProjectDirectoryUri = new Uri( Path.GetFullPath( "DefaultWorld" ) );
+            ProjectDirectoryUri = new Uri( Path.GetFullPath( "." ) );
             Test.Debug( ProjectDirectoryUri.ToString() );
         }
-        public string GetRelativePathString( Uri uri )
+        public void SetProjectPath( Uri projectpath )
         {
-            Test.Debug( uri.ToString() + " -> " + ProjectDirectoryUri.MakeRelative( uri ) );
-            return ProjectDirectoryUri.MakeRelative( uri );
+            Console.WriteLine( "project path: " + projectpath );
+            this.ProjectDirectoryUri = projectpath;
         }
-        public Uri CreateUriFromRelativePathString( string relativepath )
+        public string GetRelativePath( Uri uri )
+        {
+            Console.WriteLine( ProjectDirectoryUri + " " + uri );
+            string relativepath = ProjectDirectoryUri.MakeRelativeUri( uri ).ToString();
+            Test.Debug( uri + " -> " + relativepath );
+            return relativepath;
+        }
+        public Uri GetFullPath( string relativepath )
         {
             Uri newuri = new Uri( ProjectDirectoryUri, relativepath );
             Test.Debug( newuri.ToString() );
