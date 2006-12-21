@@ -55,6 +55,7 @@
     <Compile Include="HelperClasses\LogFile.cs" />
     <Compile Include="HelperClasses\mvMath.cs" />
     <Compile Include="HelperClasses\MyRand.cs" />
+    <Compile Include="HelperClasses\StreamHelper.cs" />
     <Compile Include="HelperClasses\Test.cs" />
     <Compile Include="HelperClasses\TimeKeeper.cs" />
     <Compile Include="HelperClasses\XmlHelper.cs" />
