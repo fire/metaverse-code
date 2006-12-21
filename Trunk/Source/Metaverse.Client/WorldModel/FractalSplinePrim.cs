@@ -54,21 +54,44 @@ namespace OSMP
         }
         
         Color[] facecolors = new Color[ iMaxFaces ];
-            
+
+        [Replicate]
         [XmlIgnore]
-        public Uri[] TextureFullPaths
+        // for client/server replication, or perhaps not
+        public string[] TextureFullPaths
         {
             get{
-                return texturefullpaths;
+                string[] texturefullpathstrings = new string[texturefullpaths.GetLength( 0 )];
+                for (int i = 0; i < texturefullpaths.GetLength( 0 ); i++)
+                {
+                    if (texturefullpaths[i] != null)
+                    {
+                        texturefullpathstrings[i] = texturefullpaths[i].ToString();
+                    }
+                    else
+                    {
+                        texturefullpathstrings[i] = "";
+                    }
+                }
+                return texturefullpathstrings;
             }
             set{
                 // Note to self: this should be moved somewhere else really
-                texturefullpaths = value;
+                texturefullpaths = new Uri[ value.GetLength(0) ];
+                for (int i = 0; i < value.GetLength( 0 ); i++)
+                {
+                    if (value[i] != null && value[i] != "" )
+                    {
+                        texturefullpaths[i] = new Uri( value[i] );
+                        Test.Debug( "loading texture " + texturefullpaths[i] + "..." );
+                        int textureid = (int)TextureController.GetInstance().LoadUri( texturefullpaths[i] );
+                        _SetTexture( i, textureid );
+                    }
+                }
             }
         }
 
-        // for replication/serialization only
-        [Replicate]
+        // xml serialization only
         public string[] TextureRelativePaths
         {
             get
@@ -373,12 +396,12 @@ namespace OSMP
             {
                 for( int i = 0; i < TextureFullPaths.GetUpperBound(0) + 1; i++ )
                 {
-                    TextureFullPaths[i] = uri; // Note to self: fix this dependency, wrong level of abstraction
+                    texturefullpaths[i] = uri; // Note to self: fix this dependency, wrong level of abstraction
                 }
             }
             else
             {
-                TextureFullPaths[ face ] = uri;
+                texturefullpaths[face] = uri;
             }
             
             int textureid = (int)TextureController.GetInstance().LoadUri( uri );

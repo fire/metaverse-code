@@ -87,18 +87,9 @@ namespace OSMP
             HttpWebResponse httpwebresponse = (HttpWebResponse)myReq.GetResponse();
             Stream stream = httpwebresponse.GetResponseStream();
             
-            //StreamReader streamreader = new StreamReader( stream );
-            //string contents = streamreader.ReadToEnd();
-            //streamreader.Close();
             Restore( stream, projecturi );
             stream.Close();
             httpwebresponse.Close();
-
-            //Console.WriteLine( contents );
-
-            //StringReader stringreader = new StringReader( contents );
-            //Restore( stringreader, projecturi );
-            //stringreader.Close();
 
             DialogHelpers.ShowInfoMessage( null, "World load completed" );
         }
@@ -137,20 +128,12 @@ namespace OSMP
             streamwriter.Close();
         }
 
-        // need to add a publisher/subscriber to this ;-)
         public void Restore( string filename )
         {
             Uri projecturi = new Uri( Path.GetDirectoryName( filename ) + "/" );
             FileStream filestream = new FileStream( filename, FileMode.Open );
             Restore( filestream, projecturi );
             filestream.Close();
-
-            //StreamReader streamreader = new StreamReader( filename );
-            //string contents = streamreader.ReadToEnd();
-            //streamreader.Close();
-            //StringReader stringreader = new StringReader( contents );
-            //Restore( stringreader, projecturi );
-            //streamreader.Close();
         }
 
         public void Restore( Stream stream, Uri projecturi )
