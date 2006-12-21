@@ -227,6 +227,7 @@
             <include name="./UI/Dialogs/ChatController.cs" />
             <include name="./UI/Dialogs/UIContextMenu.cs" />
             <include name="./UI/Dialogs/LoginDialog.cs" />
+            <include name="./UI/Dialogs/InputBox.cs" />
             <include name="./UI/Dialogs/ConnectToServerDialog.cs" />
                 </sources>
             </csc>
