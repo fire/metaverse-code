@@ -50,7 +50,7 @@ namespace OSMP
         {
             this.callback = callback;
 
-            Glade.XML app = new Glade.XML( "./metaverse.client.glade", "inputbox", "" );
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/metaverse.client.glade", "inputbox", "" );
             app.Autoconnect( this );
 
             this.promptlabel.Text = prompt;

@@ -52,6 +52,7 @@
     <Compile Include="HelperClasses\Arguments.cs" />
     <Compile Include="HelperClasses\ArrayHelper.cs" />
     <Compile Include="HelperClasses\Config.cs" />
+    <Compile Include="HelperClasses\EnvironmentHelper.cs" />
     <Compile Include="HelperClasses\LogFile.cs" />
     <Compile Include="HelperClasses\mvMath.cs" />
     <Compile Include="HelperClasses\MyRand.cs" />

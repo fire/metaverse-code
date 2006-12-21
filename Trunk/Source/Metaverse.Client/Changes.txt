@@ -17,6 +17,7 @@ Next release:
 - can load worlds from web server url, including textures located on the webserver
 - corrected dirtyobject cache exception on client
 - corrected issue with repeated "received potential spoofed packet" when running integrated client/server
+- OSMP no longer needs working directory set to that of Metaverse.Client.exe
 
 Release December 12 2006:
 - renamed "Properties" in context menu to "Edit"

@@ -56,18 +56,6 @@ namespace OSMP
         {
             MouseCache.GetInstance().MouseDown += new MouseButtonEventHandler(UIContextMenu_MouseDown);
             MouseCache.GetInstance().MouseUp += new MouseButtonEventHandler(UIContextMenu_MouseUp);
-            //MouseFilterSdlMouseCache.GetInstance().MouseMove += new MouseMoveHandler(UIContextMenu_MouseMove);
-
-            //RendererFactory.GetInstance().ContextMenuPopup += new EventHandler(ContextMenu_ContextMenuPopup);
-            //UIController.GetInstance().contextmenu.RegisterContextMenu(contextmenupath, callback);
-
-            //KeyFilterConfigMappingsFactory.GetInstance().RegisterCommand("contextmenu", new KeyCommandHandler(
-                //OpenContextMenu));
-            //MouseFilterMouseCacheFactory.GetInstance().MouseDown += new SdlDotNet.MouseButtonEventHandler(UIContextMenu_MouseDown);
-            //MouseFilterMouseCacheFactory.GetInstance().MouseUp += new SdlDotNet.MouseButtonEventHandler(UIContextMenu_MouseUp);
-
-            //MouseFilterFormsMouseCache.GetInstance().MouseDown += new System.Windows.Forms.MouseEventHandler(GtkContextMenu_MouseDown);
-            //MouseFilterFormsMouseCache.GetInstance().MouseUp += new System.Windows.Forms.MouseEventHandler(UIContextMenu_MouseUp);
         }
 
         void UIContextMenu_MouseUp(object sender, MouseButtonEventArgs e)

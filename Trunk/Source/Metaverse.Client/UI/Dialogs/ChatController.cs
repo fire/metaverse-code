@@ -56,7 +56,7 @@ namespace OSMP
             ImImplementationFactory.GetInstance().Login( username, password);
             //logindialog.Destroy();
 
-            Glade.XML app = new Glade.XML("./metaverse.client.glade", "chatwindow", "");
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/metaverse.client.glade", "chatwindow", "");
             app.Autoconnect(this);
 
             ImImplementationFactory.GetInstance().MessageReceived += new MessageReceivedHandler(MessageReceived);

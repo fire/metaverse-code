@@ -59,7 +59,7 @@ namespace OSMP
                 connecttoserverdialog.Destroy();
             }
 
-            Glade.XML app = new Glade.XML("./metaverse.client.glade", "connecttoserverdialog", "");
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/metaverse.client.glade", "connecttoserverdialog", "" );
             app.Autoconnect(this);
 
             entryserveripaddress.Text = "127.0.0.1";

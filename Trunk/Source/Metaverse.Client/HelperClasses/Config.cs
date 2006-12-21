@@ -136,8 +136,8 @@ namespace OSMP
 
         public void RefreshConfig()
         {
-            configdoc = XmlHelper.OpenDom( sFilePath );
-            Test.Debug("reading config.xml ...");
+            Test.Debug( "reading config.xml ..." );
+            configdoc = XmlHelper.OpenDom( EnvironmentHelper.GetExeDirectory() + "/" + sFilePath );
         
             XmlElement systemnode = (XmlElement)configdoc.DocumentElement.SelectSingleNode( "config");
             iDebugLevel = Convert.ToInt32( systemnode.GetAttribute("debuglevel") );

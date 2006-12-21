@@ -130,23 +130,24 @@ namespace OSMP
             worldstorage.AddEntity(myavatar);
 
             PluginsLoader.GetInstance().LoadClientPlugins(arguments);
-            //UIController.GetInstance();
             if (!arguments.Unnamed.Contains("nochat"))
             {
                 LoadChat();
             }
 
-            //while (true)
-            //{
-              //  if (Tick != null)
-                //{
-                  //  Tick();
-                //}
-            //}
+            foreach (string argument in args)
+            {
+                Console.WriteLine( argument );
+                if (argument.StartsWith( "osmp://" ))
+                {
+                    string target = "http://" + argument.Substring( "osmp://".Length );
+                    Console.WriteLine( "target: " + target );
+                    WorldPersistToXml.GetInstance().LoadFromUrl( target );
+                }
+            }
 
             renderer = RendererFactory.GetInstance();
             renderer.Tick += new OSMP.TickHandler(MainLoop);
-            //renderer.RegisterMainLoopCallback(new MainLoopDelegate(this.MainLoop));
             renderer.Init();
             renderer.StartMainLoop();
 

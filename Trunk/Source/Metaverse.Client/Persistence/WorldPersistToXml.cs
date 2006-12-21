@@ -83,6 +83,8 @@ namespace OSMP
 
             Uri projecturi = new Uri( new Uri( url ), "." );
 
+            LogFile.GetInstance().WriteLine( "loading [" + url + "] ..." );
+
             HttpWebRequest myReq = (HttpWebRequest)WebRequest.Create( url );
             HttpWebResponse httpwebresponse = (HttpWebResponse)myReq.GetResponse();
             Stream stream = httpwebresponse.GetResponseStream();
