@@ -24,6 +24,8 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization; 
 using System.IO;
+using Gtk;
+using System.Net;
 
 namespace OSMP
 {
@@ -42,6 +44,7 @@ namespace OSMP
             
             ContextMenuController.GetInstance().RegisterPersistentContextMenu(new string[]{ "World","&Save to File..." }, new ContextMenuHandler( ContextMenuSave ) );
             ContextMenuController.GetInstance().RegisterPersistentContextMenu(new string[]{ "World","&Load from File..." }, new ContextMenuHandler( ContextMenuLoad ) );
+            ContextMenuController.GetInstance().RegisterPersistentContextMenu( new string[] { "World", "&Load from Url..." }, new ContextMenuHandler( ContextMenuLoadFromUrl ) );
         }
         
         public void ContextMenuSave( object source, ContextMenuArgs e )
@@ -65,7 +68,41 @@ namespace OSMP
         {
             LoadWorld();
         }
-        
+
+        public void ContextMenuLoadFromUrl( object source, ContextMenuArgs e )
+        {
+            new InputBox( "Please enter URL:", new InputBox.Callback( LoadFromUrl ) );
+        }
+
+        public void LoadFromUrl( string url )
+        {
+            if (url == "")
+            {
+                return;
+            }
+
+            Uri projecturi = new Uri( new Uri( url ), "." );
+
+            HttpWebRequest myReq = (HttpWebRequest)WebRequest.Create( url );
+            HttpWebResponse httpwebresponse = (HttpWebResponse)myReq.GetResponse();
+            Stream stream = httpwebresponse.GetResponseStream();
+            
+            //StreamReader streamreader = new StreamReader( stream );
+            //string contents = streamreader.ReadToEnd();
+            //streamreader.Close();
+            Restore( stream, projecturi );
+            stream.Close();
+            httpwebresponse.Close();
+
+            //Console.WriteLine( contents );
+
+            //StringReader stringreader = new StringReader( contents );
+            //Restore( stringreader, projecturi );
+            //stringreader.Close();
+
+            DialogHelpers.ShowInfoMessage( null, "World load completed" );
+        }
+
         public void LoadWorld()
         {
             string filename = DialogHelpers.GetFilePath("Open world file", "world.OSMP");
@@ -77,7 +114,7 @@ namespace OSMP
                 DialogHelpers.ShowInfoMessage(null, "World load completed");
             }
         }
-        
+
         public void Store( string filename )
         {
             Console.WriteLine( "store " + filename );
@@ -103,10 +140,26 @@ namespace OSMP
         // need to add a publisher/subscriber to this ;-)
         public void Restore( string filename )
         {
+            Uri projecturi = new Uri( Path.GetDirectoryName( filename ) + "/" );
+            FileStream filestream = new FileStream( filename, FileMode.Open );
+            Restore( filestream, projecturi );
+            filestream.Close();
+
+            //StreamReader streamreader = new StreamReader( filename );
+            //string contents = streamreader.ReadToEnd();
+            //streamreader.Close();
+            //StringReader stringreader = new StringReader( contents );
+            //Restore( stringreader, projecturi );
+            //streamreader.Close();
+        }
+
+        public void Restore( Stream stream, Uri projecturi )
+        //public void Restore( StringReader stringreader, Uri projecturi )
+        {
             WorldModel worldmodel = MetaverseClient.GetInstance().worldstorage;
-            
+
             // note to self: should make these types a publisher/subscriber thing
-            XmlSerializer serializer = new XmlSerializer( typeof(Entity[]), new Type[]{
+            XmlSerializer serializer = new XmlSerializer( typeof( Entity[] ), new Type[]{
                 typeof( Avatar ),
                 typeof( FractalSplineCylinder ), 
                 typeof( FractalSplineRing ), 
@@ -114,18 +167,16 @@ namespace OSMP
                 typeof( FractalSplineTorus ),
                 typeof( FractalSplinePrism ),
                 typeof( FractalSplineTube )
-                } );            
-            FileStream filestream = new FileStream( filename, FileMode.Open );
+                } );
             //DialogHelpers.ShowInfoMessage( null, serializer.Deserialize(filestream).GetType().ToString());
-            ProjectFileController.GetInstance().SetProjectPath( new Uri( Path.GetDirectoryName( filename ) + "/" ) );
-            Entity[] entities = (Entity[])serializer.Deserialize( filestream );
+            ProjectFileController.GetInstance().SetProjectPath( projecturi );
+            Entity[] entities = (Entity[])serializer.Deserialize( stream );
             worldmodel.Clear();
             foreach (Entity entity in entities)
             {
                 Console.WriteLine( entity );
-                worldmodel.AddEntity(entity);
+                worldmodel.AddEntity( entity );
             }
-            filestream.Close();
         }
     }
 }
