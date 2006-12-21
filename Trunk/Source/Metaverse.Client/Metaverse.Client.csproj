@@ -160,7 +160,6 @@
     <Compile Include="UI\UIController.cs" />
     <Compile Include="WorldModel\Avatar.cs" />
     <Compile Include="WorldModel\Entity.cs" />
-    <Compile Include="WorldModel\EntityArrayList.cs" />
     <Compile Include="WorldModel\EntityCreationProperties.cs" />
     <Compile Include="WorldModel\EntityGroup.cs" />
     <Compile Include="WorldModel\FractalSplineBox.cs" />

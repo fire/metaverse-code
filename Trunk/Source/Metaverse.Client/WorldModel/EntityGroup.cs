@@ -36,6 +36,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace OSMP
 {
@@ -43,11 +44,11 @@ namespace OSMP
     //! an EntityGrouping is a group of Entities, be it Cubes, or other EntityGroupings, or a mixture
     public class EntityGroup : Entity
     {
-        public EntityArrayList children;
+        public List<Entity> children;
         
         public EntityGroup()
         {
-            children = new EntityArrayList();
+            children = new List<Entity>();
         }
             
         public void RemoveChild( Entity childentity )
