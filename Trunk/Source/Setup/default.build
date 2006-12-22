@@ -7,9 +7,10 @@
                 <sources>
                     <include name="./Setup.cs" />                    
                     <include name="./Common.cs" />
-                    <include name="./Win32.cs" />
-                    <include name="./Linux.cs" />
-                    <include name="./AddOsmpProtocol.cs" />
+                    <include name="./Linux/Linux.cs" />
+                    <include name="./Win32/Win32.cs" />
+                    <include name="./Win32/AddOsmpProtocol.cs" />
+                    <include name="./Win32/FileAssociations.cs" />
                     
                     <include name="./HelperClasses/EnvironmentHelper.cs" />
                 </sources>

@@ -29,6 +29,7 @@ namespace Setup
         public void Go()
         {
             new AddOsmpProtocol().Go();
+            new FileAssociations().Go();
         }
     }
 }
