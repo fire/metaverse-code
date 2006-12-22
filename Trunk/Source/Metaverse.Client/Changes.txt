@@ -1,4 +1,4 @@
-Next release:
+Release 0.4:
 - migrated context menu to GTK#
 - migrated entity properties box to GTK#
 - migrated renderer to standard SDL window
