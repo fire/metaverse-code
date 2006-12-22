@@ -93,7 +93,7 @@ namespace OSMP
             stream.Close();
             httpwebresponse.Close();
 
-            DialogHelpers.ShowInfoMessage( null, "World load completed" );
+            DialogHelpers.ShowInfoMessage( null, "World structure load completed; textures may continue to load in the background." );
         }
 
         public void LoadWorld()
