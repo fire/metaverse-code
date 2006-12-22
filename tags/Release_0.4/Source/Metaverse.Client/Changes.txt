@@ -1,0 +1,42 @@
+Next release:
+- migrated context menu to GTK#
+- migrated entity properties box to GTK#
+- migrated renderer to standard SDL window
+- migrated chat box to GTK#
+- migrated chat login to GTK#
+- migrated many info/error dialog boxes to GTK#
+- improved keyboard processing algos
+- improved camera
+- added FrustrumCulling class
+- updated SDL dlls in Libraries folder
+- added SDL_imaging.dll to Libraries folder
+- added Metaverse.ico icon to SDL window
+- migrated all windows.forms items to use GTK#
+- migrated DevIl.Net to Tao.DevIl -> can compile on Mono now
+- can load/save worlds correctly now
+- can load worlds from web server url, including textures located on the webserver
+- corrected dirtyobject cache exception on client
+- corrected issue with repeated "received potential spoofed packet" when running integrated client/server
+- OSMP no longer needs working directory set to that of Metaverse.Client.exe
+- added Setup application, needs to run from same directory as Metaverse.Client.exe
+- added osmp:// protocol, so can open links like http://manageddreams.com/osmp/TestWorld/worldwithtexture.OSMP
+- added background loading for textures
+- added .osmp filetype, to directly open .osmp files
+- added non-modal messagebox at "UI/Dialogs/MessageBox.cs"
+- added Metaverse.ico icon to MessageBox.cs
+- readded Help|About; added compile date/time to help about
+- removed Avatar from serialization/deserialization, should alleviate world-loading issues
+- moved dynamic context menu items to top of context menu
+- removed list around cone drawing, correct rendering bug for position edit handles
+
+Release December 12 2006:
+- renamed "Properties" in context menu to "Edit"
+- activating Edit on an object automatically selects that object
+- added message box on selecting Edit with instructions for editing controls
+- entity modifications are now replicated to other connected clients, ie position,rot,scale,hollow,...
+- entity deletes are now replicated
+- "Delete" added to context menu
+- added ServerInfo dialog to obtain server port number
+- added "-serverport 1234" commandline option to change server port number (works with both client and server)
+- added "nochat" option to run without irc chat dialog
+- added Connect to Server dialog to connect to a different server
