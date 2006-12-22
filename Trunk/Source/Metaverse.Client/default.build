@@ -27,6 +27,7 @@
 		<if test="${framework::get-target-framework()=='net-2.0'}">
 			<copy todir="bin" >
 				<fileset basedir="../../Libraries/Gtk.Net2.0">
+					<include name="*.dll"/>
 				</fileset>
 			</copy>
 		</if>
