@@ -23,8 +23,8 @@ namespace OSMP
             }
         }
 
-        int windowwidth;
-        int windowheight;
+        //int windowwidth;
+        //int windowheight;
 
         //[StructLayout( LayoutKind.Sequential     )]
         //public struct Rect

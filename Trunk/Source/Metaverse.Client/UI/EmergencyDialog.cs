@@ -29,6 +29,6 @@ public class EmergencyDialog
     public static void WarningMessage(string message)
     {
         Application.Init();
-        DialogHelpers.ShowWarningMessage(null, message);
+        DialogHelpers.ShowWarningMessageModal(null, message);
     }
 }

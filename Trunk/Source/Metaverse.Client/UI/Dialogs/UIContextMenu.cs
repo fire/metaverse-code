@@ -127,9 +127,9 @@ namespace OSMP
             contextmenucommanditems = new List<MenuItem>();
             contextmenucallbacks = new List<ContextMenuHandler>();
 
-            AddPersistentItems();
-
             ContextMenuController.GetInstance().OnContextMenuPopup(this, new ContextMenuArgs(iMouseX, iMouseY, entity));
+
+            AddPersistentItems();
 
             contextmenu.ShowAll();
             contextmenu.Popup(null,null,null,IntPtr.Zero,3, Gtk.Global.CurrentEventTime);

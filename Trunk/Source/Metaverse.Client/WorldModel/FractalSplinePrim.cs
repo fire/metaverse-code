@@ -413,7 +413,7 @@ namespace OSMP
         }
         public override string ToString()
         {
-            return primitive.GetType().ToString() + ", " + pos.ToString() + " " + rot.ToString() + " " + scale.ToString();
+            return primitive.GetType().ToString() + " " + iReference + " " + pos.ToString() + " " + rot.ToString() + " " + scale.ToString();
         }
 
         public override void RenderSingleFace( int ifacenum )

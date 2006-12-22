@@ -43,7 +43,6 @@ namespace OSMP
             }
             LoadGlobalPlugins();
 
-            KeyHandlerQuit.GetInstance();
             UIEntityPropertiesDialog.GetInstance();
             Editing3d.GetInstance();
             SelectionController.GetInstance();
@@ -55,7 +54,6 @@ namespace OSMP
 
             EntityDelete.GetInstance();
 
-            HelpAbout.GetInstance();
 
             //SimpleCube.Register();  // SimpleCube and SimpleCone are for testing primarily
             //SimpleCone.Register();
@@ -76,6 +74,9 @@ namespace OSMP
 
             ServerInfo.GetInstance();
             ConnectToServerDialog.GetInstance();
+
+            HelpAbout.GetInstance();
+            KeyHandlerQuit.GetInstance();
         }
 
         public void LoadServerPlugins()

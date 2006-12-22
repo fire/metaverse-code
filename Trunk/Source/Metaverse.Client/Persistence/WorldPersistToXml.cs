@@ -60,7 +60,7 @@ namespace OSMP
             {
                 Console.WriteLine ( filename );
                 Store( filename );
-                DialogHelpers.ShowInfoMessage(null, "World save completed");
+                DialogHelpers.ShowInfoMessageModal(null, "World save completed");
             }
         }
         
@@ -98,7 +98,7 @@ namespace OSMP
             stream.Close();
             httpwebresponse.Close();
 
-            DialogHelpers.ShowInfoMessage( null, "World structure load completed; textures may continue to load in the background." );
+            DialogHelpers.ShowInfoMessageModal( null, "World structure load completed; textures may continue to load in the background." );
         }
 
         /// <summary>
@@ -125,7 +125,13 @@ namespace OSMP
                 return;
             }
             Restore( filename );
-            DialogHelpers.ShowInfoMessage( null, "World load completed" );
+            //DialogHelpers.ShowInfoMessageModal( null, "World load completed" );
+            new MessageBox( MessageBox.MessageType.Info, "World load completed", "World load completed", new MessageBox.Callback( CallbackTest ) );
+        }
+
+        void CallbackTest()
+        {
+            Console.WriteLine( "messagebox closed" );
         }
 
         public void Store( string filename )
@@ -146,7 +152,17 @@ namespace OSMP
             XmlSerializer serializer = new XmlSerializer( typeof( Entity[]), (Type[])types.ToArray( typeof( Type ) ) );
             StreamWriter streamwriter = new StreamWriter( filename );
             ProjectFileController.GetInstance().SetProjectPath( new Uri( Path.GetDirectoryName( filename ) + "/" ) );
-            serializer.Serialize( streamwriter, worldmodel.entities.ToArray() );
+            List<Entity> entitiestoserialize = new List<Entity>();
+            foreach (Entity entity in worldmodel.entities)
+            {
+                // note to self: need to check root entity in fact
+                // doesnt matter yet because no linking
+                if (entity.GetType() != typeof(Avatar))
+                {
+                    entitiestoserialize.Add(entity);
+                }
+            }
+            serializer.Serialize( streamwriter, entitiestoserialize.ToArray() );
             streamwriter.Close();
         }
 
@@ -179,8 +195,11 @@ namespace OSMP
             worldmodel.Clear();
             foreach (Entity entity in entities)
             {
-                Console.WriteLine( entity );
-                worldmodel.AddEntity( entity );
+                if (entity.GetType() != typeof(Avatar))
+                {
+                    Console.WriteLine("WorldPersistToXml, restoring: " + entity);
+                    worldmodel.AddEntity(entity);
+                }
             }
         }
     }

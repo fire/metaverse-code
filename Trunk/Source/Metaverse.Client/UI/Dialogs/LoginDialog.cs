@@ -34,8 +34,8 @@ namespace OSMP
         [Widget]
         Entry entrypassword = null;
 
-        [Widget]
-        Button btnok = null;
+        //[Widget]
+        //Button btnok = null;
 
         [Widget]
         Window loginwindow = null;

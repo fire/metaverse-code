@@ -35,11 +35,11 @@ namespace OSMP
         int iWindowHeight = 812;
 
         bool bCubeDefined = false;
-        bool bConeDefined = false;
+        //bool bConeDefined = false;
         bool bCylinderDefined = false;
         bool bSphereDefined = false;
 
-        int LISTCONE = 1;
+        //int LISTCONE = 1;
         int LISTCUBE = 2;
         int LISTSPHERE = 3;
         int LISTCYLINDER = 4;
@@ -280,9 +280,9 @@ namespace OSMP
 
         public void DrawCone()
         {
-            if (!bConeDefined)
-            {
-                Gl.glNewList(LISTCONE, Gl.GL_COMPILE);
+            //if (!bConeDefined)
+            //{
+              //  Gl.glNewList(LISTCONE, Gl.GL_COMPILE);
 
                 Gl.glPushMatrix();
                 Glu.GLUquadric quadratic = Glu.gluNewQuadric();   // Create A Pointer To The Quadric Object
@@ -299,11 +299,11 @@ namespace OSMP
                 //gluDisk(quadratic,0.0f,1.0f,32,32);
                 Gl.glPopMatrix();
 
-                Gl.glEndList();
-                bConeDefined = true;
-            }
+              //  Gl.glEndList();
+                //bConeDefined = true;
+            //}
 
-            Gl.glCallList(LISTCONE);
+            //Gl.glCallList(LISTCONE);
         }
 
         public void DrawCube()

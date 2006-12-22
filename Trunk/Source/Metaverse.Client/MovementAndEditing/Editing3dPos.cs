@@ -191,6 +191,7 @@ namespace OSMP
         void DrawSingleEditHandle( Vector3 entityscale, Vector3 handlescale, Axis handleaxis )
         {
             graphics.PushMatrix();
+            
             graphics.SetMaterialColor( editing3d.GetEditHandleColor( handleaxis ) );
             RendererFactory.GetPicker3dModel().AddHitTarget( new HitTargetEditHandle( new Axis( handleaxis ) ) );
             double fTranslateAmount = ( handleaxis.GetAxisComponentIgnoreAxisDirection( entityscale ) + handleaxis.GetAxisComponentIgnoreAxisDirection( handlescale ) ) / 2;
@@ -200,8 +201,8 @@ namespace OSMP
             graphics.Rotate( handleaxis.ToRot() );
             
             graphics.Rotate( 90, 0, 1, 0 );
-            graphics.DrawCone();
             
+            graphics.DrawCone();
             graphics.PopMatrix();
         }
         
@@ -210,7 +211,8 @@ namespace OSMP
             graphics.SetMaterialColor( new double[]{ 1, 0, 0, 0.5 } );
         
             //double averageobjectdimension = ( scaletouse.x + scaletouse.y + scaletouse.z ) / 3;
-            Vector3 handlescale = new Vector3( 0.4, 0.4, 0.4 ) * ( distance / 10d );
+            Vector3 handlescale = new Vector3( 0.4, 0.4, 0.4 ) * ( distance / 10.0 );
+            //Console.WriteLine("editing3dpos drawedithandles " + entityscale + " " + distance + " " + handlescale );
         
             DrawSingleEditHandle( entityscale, handlescale, Axis.PosX );
             DrawSingleEditHandle( entityscale, handlescale, Axis.NegX );
