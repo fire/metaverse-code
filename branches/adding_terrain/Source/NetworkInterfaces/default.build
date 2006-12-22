@@ -1,0 +1,25 @@
+<project name="NetworkInterfaces" default="build" basedir=".">
+		<target name="clean" description="remove all generated files">
+			<delete>
+				<fileset basedir="../../Outputs/NetworkInterfaces">
+					<include name="*" />
+				</fileset>
+			</delete>
+        </target>
+
+    <target name="build" description="compiles the source code">
+        <csc target="library" output="../../Outputs/NetworkInterfaces/NetworkInterfaces.dll" debug="${debug}">
+            <references>
+            </references>
+            <sources>
+                <include name="AuthorizedTypes.cs" />
+                <include name="ILockRpcToClient.cs" />
+                <include name="ILockRpcToServer.cs" />
+                <include name="IObjectReplication.cs" />
+                <include name="IReplicated.cs" />
+                <include name="ITestInterface.cs" />
+                <include name="IWorldControl.cs" />
+            </sources>
+        </csc>
+    </target>
+</project>

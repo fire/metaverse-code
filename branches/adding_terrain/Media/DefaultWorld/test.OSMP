@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfEntity xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Entity xsi:type="Avatar">
+    <iReference>0</iReference>
+    <iParentReference>0</iParentReference>
+    <iOwnerReference>0</iOwnerReference>
+    <name>New entity</name>
+    <pos>
+      <x>-18.381122082322829</x>
+      <y>1.0320387440367069</y>
+      <z>0</z>
+    </pos>
+    <rot>
+      <x>0.022836938135434397</x>
+      <y>0.13290315140088607</y>
+      <z>-0.16780264810338702</z>
+      <s>0.97655388888366135</s>
+    </rot>
+    <children />
+  </Entity>
+  <Entity xsi:type="FractalSplineBox">
+    <iReference>0</iReference>
+    <iParentReference>0</iParentReference>
+    <iOwnerReference>0</iOwnerReference>
+    <name>New Box</name>
+    <pos>
+      <x>-2.5025373144187091</x>
+      <y>-1.233384887577611</y>
+      <z>0.014237195067707154</z>
+    </pos>
+    <scale>
+      <x>1</x>
+      <y>1</y>
+      <z>1</z>
+    </scale>
+    <rot>
+      <x>-0.099718081738365466</x>
+      <y>-0.26289162059473586</y>
+      <z>0.15095171674235067</z>
+      <s>0.9477119178358111</s>
+    </rot>
+    <FaceColors>
+      <Color>
+        <r>0</r>
+        <g>0</g>
+        <b>0.25098039215686274</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.8</r>
+        <g>0.8</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.8</r>
+        <g>0.8</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>1</r>
+        <g>1</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.25098039215686274</r>
+        <g>0</g>
+        <b>0.25098039215686274</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.8</r>
+        <g>0.8</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.8</r>
+        <g>0.8</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.8</r>
+        <g>0.8</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.8</r>
+        <g>0.8</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.8</r>
+        <g>0.8</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.8</r>
+        <g>0.8</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+      <Color>
+        <r>0.8</r>
+        <g>0.8</g>
+        <b>1</b>
+        <a>1</a>
+      </Color>
+    </FaceColors>
+    <TextureRelativePaths>
+      <string xsi:nil="true" />
+      <string xsi:nil="true" />
+      <string xsi:nil="true" />
+      <string>Compressed.tga</string>
+      <string xsi:nil="true" />
+      <string xsi:nil="true" />
+      <string xsi:nil="true" />
+      <string xsi:nil="true" />
+      <string xsi:nil="true" />
+      <string xsi:nil="true" />
+      <string xsi:nil="true" />
+      <string xsi:nil="true" />
+    </TextureRelativePaths>
+    <Hollow>0</Hollow>
+    <Twist>0</Twist>
+    <Shear>0</Shear>
+    <CutStart>0</CutStart>
+    <CutEnd>200</CutEnd>
+    <AdvancedCutStart>0</AdvancedCutStart>
+    <AdvancedCutEnd>0</AdvancedCutEnd>
+    <TopSizeX>1</TopSizeX>
+    <TopSizeY>1</TopSizeY>
+  </Entity>
+</ArrayOfEntity>
