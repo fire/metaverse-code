@@ -34,32 +34,11 @@ namespace OSMP
         // note to self: currently only support File Uris.
         class TextureProxy
         {
-            /*
-            class TextureLoader
+            int CreateGraphicsEngineId()
             {
-                //public delegate void DoneCallback();
-                //DoneCallback donecallback;
-                Uri uri;
-                public Byte[] data;
-                public bool Done = false;
-                public TextureLoader( Uri uri )
-                {
-                    this.uri = uri;
-                    this.donecallback = donecallback;
-                }
-                public void Go()
-                {
-                    HttpWebRequest myReq = (HttpWebRequest)WebRequest.Create( url );
-                    HttpWebResponse httpwebresponse = (HttpWebResponse)myReq.GetResponse();
-                    Stream stream = httpwebresponse.GetResponseStream();
-                    data = new byte[stream.Length];
-                    stream.Read( data, 0, stream.Length );
-                    stream.Close();
-                    httpwebresponse.Close();
-                    Done = true;
-                }
+                Gl.glGenTextures( 1, out idingraphicsengine );
+                return idingraphicsengine;
             }
-             */
 
             // from http://svn.sourceforge.net/viewvc/boogame/trunk/BooGame/src/Texture.cs?view=markup
             int NextPowerOfTwo(int n)
@@ -70,7 +49,7 @@ namespace OSMP
                 return (int)Math.Pow(2.0, power);
             }
 
-            int LoadTexture(byte[] bytes)
+            void LoadTexture(byte[] bytes)
             {
                 // from http://svn.sourceforge.net/viewvc/boogame/trunk/BooGame/src/Texture.cs?view=markup
                 int ilImage;
@@ -92,20 +71,16 @@ namespace OSMP
                     Ilu.iluEnlargeCanvas(m_TextureWidth, m_TextureHeight, m_Depth);
                 //Ilu.iluFlipImage();
 
-                int m_TextureID;
-                Gl.glGenTextures(1, out m_TextureID);
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, m_TextureID);
+                Gl.glBindTexture( Gl.GL_TEXTURE_2D, idingraphicsengine );
                 Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST);
                 Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
                 Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, m_BytesPerPixel, m_TextureWidth,
                     m_TextureHeight, 0, m_Format, Gl.GL_UNSIGNED_BYTE, Il.ilGetData());
 
                 Il.ilDeleteImages(1, ref ilImage);
-
-                return m_TextureID;
             }
 
-            byte[] LoadUri( Uri uri )
+            byte[] _LoadUri( Uri uri )
             {
                 byte[] bytes = null;
                 if (uri.IsFile)
@@ -132,32 +107,57 @@ namespace OSMP
                 return bytes;
             }
 
-            int _LoadUri(Uri uri)
-            {
-                //string localpath = uri.LocalPath;
-                Console.WriteLine("Loading image " + uri);
-                byte[] bytes = LoadUri( uri );
-                return LoadTexture(bytes);
-                // return TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( uri.LocalPath ) ); // need to check if DevIL handles generic URLs, but anyway we should probably cache them locally, as files
-            }
+            delegate byte[] LoadUriDelegate( Uri uri );
+            LoadUriDelegate loaduridelegate;
 
             Uri uri;
-
             bool isloaded = false;
+            int idingraphicsengine = 0;
+            IAsyncResult asyncresult = null;
+
+            void LoadUri(Uri uri)
+            {
+                Console.WriteLine("Loading image " + uri);
+                loaduridelegate = new LoadUriDelegate( _LoadUri );
+                asyncresult = loaduridelegate.BeginInvoke( uri, null, null );
+                CheckHowLoadingIsGoing();
+            }
+
+            void CheckHowLoadingIsGoing()
+            {
+                if (asyncresult.IsCompleted)
+                {
+                    Console.WriteLine( "image " + uri + " loaded, adding to opengl..." );
+                    byte[] bytes = loaduridelegate.EndInvoke( asyncresult );
+                    LoadTexture( bytes );
+                    isloaded = true;
+                }
+            }
 
             public int IdInGraphicsEngine { get { return idingraphicsengine; } } // since this doesnt have a set, this doesnt get saved to xml by serializer, which is correct behavior
-            int idingraphicsengine = 0;
-            bool IsLoaded
+
+            public bool IsLoaded
             {
                 get { return isloaded; }
             }
+
             public TextureProxy() // for XmlSerializer Usage
             {
             }
+
             public TextureProxy(Uri uri)
             {
                 this.uri = uri;
-                idingraphicsengine = _LoadUri(uri);
+                idingraphicsengine = CreateGraphicsEngineId();
+                LoadUri(uri);
+            }
+
+            public void Tick()
+            {
+                if (!isloaded)
+                {
+                    CheckHowLoadingIsGoing();
+                }
             }
         }
 
@@ -169,6 +169,18 @@ namespace OSMP
         public TextureController()
         {
             Il.ilInit();
+            MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler( TextureController_Tick );
+        }
+
+        void TextureController_Tick()
+        {
+            foreach (TextureProxy proxy in TextureProxies.Values)
+            {
+                if (!proxy.IsLoaded)
+                {
+                    proxy.Tick();
+                }
+            }
         }
 
         public int LoadUri( Uri uri )
