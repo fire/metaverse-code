@@ -39,7 +39,7 @@ namespace OSMP
 
         void ServerInfoDialog(object source, ContextMenuArgs e)
         {
-            DialogHelpers.ShowInfoMessage( null, "Server listening on port: " + MetaverseServer.GetInstance().ServerPort );
+            DialogHelpers.ShowInfoMessageModal( null, "Server listening on port: " + MetaverseServer.GetInstance().ServerPort );
         }
     }
 }

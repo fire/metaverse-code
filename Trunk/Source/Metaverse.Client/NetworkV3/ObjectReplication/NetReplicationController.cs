@@ -305,9 +305,9 @@ namespace OSMP
 
         void controller_ObjectCreated(object source, ObjectCreatedArgs e)
         {
-            Console.WriteLine("netreplicationcontroller ObjectCreated " + e.TargetObject.GetType());
             if( this.rpc.IsServer )
             {
+                Console.WriteLine("netreplicationcontroller,server ObjectCreated " + e.TargetObject.GetType());
                 //Console.WriteLine("controller_ObjectCreated() " + e.TargetObject);
                 //NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy objectreplicationproxy = new OSMP.NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy( rpc, 
                 // handled by something like DirtyCacheController
@@ -315,6 +315,7 @@ namespace OSMP
             }
             else
             {
+                Console.WriteLine("netreplicationcontroller,client ObjectCreated " + e.TargetObject.GetType());
                 int tempreference = GenerateTempReference();
                 tempreferences.Add( tempreference, e.TargetObject );
 
@@ -522,7 +523,6 @@ namespace OSMP
 
         public void ObjectDeletedRpc(IPEndPoint connection, int reference, string typename)
         {
-            Console.WriteLine("ObjectDeletedRpc " + reference);
             Type type = Type.GetType( typename );
             IReplicatedObjectController replicatedobjectcontroller = GetControllerForType(type);
             if (replicatedobjectcontroller == null)
@@ -533,10 +533,12 @@ namespace OSMP
 
             if (rpc.isserver)
             {
+                Console.WriteLine("ObjectDeletedRpc, server " + reference);
                 dirtyobjectcontroller.MarkDeleted(reference, typename);
             }
             else
             {
+                Console.WriteLine("ObjectDeletedRpc, client " + reference);
                 replicatedobjectcontroller.ReplicatedObjectDeleted(this, new ObjectDeletedArgs(DateTime.Now, reference, typename));
             }
         }        

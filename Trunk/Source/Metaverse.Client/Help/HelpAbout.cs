@@ -18,6 +18,7 @@
 //
 
 using System;
+using System.IO;
 
 namespace OSMP
 {
@@ -34,16 +35,27 @@ namespace OSMP
         public HelpAbout()
         {
             Console.WriteLine("instantiating HelpAbout" );
-            MenuController.GetInstance().RegisterMainMenu(new string[]{ "&Help","&About..." }, new MainMenuCallback( About ) );
+            //MenuController.GetInstance().RegisterMainMenu(new string[]{ "&Help","&About..." }, new MainMenuCallback( About ) );
+            ContextMenuController.GetInstance().RegisterPersistentContextMenu(new string[] { "&Help", "&About..." }, new ContextMenuHandler(About));
         }
-        public void About()
+        public void About( object source, ContextMenuArgs e)
         {
-            DialogHelpers.ShowInfoMessage(null,
-                "OSMP C# written by Hugh Perkins hughperkins@gmail.com"  + Environment.NewLine +
+            //DialogHelpers.ShowInfoMessageModal(null,
+              //  "OSMP C# written by Hugh Perkins hughperkins@gmail.com"  + Environment.NewLine +
+                //"Website at http://metaverse.sf.net by Zenaphex" + Environment.NewLine +
+                //"Forums designed by Nick Merrill" + Environment.NewLine +
+                //"OSMP C# based on original C++ version written by Hugh Perkins and contributed to by Jack Didgeridoo, Christopher Omega, Jorge Lima, and Carnildo" + Environment.NewLine +
+                //Environment.NewLine +
+                //"OSMP C# compilation date/time: " + EnvironmentHelper.GetCompilationDateTime()
+            //);
+            new MessageBox(MessageBox.MessageType.Info, "About OSMP",
+                "OSMP C# written by Hugh Perkins hughperkins@gmail.com" + Environment.NewLine +
                 "Website at http://metaverse.sf.net by Zenaphex" + Environment.NewLine +
                 "Forums designed by Nick Merrill" + Environment.NewLine +
-                "OSMP C# based on original C++ version written by Hugh Perkins and contributed to by Jack Didgeridoo, Christopher Omega, Jorge Lima, and Carnildo"
-            );
+                "OSMP C# based on original C++ version written by Hugh Perkins and contributed to by Jack Didgeridoo, Christopher Omega, Jorge Lima, and Carnildo" + Environment.NewLine +
+                Environment.NewLine +
+                "OSMP C# compilation date/time: " + EnvironmentHelper.GetCompilationDateTime(),
+                null);
         }
     }
 }

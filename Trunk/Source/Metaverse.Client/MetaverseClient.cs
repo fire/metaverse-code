@@ -72,7 +72,7 @@ namespace OSMP
         void MainLoop()
         {
             //Console.WriteLine("Tick");
-            if (targettoload != "")
+            if (targettoload != "" && !waitingforserverconnection )
             {
                 // note to self: should shift this comparison into WorldPersist really
                 WorldPersistToXml.GetInstance().Load( targettoload );
@@ -182,7 +182,7 @@ namespace OSMP
             }
             catch (Exception e)
             {
-                DialogHelpers.ShowErrorMessage( null, "Failed to connect to server");
+                DialogHelpers.ShowErrorMessageModal( null, "Failed to connect to server");
                 Console.WriteLine(e.ToString());
             }
 

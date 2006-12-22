@@ -59,6 +59,8 @@ using System.IO;
             return this;
         }
 
+        //string prefix = "";
+
         public LogFile Init( string logfilepath )
         {
             this.filename = logfilepath;
@@ -75,7 +77,9 @@ using System.IO;
         // arguably we shouldnt auto-flush. because it slows writes, up to you
         public void WriteLine( string message )
         {
+            //string finalmessage = prefix + " " + message;
             logfilecontents += message + "\n";
+            Console.WriteLine(message);
             //sw.WriteLine(DateTime.Now.ToString("hh:mm:ss.ff") + ": " + message);
             //sw.WriteLine( message);
             //Console.WriteLine(message);

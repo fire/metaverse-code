@@ -123,7 +123,7 @@ namespace OSMP
 
         void Editing3d_WriteNextFrameEvent(Vector3 camerapos)
         {
-            DrawEditBarsToOpenGL();
+            DrawEditBarsToOpenGL( camerapos );
         }
 
         public bool IsHandleEdit()
@@ -440,8 +440,8 @@ namespace OSMP
         {
             currentedittype = EditType.None;
         }
-        
-        public void DrawEditBarsToOpenGL()
+
+        public void DrawEditBarsToOpenGL(Vector3 camerapos)
         {
             if( bShowEditBars )
             {
@@ -468,8 +468,8 @@ namespace OSMP
                 graphics.Rotate( entity.rot );
     
                // Vector3[] FaceCentreOffsets = new Vector3[6];
-                
-                double distance = ( entity.pos - MetaverseClient.GetInstance().myavatar.pos ).Det();
+
+                double distance = (entity.pos - camerapos).Det();
     
                 Vector3 ScaleToUse = entity.scale;
                 
@@ -477,6 +477,7 @@ namespace OSMP
                 {
                     case EditBarType.Pos:
                         editing3dpos.DrawEditHandles( ScaleToUse, distance );
+                        //editing3dscale.DrawEditHandles(ScaleToUse, distance);
                         break;
     
                     case EditBarType.Scale:

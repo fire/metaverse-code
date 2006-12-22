@@ -63,8 +63,8 @@ namespace OSMP
         void btnok_Activated( object sender, EventArgs e )
         {
             Console.WriteLine( "ok pressed" );
-            callback( usertext.Text );
             inputbox.Destroy();
+            callback( usertext.Text );
         }
 
         void btncancel_Activated( object sender, EventArgs e )

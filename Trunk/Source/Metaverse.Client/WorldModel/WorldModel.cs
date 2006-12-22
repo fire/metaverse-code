@@ -131,7 +131,8 @@ namespace OSMP
         public event AfterModifyHandler AfterModify;
 
         public event ClearHandler ClearEvent;
-        
+
+        public int worldversion = 0; // version of world; resetting world increments version number
         public List<Entity> entities = new List<Entity>();
         public Dictionary<int, Entity> entitybyreference = new Dictionary<int, Entity>();
 

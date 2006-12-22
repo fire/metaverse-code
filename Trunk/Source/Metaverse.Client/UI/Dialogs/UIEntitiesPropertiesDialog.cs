@@ -249,7 +249,7 @@ namespace OSMP
             // Show();
 
             // hack to add a semblance of user-friendliness
-            DialogHelpers.ShowInfoMessage(null, "Hold down z to move the object, x to change scale and v to rotate.");
+            DialogHelpers.ShowInfoMessageModal(null, "Hold down z to move the object, x to change scale and v to rotate.");
 
             entitypropertiesdialog.ShowAll();
             //entitypropertiesdialog.Show();

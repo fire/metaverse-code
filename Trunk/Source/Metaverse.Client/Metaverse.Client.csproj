@@ -154,6 +154,7 @@
     </Compile>
     <Compile Include="UI\DialogHelpers.cs" />
     <Compile Include="UI\Dialogs\ConnectToServerDialog.cs" />
+    <Compile Include="UI\Dialogs\MessageBox.cs" />
     <Compile Include="UI\Dialogs\InputBox.cs" />
     <Compile Include="UI\Dialogs\LoginDialog.cs" />
     <Compile Include="UI\Dialogs\UIContextMenu.cs" />
@@ -240,7 +241,7 @@
   <PropertyGroup>
     <PreBuildEvent>rpcproxygenerator &gt; prebuild.log
 
-copy /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies &gt;&gt; prebuild.log
+xcopy /d /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies &gt;&gt; prebuild.log
 
 xcopy /d /y $(ProjectDir)..\..\Libraries\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log
 xcopy /d /y $(ProjectDir)..\..\Libraries\Gtk.Net2.0\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log
@@ -274,6 +275,7 @@ xcopy /d /y $(ProjectDir)metaverse.ico . &gt;&gt; copy.log
     <Content Include="osmpico32.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="default.build" />
     <None Include="metaverse.client.glade" />
   </ItemGroup>
   <ItemGroup>

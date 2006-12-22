@@ -1,253 +1,253 @@
+<project name="Metaverse.Client" default="build" basedir=".">
+	<description>Compiles, cleans and exports the Metaverse.ClientProject</description>
+	<property name="debug" value="true" overwrite="false" />
 
-  <project name="Metaverse.Client" default="build" basedir=".">
-        <description>Compiles, cleans and exports the Metaverse.ClientProject</description>
-        <property name="debug" value="true" overwrite="false" />
-        
-		<target name="clean" description="remove all generated files">
-            <nant buildfile="../FractalSpline/default.build" target="clean" />
-            <nant buildfile="../NetworkInterfaces/default.build" target="clean" />
-            <nant buildfile="../RpcProxyGenerator/default.build" target="clean" />
-			<delete failonerror="false">
-				<fileset basedir="bin">
-					<include name="*" />
-				</fileset>
-			</delete>
-			<delete failonerror="false">
-				<fileset basedir="../../Outputs/Metaverse.Client">
-					<include name="*" />
-				</fileset>
-			</delete>
-        </target>
+	<target name="clean" description="remove all generated files">
+		<nant buildfile="../FractalSpline/default.build" target="clean" />
+		<nant buildfile="../NetworkInterfaces/default.build" target="clean" />
+		<nant buildfile="../RpcProxyGenerator/default.build" target="clean" />
+		<delete failonerror="false">
+			<fileset basedir="bin">
+				<include name="*" />
+			</fileset>
+		</delete>
+		<delete failonerror="false">
+			<fileset basedir="../../Outputs/Metaverse.Client">
+				<include name="*" />
+			</fileset>
+		</delete>
+	</target>
 
-        <target name="build" description="compiles the source code">
-			<copy todir="bin">
-				<fileset basedir="../../Libraries">
-					<include name="*.dll"/>
+	<target name="build" description="compiles the source code">
+		<copy todir="bin">
+			<fileset basedir="../../Libraries">
+				<include name="*.dll"/>
+			</fileset>
+		</copy>
+		<if test="${framework::get-target-framework()=='net-2.0'}">
+			<copy todir="bin" >
+				<fileset basedir="../../Libraries/Gtk.Net2.0">
 				</fileset>
 			</copy>
-            <if test="${framework::get-target-framework()=='net-2.0'}">
-                <copy todir="bin" >
-                    <fileset basedir="../../Libraries/Gtk.Net2.0">
-                    </fileset>
-                </copy>
-            </if>
-			<nant buildfile="../FractalSpline/default.build" />
-            <copy todir="bin">
-			    <fileset basedir="../FractalSpline/bin/">
-					<include name="MathGL.dll"/>
-					<include name="Tao.OpenGl.dll"/>
-					<include name="Tao.OpenGl.Glu.dll"/>
-					<include name="Tao.OpenGl.ExtensionLoader.dll"/>
-					<include name="FractalSpline.dll"/>
-				</fileset>
-			</copy>
-			<nant buildfile="../NetworkInterfaces/default.build" />
-			<copy todir="bin">
-				<fileset basedir="../../Outputs/NetworkInterfaces">
-					<include name="NetworkInterfaces.dll"/>
-				</fileset>
-			</copy>
-			<copy todir="../../Outputs/RpcProxyGenerator">
-				<fileset basedir="../../Outputs/NetworkInterfaces">
-					<include name="NetworkInterfaces.dll"/>
-				</fileset>
-			</copy>
-			<nant buildfile="../RpcProxyGenerator/default.build" />
-            <exec program="../../Outputs/RpcProxyGenerator/RpcProxyGenerator.exe" output="../../Outputs/RpcProxyGenerator/generate.log"
-                workingdir="../../Outputs/RpcProxyGenerator" />
-                
-			<copy todir="NetworkV3\Layer4_Rpc\GeneratedProxies">
-				<fileset basedir="../../Outputs/RpcProxyGenerator">
-					<include name="LockRpcToClient_ClientProxy_Generated.cs"/>
-					<include name="LockRpcToServer_ClientProxy_Generated.cs"/>
-					<include name="ObjectReplicationClientToServer_ClientProxy_Generated.cs"/>
-					<include name="ObjectReplicationServerToClient_ClientProxy_Generated.cs"/>
-					<include name="TestInterface_ClientProxy_Generated.cs"/>
-					<include name="WorldControl_ClientProxy_Generated.cs"/>
-				</fileset>
-			</copy>
-                
-			<csc target="exe" output="bin/Metaverse.Client.exe" debug="${debug}">
-				<references>
-					<include name="bin/NetworkInterfaces.dll" />
-					<include name="bin/FractalSpline.dll" />
-					<include name="bin/MathGL.dll" />
-                    
-					<include name="bin/glade-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}" />
-					<include name="bin/atk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
-					<include name="bin/gtk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
-					<include name="bin/gdk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
-					<include name="bin/glib-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
-                    
-					<include name="bin/Meebey.SmartIrc4net.dll" />
-                    
-					<include name="bin/Tao.DevIl.dll" />
-					<include name="bin/Tao.FreeGlut.dll" />
-					<include name="bin/Tao.OpenGl.dll" />
-					<include name="bin/Tao.OpenGl.Glu.dll" />
-					<include name="bin/Tao.OpenGl.ExtensionLoader.dll" />
-					<include name="bin/Tao.Sdl.dll" />
-					<include name="bin/SdlDotNet.dll" />
-                    
-					<include name="System.Drawing.dll" />
-				</references>
-                <pkg-references>
-                    <package name="gtk-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
-                    <package name="glade-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
-                </pkg-references>
-                <sources>
-            <include name="./EntryPoint.cs" />
-            <include name="./MetaverseClient.cs" />
-            <include name="./PluginsLoader.cs" />
-            
-            <include name="./Server/MetaverseServer.cs" />
-            
-            <include name="./MovementAndEditing/PropertyInfoClasses.cs" />
-            <include name="./MovementAndEditing/SelectionView.cs" />
-            <include name="./MovementAndEditing/Editing3dScale.cs" />
-            <include name="./MovementAndEditing/Camera.cs" />
-            <include name="./MovementAndEditing/SelectionController.cs" />
-            <include name="./MovementAndEditing/KeyHandlerQuit.cs" />
-            <include name="./MovementAndEditing/Editing3dPos.cs" />
-            <include name="./MovementAndEditing/EntityDelete.cs" />
-            <include name="./MovementAndEditing/Editing3dRot.cs" />
-            <include name="./MovementAndEditing/ViewerState.cs" />
-            <include name="./MovementAndEditing/SelectionModel.cs" />
-            <include name="./MovementAndEditing/PlayerMovement.cs" />
-            <include name="./MovementAndEditing/Editing3d.cs" />
-            <include name="./MovementAndEditing/AssignTextureHandler.cs" />
-            <include name="./MovementAndEditing/AssignColorHandler.cs" />
-            
-            <include name="./Persistence/IHasProperties.cs" />
-            <include name="./Persistence/IWorldPersist.cs" />
-            <include name="./Persistence/ProjectFileController.cs" />
-            <include name="./Persistence/ImportExportPrimBlender.cs" />
-            <include name="./Persistence/WorldPersistToXml.cs" />
-            
-            <include name="./KeyAndMouse/KeyCombos.cs" />
-            <include name="./KeyAndMouse/Layer2MouseEvents.cs" />
-            <include name="./KeyAndMouse/MouseCache.cs" />
-            <include name="./KeyAndMouse/KeyNameCache.cs" />
-            <include name="./KeyAndMouse/SdlKeyCache.cs" />
-            <include name="./KeyAndMouse/CommandCombos.cs" />
-            <include name="./KeyAndMouse/MouseMoveConfigMappings.cs" />
-            
-            <include name="./Help/HelpAbout.cs" />
-            <include name="./HelperClasses/mvMath.cs" />
-            <include name="./HelperClasses/ArrayHelper.cs" />
-            <include name="./HelperClasses/Test.cs" />
-            <include name="./HelperClasses/XmlHelper.cs" />
-            <include name="./HelperClasses/LogFile.cs" />
-            <include name="./HelperClasses/Arguments.cs" />
-            <include name="./HelperClasses/Config.cs" />
-            <include name="./HelperClasses/MyRand.cs" />
-            <include name="./HelperClasses/TimeKeeper.cs" />
-            <include name="./HelperClasses/StreamHelper.cs" />
-            <include name="./HelperClasses/EnvironmentHelper.cs" />
-            
-            <include name="./NetworkV3/ObjectReplication/NetObjectReferenceController.cs" />
-            <include name="./NetworkV3/ObjectReplication/ReplicationAttributes.cs" />
-            <include name="./NetworkV3/ObjectReplication/WorldReplication.cs" />
-            <include name="./NetworkV3/ObjectReplication/NetReplicationController.cs" />
-            <include name="./NetworkV3/ObjectReplication/DirtyObjectController.cs" />
-            <include name="./NetworkV3/ObjectReplication/DirtyObjectQueueSingleClient.cs" />
-            <include name="./NetworkV3/Layer1_Implementation/NetworkImplementationFactory.cs" />
-            <include name="./NetworkV3/Layer1_Implementation/INetworkImplementation.cs" />
-            <include name="./NetworkV3/Layer1_Implementation/Test/TestNetworkUdp.cs" />
-            <include name="./NetworkV3/Layer1_Implementation/UDP/NetworkImplementationUdp.cs" />
-            <include name="./NetworkV3/Layer4_Rpc/RpcController.cs" />
-            <include name="./NetworkV3/Layer4_Rpc/Test/TestNetRpc.cs" />
-            <include name="./NetworkV3/Layer4_Rpc/Test/TestInterface.cs" />
-            <include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/TestInterface_ClientProxy_Generated.cs" />
-            <include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/WorldControl_ClientProxy_Generated.cs" />
-            <include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
-            <include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
-            <include name="./NetworkV3/HelperClasses/BinaryPacker.cs" />
-            <include name="./NetworkV3/HelperClasses/TestBinaryPacker.cs" />
-            <include name="./NetworkV3/Layer2_Connection/NetPacketReferenceController.cs" />
-            <include name="./NetworkV3/Layer2_Connection/NetworkLevel2Connection.cs" />
-            <include name="./NetworkV3/Layer2_Connection/NetSharedSecretExchange.cs" />
-            <include name="./NetworkV3/Layer2_Connection/NetworkLevel2Controller.cs" />
-            <include name="./NetworkV3/Layer2_Connection/Test/TestLevel2.cs" />
-            <include name="./NetworkV3/UI/ServerInfo.cs" />
-            
-            <include name="./IM/IrcController.cs" />
-            <include name="./IM/ImImplementationFactory.cs" />
-            <include name="./IM/IImImplementation.cs" />
-            
-            <include name="./BasicTypes/Color.cs" />
-            <include name="./BasicTypes/Plane.cs" />
-            <include name="./BasicTypes/Axis.cs" />
-            <include name="./BasicTypes/Rot.cs" />
-            <include name="./BasicTypes/Vector2.cs" />
-            <include name="./BasicTypes/Vector3.cs" />
-            <include name="./BasicTypes/CustomCollections.cs" />
-            
-            <include name="./WorldModel/Entity.cs" />
-            <include name="./WorldModel/EntityCreationProperties.cs" />
-            <include name="./WorldModel/Avatar.cs" />
-            <include name="./WorldModel/FractalSplinePrim.cs" />
-            <include name="./WorldModel/FractalSplineCylinder.cs" />
-            <include name="./WorldModel/WorldView.cs" />
-            <include name="./WorldModel/FractalSplineTorus.cs" />
-            <include name="./WorldModel/SimpleCube.cs" />
-            <include name="./WorldModel/EntityGroup.cs" />
-            <include name="./WorldModel/SimpleCone.cs" />
-            <include name="./WorldModel/FractalSplineBox.cs" />
-            <include name="./WorldModel/FractalSplinePrism.cs" />
-            <include name="./WorldModel/TextureController.cs" />
-            <include name="./WorldModel/Prim.cs" />
-            <include name="./WorldModel/FractalSplineTube.cs" />
-            <include name="./WorldModel/FractalSplineRing.cs" />
-            <include name="./WorldModel/WorldModel.cs" />
-            
-            <include name="./Rendering/DisplayGeometryX11.cs" />
-            <include name="./Rendering/DrawAxes.cs" />
-            <include name="./Rendering/IRenderer.cs" />
-            <include name="./Rendering/GraphicsHelperGl.cs" />
-            <include name="./Rendering/GraphicsHelperFactory.cs" />
-            <include name="./Rendering/IDisplayGeometry.cs" />
-            <include name="./Rendering/DisplayGeometryWindows.cs" />
-            <include name="./Rendering/IPicker3dModel.cs" />
-            <include name="./Rendering/RendererFactory.cs" />
-            <include name="./Rendering/TextureHelper.cs" />
-            <include name="./Rendering/IGraphicsHelperFactory.cs" />
-            <include name="./Rendering/MenuHelper.cs" />
-            <include name="./Rendering/FrustrumCulling.cs" />
-            <include name="./Rendering/Picker3dModelGl.cs" />
-            <include name="./Rendering/Picker3dController.cs" />
-            <include name="./Rendering/IGraphicsHelper.cs" />
-            <include name="./Rendering/DisplayGeometryFactory.cs" />
-            <include name="./Rendering/RendererSdl.cs" />
-            <include name="./Rendering/MenuController.cs" />
-            
-            <include name="./UI/ContextMenuController.cs" />
-            <include name="./UI/EmergencyDialog.cs" />
-            <include name="./UI/UIController.cs" />
-            <include name="./UI/DialogHelpers.cs" />
-            <include name="./UI/Dialogs/UIEntitiesPropertiesDialog.cs" />
-            <include name="./UI/Dialogs/ChatController.cs" />
-            <include name="./UI/Dialogs/UIContextMenu.cs" />
-            <include name="./UI/Dialogs/LoginDialog.cs" />
-            <include name="./UI/Dialogs/InputBox.cs" />
-            <include name="./UI/Dialogs/ConnectToServerDialog.cs" />
-                </sources>
-            </csc>
-			<copy todir="../../Outputs/Metaverse.Client">
-				<fileset basedir="bin">
-					<include name="*"/>
-				</fileset>
-			</copy>
-			<copy todir="../../Outputs/Metaverse.Client">	
-				<fileset basedir=".">
-					<include name="metaverse.client.glade"/>
-					<include name="config.xml"/>
-					<include name="metaverse.ico"/>
-					<include name="Meebey.SmartIrc4net.xml"/>
-				</fileset>
-			</copy>
-            
-            <nant buildfile="../Setup/default.build" />
-        </target>
-    </project>
+		</if>
+		<nant buildfile="../FractalSpline/default.build" />
+		<copy todir="bin">
+			<fileset basedir="../FractalSpline/bin/">
+				<include name="MathGL.dll"/>
+				<include name="Tao.OpenGl.dll"/>
+				<include name="Tao.OpenGl.Glu.dll"/>
+				<include name="Tao.OpenGl.ExtensionLoader.dll"/>
+				<include name="FractalSpline.dll"/>
+			</fileset>
+		</copy>
+		<nant buildfile="../NetworkInterfaces/default.build" />
+		<copy todir="bin">
+			<fileset basedir="../../Outputs/NetworkInterfaces">
+				<include name="NetworkInterfaces.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="../../Outputs/RpcProxyGenerator">
+			<fileset basedir="../../Outputs/NetworkInterfaces">
+				<include name="NetworkInterfaces.dll"/>
+			</fileset>
+		</copy>
+		<nant buildfile="../RpcProxyGenerator/default.build" />
+		<exec program="../../Outputs/RpcProxyGenerator/RpcProxyGenerator.exe" output="../../Outputs/RpcProxyGenerator/generate.log"
+			workingdir="../../Outputs/RpcProxyGenerator" />
+
+		<copy todir="NetworkV3\Layer4_Rpc\GeneratedProxies">
+			<fileset basedir="../../Outputs/RpcProxyGenerator">
+				<include name="LockRpcToClient_ClientProxy_Generated.cs"/>
+				<include name="LockRpcToServer_ClientProxy_Generated.cs"/>
+				<include name="ObjectReplicationClientToServer_ClientProxy_Generated.cs"/>
+				<include name="ObjectReplicationServerToClient_ClientProxy_Generated.cs"/>
+				<include name="TestInterface_ClientProxy_Generated.cs"/>
+				<include name="WorldControl_ClientProxy_Generated.cs"/>
+			</fileset>
+		</copy>
+
+		<csc target="exe" output="bin/Metaverse.Client.exe" debug="${debug}">
+			<references>
+				<include name="bin/NetworkInterfaces.dll" />
+				<include name="bin/FractalSpline.dll" />
+				<include name="bin/MathGL.dll" />
+
+				<include name="bin/glade-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}" />
+				<include name="bin/atk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+				<include name="bin/gtk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+				<include name="bin/gdk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+				<include name="bin/glib-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+
+				<include name="bin/Meebey.SmartIrc4net.dll" />
+
+				<include name="bin/Tao.DevIl.dll" />
+				<include name="bin/Tao.FreeGlut.dll" />
+				<include name="bin/Tao.OpenGl.dll" />
+				<include name="bin/Tao.OpenGl.Glu.dll" />
+				<include name="bin/Tao.OpenGl.ExtensionLoader.dll" />
+				<include name="bin/Tao.Sdl.dll" />
+				<include name="bin/SdlDotNet.dll" />
+
+				<include name="System.Drawing.dll" />
+			</references>
+			<pkg-references>
+				<package name="gtk-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
+				<package name="glade-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
+			</pkg-references>
+			<sources>
+				<include name="./EntryPoint.cs" />
+				<include name="./MetaverseClient.cs" />
+				<include name="./PluginsLoader.cs" />
+
+				<include name="./Server/MetaverseServer.cs" />
+
+				<include name="./MovementAndEditing/PropertyInfoClasses.cs" />
+				<include name="./MovementAndEditing/SelectionView.cs" />
+				<include name="./MovementAndEditing/Editing3dScale.cs" />
+				<include name="./MovementAndEditing/Camera.cs" />
+				<include name="./MovementAndEditing/SelectionController.cs" />
+				<include name="./MovementAndEditing/KeyHandlerQuit.cs" />
+				<include name="./MovementAndEditing/Editing3dPos.cs" />
+				<include name="./MovementAndEditing/EntityDelete.cs" />
+				<include name="./MovementAndEditing/Editing3dRot.cs" />
+				<include name="./MovementAndEditing/ViewerState.cs" />
+				<include name="./MovementAndEditing/SelectionModel.cs" />
+				<include name="./MovementAndEditing/PlayerMovement.cs" />
+				<include name="./MovementAndEditing/Editing3d.cs" />
+				<include name="./MovementAndEditing/AssignTextureHandler.cs" />
+				<include name="./MovementAndEditing/AssignColorHandler.cs" />
+
+				<include name="./Persistence/IHasProperties.cs" />
+				<include name="./Persistence/IWorldPersist.cs" />
+				<include name="./Persistence/ProjectFileController.cs" />
+				<include name="./Persistence/ImportExportPrimBlender.cs" />
+				<include name="./Persistence/WorldPersistToXml.cs" />
+
+				<include name="./KeyAndMouse/KeyCombos.cs" />
+				<include name="./KeyAndMouse/Layer2MouseEvents.cs" />
+				<include name="./KeyAndMouse/MouseCache.cs" />
+				<include name="./KeyAndMouse/KeyNameCache.cs" />
+				<include name="./KeyAndMouse/SdlKeyCache.cs" />
+				<include name="./KeyAndMouse/CommandCombos.cs" />
+				<include name="./KeyAndMouse/MouseMoveConfigMappings.cs" />
+
+				<include name="./Help/HelpAbout.cs" />
+				<include name="./HelperClasses/mvMath.cs" />
+				<include name="./HelperClasses/ArrayHelper.cs" />
+				<include name="./HelperClasses/Test.cs" />
+				<include name="./HelperClasses/XmlHelper.cs" />
+				<include name="./HelperClasses/LogFile.cs" />
+				<include name="./HelperClasses/Arguments.cs" />
+				<include name="./HelperClasses/Config.cs" />
+				<include name="./HelperClasses/MyRand.cs" />
+				<include name="./HelperClasses/TimeKeeper.cs" />
+				<include name="./HelperClasses/StreamHelper.cs" />
+				<include name="./HelperClasses/EnvironmentHelper.cs" />
+
+				<include name="./NetworkV3/ObjectReplication/NetObjectReferenceController.cs" />
+				<include name="./NetworkV3/ObjectReplication/ReplicationAttributes.cs" />
+				<include name="./NetworkV3/ObjectReplication/WorldReplication.cs" />
+				<include name="./NetworkV3/ObjectReplication/NetReplicationController.cs" />
+				<include name="./NetworkV3/ObjectReplication/DirtyObjectController.cs" />
+				<include name="./NetworkV3/ObjectReplication/DirtyObjectQueueSingleClient.cs" />
+				<include name="./NetworkV3/Layer1_Implementation/NetworkImplementationFactory.cs" />
+				<include name="./NetworkV3/Layer1_Implementation/INetworkImplementation.cs" />
+				<include name="./NetworkV3/Layer1_Implementation/Test/TestNetworkUdp.cs" />
+				<include name="./NetworkV3/Layer1_Implementation/UDP/NetworkImplementationUdp.cs" />
+				<include name="./NetworkV3/Layer4_Rpc/RpcController.cs" />
+				<include name="./NetworkV3/Layer4_Rpc/Test/TestNetRpc.cs" />
+				<include name="./NetworkV3/Layer4_Rpc/Test/TestInterface.cs" />
+				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/TestInterface_ClientProxy_Generated.cs" />
+				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/WorldControl_ClientProxy_Generated.cs" />
+				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
+				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
+				<include name="./NetworkV3/HelperClasses/BinaryPacker.cs" />
+				<include name="./NetworkV3/HelperClasses/TestBinaryPacker.cs" />
+				<include name="./NetworkV3/Layer2_Connection/NetPacketReferenceController.cs" />
+				<include name="./NetworkV3/Layer2_Connection/NetworkLevel2Connection.cs" />
+				<include name="./NetworkV3/Layer2_Connection/NetSharedSecretExchange.cs" />
+				<include name="./NetworkV3/Layer2_Connection/NetworkLevel2Controller.cs" />
+				<include name="./NetworkV3/Layer2_Connection/Test/TestLevel2.cs" />
+				<include name="./NetworkV3/UI/ServerInfo.cs" />
+
+				<include name="./IM/IrcController.cs" />
+				<include name="./IM/ImImplementationFactory.cs" />
+				<include name="./IM/IImImplementation.cs" />
+
+				<include name="./BasicTypes/Color.cs" />
+				<include name="./BasicTypes/Plane.cs" />
+				<include name="./BasicTypes/Axis.cs" />
+				<include name="./BasicTypes/Rot.cs" />
+				<include name="./BasicTypes/Vector2.cs" />
+				<include name="./BasicTypes/Vector3.cs" />
+				<include name="./BasicTypes/CustomCollections.cs" />
+
+				<include name="./WorldModel/Entity.cs" />
+				<include name="./WorldModel/EntityCreationProperties.cs" />
+				<include name="./WorldModel/Avatar.cs" />
+				<include name="./WorldModel/FractalSplinePrim.cs" />
+				<include name="./WorldModel/FractalSplineCylinder.cs" />
+				<include name="./WorldModel/WorldView.cs" />
+				<include name="./WorldModel/FractalSplineTorus.cs" />
+				<include name="./WorldModel/SimpleCube.cs" />
+				<include name="./WorldModel/EntityGroup.cs" />
+				<include name="./WorldModel/SimpleCone.cs" />
+				<include name="./WorldModel/FractalSplineBox.cs" />
+				<include name="./WorldModel/FractalSplinePrism.cs" />
+				<include name="./WorldModel/TextureController.cs" />
+				<include name="./WorldModel/Prim.cs" />
+				<include name="./WorldModel/FractalSplineTube.cs" />
+				<include name="./WorldModel/FractalSplineRing.cs" />
+				<include name="./WorldModel/WorldModel.cs" />
+
+				<include name="./Rendering/DisplayGeometryX11.cs" />
+				<include name="./Rendering/DrawAxes.cs" />
+				<include name="./Rendering/IRenderer.cs" />
+				<include name="./Rendering/GraphicsHelperGl.cs" />
+				<include name="./Rendering/GraphicsHelperFactory.cs" />
+				<include name="./Rendering/IDisplayGeometry.cs" />
+				<include name="./Rendering/DisplayGeometryWindows.cs" />
+				<include name="./Rendering/IPicker3dModel.cs" />
+				<include name="./Rendering/RendererFactory.cs" />
+				<include name="./Rendering/TextureHelper.cs" />
+				<include name="./Rendering/IGraphicsHelperFactory.cs" />
+				<include name="./Rendering/MenuHelper.cs" />
+				<include name="./Rendering/FrustrumCulling.cs" />
+				<include name="./Rendering/Picker3dModelGl.cs" />
+				<include name="./Rendering/Picker3dController.cs" />
+				<include name="./Rendering/IGraphicsHelper.cs" />
+				<include name="./Rendering/DisplayGeometryFactory.cs" />
+				<include name="./Rendering/RendererSdl.cs" />
+				<include name="./Rendering/MenuController.cs" />
+
+				<include name="./UI/ContextMenuController.cs" />
+				<include name="./UI/EmergencyDialog.cs" />
+				<include name="./UI/UIController.cs" />
+				<include name="./UI/DialogHelpers.cs" />
+				<include name="./UI/Dialogs/UIEntitiesPropertiesDialog.cs" />
+				<include name="./UI/Dialogs/ChatController.cs" />
+				<include name="./UI/Dialogs/UIContextMenu.cs" />
+				<include name="./UI/Dialogs/LoginDialog.cs" />
+				<include name="./UI/Dialogs/InputBox.cs" />
+				<include name="./UI/Dialogs/MessageBox.cs" />
+				<include name="./UI/Dialogs/ConnectToServerDialog.cs" />
+			</sources>
+		</csc>
+		<copy todir="../../Outputs/Metaverse.Client">
+			<fileset basedir="bin">
+				<include name="*"/>
+			</fileset>
+		</copy>
+		<copy todir="../../Outputs/Metaverse.Client">
+			<fileset basedir=".">
+				<include name="metaverse.client.glade"/>
+				<include name="config.xml"/>
+				<include name="metaverse.ico"/>
+				<include name="Meebey.SmartIrc4net.xml"/>
+			</fileset>
+		</copy>
+
+		<nant buildfile="../Setup/default.build" />
+	</target>
+</project>
 

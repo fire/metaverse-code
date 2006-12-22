@@ -22,6 +22,12 @@ Next release:
 - added osmp:// protocol, so can open links like http://manageddreams.com/osmp/TestWorld/worldwithtexture.OSMP
 - added background loading for textures
 - added .osmp filetype, to directly open .osmp files
+- added non-modal messagebox at "UI/Dialogs/MessageBox.cs"
+- added Metaverse.ico icon to MessageBox.cs
+- readded Help|About; added compile date/time to help about
+- removed Avatar from serialization/deserialization, should alleviate world-loading issues
+- moved dynamic context menu items to top of context menu
+- removed list around cone drawing, correct rendering bug for position edit handles
 
 Release December 12 2006:
 - renamed "Properties" in context menu to "Edit"

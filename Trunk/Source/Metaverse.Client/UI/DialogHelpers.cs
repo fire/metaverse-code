@@ -24,50 +24,50 @@ using System.Text;
 using System.IO;
 using Gtk;
 
-// note: all of these run modally at the moment and will cause disconnection of all clients most likely
-// we should probably shift these to non-modal dialogs
+    // note: all of these run modally at the moment and will cause disconnection of all clients most likely
+    // we should probably shift these to non-modal dialogs
 
     public class DialogHelpers
     {
-        public static void ShowErrorMessage(Window window, string message)
+        public static void ShowErrorMessageModal( Window window, string message )
         {
-            Dialog dialog = new MessageDialog(window, DialogFlags.DestroyWithParent | DialogFlags.Modal,
-                MessageType.Error, ButtonsType.Ok, message);
+            Dialog dialog = new MessageDialog( window, DialogFlags.DestroyWithParent | DialogFlags.Modal,
+                MessageType.Error, ButtonsType.Ok, message );
             dialog.Run();
             dialog.Hide();
         }
-        public static void ShowWarningMessage(Window window, string message)
+        public static void ShowWarningMessageModal( Window window, string message )
         {
-            Dialog dialog = new MessageDialog(window, DialogFlags.DestroyWithParent | DialogFlags.Modal,
-                MessageType.Warning, ButtonsType.Ok, message);
+            Dialog dialog = new MessageDialog( window, DialogFlags.DestroyWithParent | DialogFlags.Modal,
+                MessageType.Warning, ButtonsType.Ok, message );
             dialog.Run();
             dialog.Hide();
         }
-        public static void ShowInfoMessage(Window window, string message)
+        public static void ShowInfoMessageModal( Window window, string message )
         {
-            Dialog dialog = new MessageDialog(window, DialogFlags.DestroyWithParent | DialogFlags.Modal,
-                MessageType.Info, ButtonsType.Ok, message);
+            Dialog dialog = new MessageDialog( window, DialogFlags.DestroyWithParent | DialogFlags.Modal,
+                MessageType.Info, ButtonsType.Ok, message );
             dialog.Run();
             dialog.Hide();
         }
 
         static string lastdirectorypath = "";
-        public static string GetFilePath(string prompt, string defaultfilename)
+        public static string GetFilePath( string prompt, string defaultfilename )
         {
-            using (FileSelection dialog = new FileSelection(prompt))
+            using (FileSelection dialog = new FileSelection( prompt ))
             {
-                dialog.Filename = Path.Combine(lastdirectorypath, defaultfilename);
+                dialog.Filename = Path.Combine( lastdirectorypath, defaultfilename );
                 ResponseType response = (ResponseType)dialog.Run();
                 dialog.Hide();
                 if (response == ResponseType.Ok)
                 {
-                    LogFile.GetInstance().WriteLine("got filepath: " + dialog.Filename);
-                    lastdirectorypath = Path.GetDirectoryName(dialog.Filename);
+                    LogFile.GetInstance().WriteLine( "got filepath: " + dialog.Filename );
+                    lastdirectorypath = Path.GetDirectoryName( dialog.Filename );
                     return dialog.Filename;
                 }
                 else
                 {
-                    LogFile.GetInstance().WriteLine("Cancel pressed");
+                    LogFile.GetInstance().WriteLine( "Cancel pressed" );
                     return "";
                 }
             }
@@ -75,26 +75,26 @@ using Gtk;
 
         public static OSMP.Color GetColor()
         {
-            ColorSelectionDialog colorselectiondialog = new ColorSelectionDialog("Choose color:");
+            ColorSelectionDialog colorselectiondialog = new ColorSelectionDialog( "Choose color:" );
             ResponseType response = (ResponseType)colorselectiondialog.Run();
             //colorselectiondialog.
 
             OSMP.Color newcolor = null;
             if (response == ResponseType.Ok)
             {
-                Console.WriteLine(colorselectiondialog);
-                Console.WriteLine(colorselectiondialog.ColorSelection);
+                Console.WriteLine( colorselectiondialog );
+                Console.WriteLine( colorselectiondialog.ColorSelection );
                 Console.WriteLine( colorselectiondialog.ColorSelection.CurrentColor.Red.ToString() + " " +
                 colorselectiondialog.ColorSelection.CurrentColor.Green.ToString() + " " +
-                    colorselectiondialog.ColorSelection.CurrentColor.Blue.ToString());
+                    colorselectiondialog.ColorSelection.CurrentColor.Blue.ToString() );
                 Gdk.Color newgtkcolor = colorselectiondialog.ColorSelection.CurrentColor;
-                newcolor = new OSMP.Color(newgtkcolor.Red / (double)65536,
+                newcolor = new OSMP.Color( newgtkcolor.Red / (double)65536,
                     newgtkcolor.Green / (double)65536,
-                    newgtkcolor.Blue / (double)65536);
+                    newgtkcolor.Blue / (double)65536 );
             }
             else
             {
-                Console.WriteLine("cancel pressed");
+                Console.WriteLine( "cancel pressed" );
             }
 
             colorselectiondialog.Hide();

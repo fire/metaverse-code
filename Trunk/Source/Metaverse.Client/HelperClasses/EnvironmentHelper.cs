@@ -33,4 +33,12 @@ using System.IO;
         {
             return Path.GetDirectoryName( System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName );
         }
+        public static DateTime GetCompilationDateTime()
+        {
+            return File.GetLastWriteTime(GetExeFilename());
+        }
+        public static string GetOsmpIconFilepath()
+        {
+            return GetExeDirectory() + "/Metaverse.ico";
+        }
     }

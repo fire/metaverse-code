@@ -140,7 +140,14 @@ namespace OSMP
                     }
                     else
                     {
-                        Console.WriteLine("WARNING: received potentially spoofed packet allegedly from " + connection.ToString() + " " + Encoding.ASCII.GetString( packet, 0, packet.Length ) );
+                        if (isserver)
+                        {
+                            Console.WriteLine("WARNING: server received potentially spoofed packet allegedly from " + connection.ToString() + " " + Encoding.ASCII.GetString(packet, 0, packet.Length));
+                        }
+                        else
+                        {
+                            Console.WriteLine("WARNING: client received potentially spoofed packet allegedly from " + connection.ToString() + " " + Encoding.ASCII.GetString(packet, 0, packet.Length));
+                        }
                     }
                 }
             }
