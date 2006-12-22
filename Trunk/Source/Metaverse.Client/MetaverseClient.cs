@@ -74,8 +74,9 @@ namespace OSMP
             //Console.WriteLine("Tick");
             if (targettoload != "")
             {
-                 WorldPersistToXml.GetInstance().LoadFromUrl( targettoload );
-                 targettoload = "";
+                // note to self: should shift this comparison into WorldPersist really
+                WorldPersistToXml.GetInstance().Load( targettoload );
+                targettoload = "";
             }
             ProcessWorld();
             if (Tick != null)
@@ -142,14 +143,18 @@ namespace OSMP
                 LoadChat();
             }
 
-            foreach (string argument in args)
+            if( arguments.Named.ContainsKey( "url" ) )
             {
-                Console.WriteLine( argument );
-                if (argument.StartsWith( "osmp://" ))
+                Console.WriteLine( "url: " + arguments.Named["url"] );
+                string urlarg = arguments.Named["url"];
+                if (urlarg.StartsWith( "osmp://" ))
                 {
-                    targettoload = "http://" + argument.Substring( "osmp://".Length );
+                    targettoload = "http://" + urlarg.Substring( "osmp://".Length );
                     Console.WriteLine( "target: " + targettoload );
-                    // WorldPersistToXml.GetInstance().LoadFromUrl( target );
+                }
+                else
+                {
+                    targettoload = urlarg;
                 }
             }
 

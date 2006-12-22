@@ -34,14 +34,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddOsmpProtocol.cs" />
+    <Compile Include="Win32\AddOsmpProtocol.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="HelperClasses\EnvironmentHelper.cs" />
-    <Compile Include="Linux.cs" />
+    <Compile Include="Linux\Linux.cs" />
     <Compile Include="Setup.cs" />
-    <Compile Include="Win32.cs" />
+    <Compile Include="Win32\FileAssociations.cs" />
+    <Compile Include="Win32\Win32.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Common\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

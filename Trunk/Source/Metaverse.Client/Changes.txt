@@ -18,6 +18,10 @@ Next release:
 - corrected dirtyobject cache exception on client
 - corrected issue with repeated "received potential spoofed packet" when running integrated client/server
 - OSMP no longer needs working directory set to that of Metaverse.Client.exe
+- added Setup application, needs to run from same directory as Metaverse.Client.exe
+- added osmp:// protocol, so can open links like http://manageddreams.com/osmp/TestWorld/worldwithtexture.OSMP
+- added background loading for textures
+- added .osmp filetype, to directly open .osmp files
 
 Release December 12 2006:
 - renamed "Properties" in context menu to "Edit"

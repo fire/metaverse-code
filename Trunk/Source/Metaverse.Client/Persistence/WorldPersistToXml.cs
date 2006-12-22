@@ -39,8 +39,8 @@ namespace OSMP
         
         public WorldPersistToXml()
         {
-            MenuController.GetInstance().RegisterMainMenu(new string[]{ "&File","&Save World..." }, new MainMenuCallback( SaveWorld ) );
-            MenuController.GetInstance().RegisterMainMenu(new string[]{ "&File","&Load World..." }, new MainMenuCallback( LoadWorld ) );
+            //MenuController.GetInstance().RegisterMainMenu(new string[]{ "&File","&Save World..." }, new MainMenuCallback( SaveWorld ) );
+            //MenuController.GetInstance().RegisterMainMenu(new string[]{ "&File","&Load World..." }, new MainMenuCallback( LoadWorld ) );
             
             ContextMenuController.GetInstance().RegisterPersistentContextMenu(new string[]{ "World","&Save to File..." }, new ContextMenuHandler( ContextMenuSave ) );
             ContextMenuController.GetInstance().RegisterPersistentContextMenu(new string[]{ "World","&Load from File..." }, new ContextMenuHandler( ContextMenuLoad ) );
@@ -66,7 +66,12 @@ namespace OSMP
         
         public void ContextMenuLoad( object source, ContextMenuArgs e )
         {
-            LoadWorld();
+            string filename = DialogHelpers.GetFilePath( "Open world file", "world.OSMP" );
+
+            if (filename != "")
+            {
+                Load( filename );
+            }
         }
 
         public void ContextMenuLoadFromUrl( object source, ContextMenuArgs e )
@@ -96,16 +101,31 @@ namespace OSMP
             DialogHelpers.ShowInfoMessage( null, "World structure load completed; textures may continue to load in the background." );
         }
 
-        public void LoadWorld()
+        /// <summary>
+        /// filename or url (url starts with http://)
+        /// </summary>
+        /// <param name="filename"></param>
+        public void Load( string filename )
         {
-            string filename = DialogHelpers.GetFilePath("Open world file", "world.OSMP");
-
-            if (filename != "")
+            Console.WriteLine( filename );
+            if (filename.StartsWith( "http:" ))
             {
-                Console.WriteLine ( filename );
-                Restore( filename );
-                DialogHelpers.ShowInfoMessage(null, "World load completed");
+                LoadFromUrl( filename );
             }
+            else
+            {
+                LoadFromFile( filename );
+            }
+        }
+
+        public void LoadFromFile( string filename )
+        {
+            if (filename == "" || !File.Exists( filename ))
+            {
+                return;
+            }
+            Restore( filename );
+            DialogHelpers.ShowInfoMessage( null, "World load completed" );
         }
 
         public void Store( string filename )

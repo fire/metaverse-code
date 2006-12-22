@@ -19,12 +19,12 @@ namespace Setup
             osmpkey.SetValue( "URL Protocol", "", RegistryValueKind.String );
 
             RegistryKey defaulticonkey = osmpkey.CreateSubKey( "DefaultIcon" );
-            defaulticonkey.SetValue( "", metaversedirectory + "/Metaverse.ico", RegistryValueKind.String );
+            defaulticonkey.SetValue( "", metaversedirectory + "\\Metaverse.ico", RegistryValueKind.String );
 
             RegistryKey shellkey = osmpkey.CreateSubKey( "shell" );
             RegistryKey openkey = shellkey.CreateSubKey( "open" );
             RegistryKey commandkey = openkey.CreateSubKey( "command" );
-            commandkey.SetValue( "", "\"" + metaverseclientexe + "\" \"%1\"" );
+            commandkey.SetValue( "", "\"" + metaverseclientexe + "\" -url \"%1\"" );
         }
     }
 }
