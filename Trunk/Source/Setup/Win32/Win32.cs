@@ -30,6 +30,7 @@ namespace Setup
         {
             new AddOsmpProtocol().Go();
             new FileAssociations().Go();
+            new AddShortcuts().Go();
         }
     }
 }

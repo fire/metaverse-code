@@ -1,9 +1,16 @@
   <project name="Setup" default="build" basedir=".">
           <target name="build" >
-               <csc target="exe" output="../../Outputs/Metaverse.Client/Setup.exe" debug="true">
+			  <copy todir="../../Outputs/Metaverse.Client">
+				  <fileset basedir="../../Libraries/win32tools">
+					  <include name="Shortcut.exe"/>
+				  </fileset>
+			  </copy>
+			  
+			  <csc target="exe" output="../../Outputs/Metaverse.Client/Setup.exe" debug="true">
 				<references>
-					<include name="System.Windows.Forms.dll" />                
-                </references>
+					<include name="System.Windows.Forms.dll" />
+					<include name="System.Drawing.dll" />
+				</references>
                 <sources>
                     <include name="./Setup.cs" />                    
                     <include name="./Common.cs" />
@@ -11,8 +18,9 @@
                     <include name="./Win32/Win32.cs" />
                     <include name="./Win32/AddOsmpProtocol.cs" />
                     <include name="./Win32/FileAssociations.cs" />
-                    
-                    <include name="./HelperClasses/EnvironmentHelper.cs" />
+					<include name="./Win32/AddShortcuts.cs" />
+
+					<include name="./HelperClasses/EnvironmentHelper.cs" />
                 </sources>
                </csc>
         </target>
