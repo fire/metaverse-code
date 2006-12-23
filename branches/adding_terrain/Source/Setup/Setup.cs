@@ -52,7 +52,7 @@ namespace Setup
                     default:
                         throw new Exception( "unknown platform: " + Environment.OSVersion.Platform );
                 }
-                MessageBox.Show( "Setup complete" );
+                MessageBox.Show( "Setup complete.  Please run Osmp from the Osmp group in the start menu." );
             }
             catch (Exception e)
             {

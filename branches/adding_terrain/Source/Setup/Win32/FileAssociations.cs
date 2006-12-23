@@ -42,6 +42,12 @@ class FileAssociations
 
     public void Go()
     {
-        Add( "osmp", "OSMP Worldfile", "\"" + EnvironmentHelper.GetExeDirectory() + "\\Metaverse.Client.exe\" -url \"%1\"", "\"" + EnvironmentHelper.GetExeDirectory() + "\\Metaverse.ico\"" );
+        string metaverseclientexe = "\"" + EnvironmentHelper.GetExeDirectory() + "\\metaverse.client.exe\"";
+        if (EnvironmentHelper.IsMonoRuntime)
+        {
+            metaverseclientexe = "\"" + EnvironmentHelper.GetClrDirectory() + "\\mono.exe\" --debug " +
+                metaverseclientexe;
+        }
+        Add( "osmp", "OSMP Worldfile", metaverseclientexe + " -url \"%1\"", "\"" + EnvironmentHelper.GetExeDirectory() + "\\Metaverse.ico\"" );
     }
 }

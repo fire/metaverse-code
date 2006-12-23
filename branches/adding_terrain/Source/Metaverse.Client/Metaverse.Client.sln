@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C# Express 2005
+# SharpDevelop 2.1.0.2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Client", "Metaverse.Client.csproj", "{B43DFCEC-2F68-4108-A83C-A02A773FD8CB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{07E3E9BF-C938-4534-9FDD-EC4A54365BA7} = {07E3E9BF-C938-4534-9FDD-EC4A54365BA7}
@@ -19,6 +19,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathGL", "..\MathGL\MathGL.csproj", "{F1BF78FA-8831-4598-8AD5-40C654B12DB7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "..\Setup\Setup.csproj", "{037ACDE6-576A-4D0D-A494-E66EDEEE9C6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Scripting", "..\Metaverse.Scripting\Metaverse.Scripting.csproj", "{595D7439-A81F-46BE-AD7E-BD1BA3265B84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Common", "..\Metaverse.Common\Metaverse.Common.csproj", "{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +54,14 @@ Global
 		{037ACDE6-576A-4D0D-A494-E66EDEEE9C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{037ACDE6-576A-4D0D-A494-E66EDEEE9C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{037ACDE6-576A-4D0D-A494-E66EDEEE9C6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{595D7439-A81F-46BE-AD7E-BD1BA3265B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{595D7439-A81F-46BE-AD7E-BD1BA3265B84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{595D7439-A81F-46BE-AD7E-BD1BA3265B84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{595D7439-A81F-46BE-AD7E-BD1BA3265B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

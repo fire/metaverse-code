@@ -43,6 +43,9 @@ namespace OSMP
 
                 Arguments arguments = new Arguments(args);
 
+                System.Environment.SetEnvironmentVariable( "PATH", System.Environment.GetEnvironmentVariable( "PATH" ) +
+                    ";" + EnvironmentHelper.GetExeDirectory(), EnvironmentVariableTarget.Process );
+
                 if( arguments.Unnamed.Contains("clientonly") )
                 {
                     Console.WriteLine("User requested client only");

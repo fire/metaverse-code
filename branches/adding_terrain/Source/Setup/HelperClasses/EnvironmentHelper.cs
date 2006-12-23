@@ -19,6 +19,7 @@
 //
 
 using System;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -32,5 +33,30 @@ using System.IO;
         public static string GetExeDirectory()
         {
             return Path.GetDirectoryName( System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName );
+        }
+        public static bool IsMonoRuntime
+        {
+            get
+            {
+                return typeof( object ).Assembly.GetType( "System.MonoType" ) != null;
+            }
+        }
+        public static string GetClrDirectory()
+        {
+            if (!IsMonoRuntime)
+            {
+                return RuntimeEnvironment.GetRuntimeDirectory();
+            }
+            else
+            {
+                if (System.Environment.OSVersion.Platform != PlatformID.Unix)
+                {
+                    return RuntimeEnvironment.GetRuntimeDirectory() + "\\..\\..\\..\\bin";
+                }
+                else
+                {
+                    return RuntimeEnvironment.GetRuntimeDirectory(); // no idea what to do with this...
+                }
+            }
         }
     }
