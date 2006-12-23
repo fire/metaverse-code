@@ -40,23 +40,6 @@ namespace Metaverse.Scripting.Testing
     	MiniSimulator simulator = server.CreateSimulator();
     	
     	//client side
-    	SimulateClientUploadingScript();
-    	
-    	//server side again to run the newly added script
-    	
-    	Assert.AreEqual(1, server.Model.Data);
-    	simulator.ScriptExecutor.Run();
-		Assert.AreEqual(2, server.Model.Data);
-    	simulator.ScriptExecutor.Run();
-		Assert.AreEqual(3, server.Model.Data);
-		simulator.ScriptExecutor.Run();
-		Assert.AreEqual(4, server.Model.Data);
-    	
-    	return;
-    }
-    
-    public void SimulateClientUploadingScript() {
-    	
     	Controller.Client.FileInsertNewSingleFileScript( "/Simulation0.cs",
     	    @"
     	    	using System;
@@ -74,6 +57,19 @@ namespace Metaverse.Scripting.Testing
 					}
     	    	}
     	    " );
+    	
+    	//server side again to run the newly added script
+    	
+    	Assert.AreEqual(1, server.Model.Data);
+    	simulator.ScriptExecutor.Run();
+		Assert.AreEqual(2, server.Model.Data);
+    	simulator.ScriptExecutor.Run();
+		Assert.AreEqual(3, server.Model.Data);
+		simulator.ScriptExecutor.Run();
+		Assert.AreEqual(4, server.Model.Data);
+    	
+    	return;
     }
+
   }
 }

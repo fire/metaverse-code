@@ -104,7 +104,7 @@ namespace OSMP
                 Vr.z = 0;
             }
         }
-        public static void ApplyRotToGLMatrix4d( ref GLMatrix4d matrix, Rot rot )
+        public static void ApplyRotToGLMatrix4d( ref GLMatrix4D matrix, Rot rot )
         {
             double fRotAngle = 0;
             Vector3 vAxis = new Vector3();

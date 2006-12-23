@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,10 +9,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OSMP</RootNamespace>
     <AssemblyName>Metaverse.Client</AssemblyName>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <Win32Resource>
-    </Win32Resource>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,14 +27,64 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <Reference Include="atk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\atk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\gdk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glade-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\glade-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glib-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\glib-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\gtk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Meebey.SmartIrc4net, Version=0.3.5.1833, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Meebey.SmartIrc4net.dll</HintPath>
+    </Reference>
+    <Reference Include="SdlDotNet, Version=4.0.2.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\SdlDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.XML" />
+    <Reference Include="Tao.DevIl, Version=1.6.7.0, Culture=neutral, PublicKeyToken=7ec4053013524957">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Tao.DevIl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.FreeGlut, Version=2.2.0.0, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Tao.FreeGlut.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenGl, Version=0.0.0.0, Culture=neutral, PublicKeyToken=1ca010269a4501ef">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Tao.OpenGl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenGl.ExtensionLoader, Version=1.5.0.3, Culture=neutral, PublicKeyToken=aaade445f4a3f192">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Tao.OpenGl.ExtensionLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenGl.Glu, Version=1.5.0.3, Culture=neutral, PublicKeyToken=3661ea75021374b5">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Tao.OpenGl.Glu.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Sdl, Version=1.2.9.1, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Tao.Sdl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicTypes\Axis.cs" />
     <Compile Include="BasicTypes\Color.cs" />
@@ -79,8 +124,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Rendering\RendererSdl.cs" />
-    <Compile Include="UI\Dialogs\ChatController.cs">
-    </Compile>
+    <Compile Include="UI\Dialogs\ChatController.cs" />
     <Compile Include="IM\IImImplementation.cs" />
     <Compile Include="IM\ImImplementationFactory.cs" />
     <Compile Include="IM\IrcController.cs" />
@@ -158,8 +202,7 @@
     <Compile Include="UI\Dialogs\InputBox.cs" />
     <Compile Include="UI\Dialogs\LoginDialog.cs" />
     <Compile Include="UI\Dialogs\UIContextMenu.cs" />
-    <Compile Include="UI\Dialogs\UIEntitiesPropertiesDialog.cs">
-    </Compile>
+    <Compile Include="UI\Dialogs\UIEntitiesPropertiesDialog.cs" />
     <Compile Include="UI\EmergencyDialog.cs" />
     <Compile Include="UI\UIController.cs" />
     <Compile Include="WorldModel\Avatar.cs" />
@@ -179,80 +222,9 @@
     <Compile Include="WorldModel\TextureController.cs" />
     <Compile Include="WorldModel\WorldModel.cs" />
     <Compile Include="WorldModel\WorldView.cs" />
+    <None Include="default.build" />
+    <None Include="metaverse.client.glade" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="atk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\atk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\gdk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="glade-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\glade-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="glib-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\glib-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="gtk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\gtk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Meebey.SmartIrc4net, Version=0.3.5.1833, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Meebey.SmartIrc4net.dll</HintPath>
-    </Reference>
-    <Reference Include="SdlDotNet, Version=4.0.2.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\SdlDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.XML" />
-    <Reference Include="Tao.DevIl, Version=1.6.7.0, Culture=neutral, PublicKeyToken=7ec4053013524957">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Tao.DevIl.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.FreeGlut, Version=2.2.0.0, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Tao.FreeGlut.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.OpenGl, Version=0.0.0.0, Culture=neutral, PublicKeyToken=1ca010269a4501ef">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Tao.OpenGl.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.OpenGl.ExtensionLoader, Version=1.5.0.3, Culture=neutral, PublicKeyToken=aaade445f4a3f192">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Tao.OpenGl.ExtensionLoader.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.OpenGl.Glu, Version=1.5.0.3, Culture=neutral, PublicKeyToken=3661ea75021374b5">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Tao.OpenGl.Glu.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.Sdl, Version=1.2.9.1, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Tao.Sdl.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <PropertyGroup>
-    <PreBuildEvent>rpcproxygenerator &gt; prebuild.log
-
-xcopy /d /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies &gt;&gt; prebuild.log
-
-xcopy /d /y $(ProjectDir)..\..\Libraries\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log
-xcopy /d /y $(ProjectDir)..\..\Libraries\Gtk.Net2.0\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log
-</PreBuildEvent>
-    <PostBuildEvent>copy /y $(ProjectDir)metaverse.client.glade . &gt;copy.log
-xcopy /d /y $(ProjectDir)\bin\*.dll . &gt;&gt; copy.log
-copy /y $(ProjectDir)config.xml . &gt;&gt;copy.log
-xcopy /d /y $(ProjectDir)metaverse.ico . &gt;&gt; copy.log
-
-</PostBuildEvent>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
       <Project>{5B709283-292D-4BE4-880E-B23C9E7FBE05}</Project>
@@ -266,19 +238,23 @@ xcopy /d /y $(ProjectDir)metaverse.ico . &gt;&gt; copy.log
       <Project>{44F0885A-0270-4ACA-8A18-68A786B1E89D}</Project>
       <Name>NetworkInterfaces</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Changes.txt" />
     <Content Include="config.xml" />
     <Content Include="Metaverse.ico" />
     <Content Include="NetworkV3\Layer3_PacketAssembly\readme.txt" />
     <Content Include="osmpico32.bmp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="default.build" />
-    <None Include="metaverse.client.glade" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>rpcproxygenerator &gt; prebuild.log
+
+xcopy /d /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies &gt;&gt; prebuild.log
+
+xcopy /d /y $(ProjectDir)..\..\Libraries\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log
+xcopy /d /y $(ProjectDir)..\..\Libraries\Gtk.Net2.0\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log</PreBuildEvent>
+    <PostBuildEvent>copy /y $(ProjectDir)metaverse.client.glade . &gt;copy.log
+xcopy /d /y $(ProjectDir)\bin\*.dll . &gt;&gt; copy.log
+copy /y $(ProjectDir)config.xml . &gt;&gt;copy.log
+xcopy /d /y $(ProjectDir)metaverse.ico . &gt;&gt; copy.log</PostBuildEvent>
+  </PropertyGroup>
 </Project>

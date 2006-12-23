@@ -27,7 +27,7 @@ namespace FractalSpline
     {
         public const int MaxSteps = 32;
             
-        protected GLMatrix4d[] transforms = new GLMatrix4d[MaxSteps];  //!< All transforms
+        protected GLMatrix4D[] transforms = new GLMatrix4D[MaxSteps];  //!< All transforms
         protected int iNumberOfTransforms = 0;  //!< Number of Transforms
         
         protected int iLevelOfDetail = 16; //!< Current LOD
@@ -41,7 +41,7 @@ namespace FractalSpline
         {
             for( int i = 0; i < MaxSteps; i++ )
             {
-                transforms[i] = GLMatrix4d.identity();
+                transforms[i] = GLMatrix4D.Identity();
             }
         }
 
