@@ -53,8 +53,18 @@
 			</fileset>
 		</copy>
 		<nant buildfile="../RpcProxyGenerator/default.build" />
-		<exec program="../../Outputs/RpcProxyGenerator/RpcProxyGenerator.exe" output="../../Outputs/RpcProxyGenerator/generate.log"
-			workingdir="../../Outputs/RpcProxyGenerator" />
+		
+		<if test="${framework::get-runtime-engine(framework::get-target-framework()) == ''}" >
+		<exec program="../../Outputs/RpcProxyGenerator/RpcProxyGenerator.exe" 
+			output="../../Outputs/RpcProxyGenerator/generate.log"
+			workingdir="../../Outputs/RpcProxyGenerator" />			
+		</if>
+		<if test="${framework::get-runtime-engine(framework::get-target-framework()) != ''}" >
+			<exec program="${framework::get-runtime-engine(framework::get-target-framework())}" 
+				commandline="RpcProxyGenerator.exe"
+				output="../../Outputs/RpcProxyGenerator/generate.log"
+				workingdir="../../Outputs/RpcProxyGenerator" />
+		</if>
 
 		<copy todir="NetworkV3\Layer4_Rpc\GeneratedProxies">
 			<fileset basedir="../../Outputs/RpcProxyGenerator">
