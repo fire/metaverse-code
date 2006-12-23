@@ -45,13 +45,13 @@ namespace FractalSpline
             {
                 fRatio = (double)i / (double)( iNumberOfTransforms - 1 );
                 
-                transforms[i].loadIdentity();
+                transforms[i].LoadIdentity();
                 
                 double fSliceAngle = ( fCutStartAngle + fRatio * (fCutEndAngle - fCutStartAngle ) );
                 
                 transforms[i].applyRotate( 180 / Math.PI * fSliceAngle, 1, 0, 0 );
-                transforms[i].applyTranslate( 0, fExtrusionRadius, 0 );
-                transforms[i].applyScale( 1, fRadialSectionScale, 1 );
+                transforms[i].ApplyTranslation( 0, fExtrusionRadius, 0 );
+                transforms[i].ApplyScale( 1, fRadialSectionScale, 1 );
             }
         }
         // start angle for extrusion

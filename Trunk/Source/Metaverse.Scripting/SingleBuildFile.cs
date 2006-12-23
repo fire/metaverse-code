@@ -1,4 +1,6 @@
 using System;
+using Metaverse.Common;
+
 namespace Metaverse.Scripting 
 {
 	public class SingleBuildFile : ABuildFile

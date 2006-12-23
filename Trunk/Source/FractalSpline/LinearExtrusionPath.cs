@@ -33,9 +33,9 @@ namespace FractalSpline
             for( i = 0; i < iNumberOfTransforms; i++ )
             {
                 fRatio = (double)i / (double)( iNumberOfTransforms - 1 );
-                transforms[i] = GLMatrix4d.identity();
-                transforms[i].applyTranslate( fRatio * fShear, 0, fRatio - 0.5 );
-                transforms[i].applyScale( 1 + fRatio * (fTopSizeX - 1), 1 + fRatio * ( fTopSizeY - 1 ), 1 );
+                transforms[i] = GLMatrix4D.Identity();
+                transforms[i].ApplyTranslation( fRatio * fShear, 0, fRatio - 0.5 );
+                transforms[i].ApplyScale( 1 + fRatio * (fTopSizeX - 1), 1 + fRatio * ( fTopSizeY - 1 ), 1 );
                 transforms[i].applyRotate( fRatio * (double)iTwist, 0, 0, 1 );
             }
         }

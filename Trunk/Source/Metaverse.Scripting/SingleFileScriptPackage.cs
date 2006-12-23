@@ -4,16 +4,24 @@ using Metaverse.Common;
 
 namespace Metaverse.Scripting 
 {
+	using Metaverse.Common;
 	
 	public class SingleFileScriptPackage : IScriptPackage
 	{
-
+		private string				_name;
 		private CSScriptFile		_file;
 		private	IScriptGenerator	_generator;
 		private bool				_compiled;
 		
-		public SingleFileScriptPackage( CSScriptFile file ) {
+		public string Name {
+			get {
+				return _name;
+			}
+		}
+		
+		public SingleFileScriptPackage( string name, CSScriptFile file ) {
 			
+			_name = name;
 			_file = file;
 			
 			return;
