@@ -12,9 +12,14 @@ namespace Setup
         public void Go()
         {
             string metaversedirectory = EnvironmentHelper.GetExeDirectory();
-            string metaverseclientexe = metaversedirectory + "/metaverse.client.exe";
+            string metaverseclientexe = "\"" + metaversedirectory + "/metaverse.client.exe\"";
+            if (EnvironmentHelper.IsMonoRuntime)
+            {
+                metaverseclientexe = "\"" + EnvironmentHelper.GetClrDirectory() + "\\mono.exe\" --debug " +
+                    metaverseclientexe;
+            }
 
-            RegistryKey osmpkey = Registry.ClassesRoot.CreateSubKey( "osmp" );
+            RegistryKey osmpkey = Registry.ClassesRoot.CreateSubKey( "mtvs" );
             osmpkey.SetValue( "", "URL:OSMP Protocol", RegistryValueKind.String );
             osmpkey.SetValue( "URL Protocol", "", RegistryValueKind.String );
 
@@ -24,7 +29,7 @@ namespace Setup
             RegistryKey shellkey = osmpkey.CreateSubKey( "shell" );
             RegistryKey openkey = shellkey.CreateSubKey( "open" );
             RegistryKey commandkey = openkey.CreateSubKey( "command" );
-            commandkey.SetValue( "", "\"" + metaverseclientexe + "\" -url \"%1\"" );
+            commandkey.SetValue( "", metaverseclientexe + " -url \"%1\"" );
         }
     }
 }

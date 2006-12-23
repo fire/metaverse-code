@@ -31,6 +31,12 @@ namespace OSMP
 {
     public class WorldPersistToXml : IWorldPersist
     {
+        // what we will save/load
+        public class World
+        {
+            public Entity[] Entities;
+        }
+
         static WorldPersistToXml instance = new WorldPersistToXml();
         public static WorldPersistToXml GetInstance()
         {
@@ -149,7 +155,8 @@ namespace OSMP
             }
             
             //XmlSerializer serializer = new XmlSerializer( worldmodel.entities.GetType(), (Type[])types.ToArray( typeof( Type ) ) );
-            XmlSerializer serializer = new XmlSerializer( typeof( Entity[]), (Type[])types.ToArray( typeof( Type ) ) );
+            XmlSerializer serializer = new XmlSerializer( typeof( World),
+                (Type[])types.ToArray( typeof( Type ) ) );
             StreamWriter streamwriter = new StreamWriter( filename );
             ProjectFileController.GetInstance().SetProjectPath( new Uri( Path.GetDirectoryName( filename ) + "/" ) );
             List<Entity> entitiestoserialize = new List<Entity>();
@@ -162,7 +169,9 @@ namespace OSMP
                     entitiestoserialize.Add(entity);
                 }
             }
-            serializer.Serialize( streamwriter, entitiestoserialize.ToArray() );
+            World world = new World();
+            world.Entities = entitiestoserialize.ToArray();
+            serializer.Serialize( streamwriter, world );
             streamwriter.Close();
         }
 
@@ -180,7 +189,7 @@ namespace OSMP
             WorldModel worldmodel = MetaverseClient.GetInstance().worldstorage;
 
             // note to self: should make these types a publisher/subscriber thing
-            XmlSerializer serializer = new XmlSerializer( typeof( Entity[] ), new Type[]{
+            XmlSerializer serializer = new XmlSerializer( typeof( World ), new Type[]{
                 typeof( Avatar ),
                 typeof( FractalSplineCylinder ), 
                 typeof( FractalSplineRing ), 
@@ -191,9 +200,9 @@ namespace OSMP
                 } );
             //DialogHelpers.ShowInfoMessage( null, serializer.Deserialize(filestream).GetType().ToString());
             ProjectFileController.GetInstance().SetProjectPath( projecturi );
-            Entity[] entities = (Entity[])serializer.Deserialize( stream );
+            World world = (World)serializer.Deserialize( stream );
             worldmodel.Clear();
-            foreach (Entity entity in entities)
+            foreach (Entity entity in world.Entities)
             {
                 if (entity.GetType() != typeof(Avatar))
                 {

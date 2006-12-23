@@ -48,6 +48,8 @@ namespace Metaverse.Scripting.Testing
 	    	ISim sim = (ISim)simulators[0];
 	    	
 	    	SimController.Singleton.InsertScript( sim, generator.Generate() );
+	    	
+	    	return;
 		}
 	}
 }
