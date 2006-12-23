@@ -253,7 +253,7 @@
 			<fileset basedir=".">
 				<include name="metaverse.client.glade"/>
 				<include name="config.xml"/>
-				<include name="metaverse.ico"/>
+				<include name="Metaverse.ico"/>
 				<include name="Meebey.SmartIrc4net.xml"/>
 			</fileset>
 		</copy>
