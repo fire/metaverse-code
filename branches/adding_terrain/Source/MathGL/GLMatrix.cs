@@ -7,6 +7,15 @@
  //*   it under the terms of the GNU Lesser General Public License as       *
  //*   published by the Free Software Foundation; either version 2 of the    *
  //*   License, or (at your option) any later version.                       *
+ //**************************************************************************
+// *   Copyright (C) 2004,2006 by Jacques Gasselin, Hugh Perkins        *
+ //*   jacquesgasselin@hotmail.com                                           *
+ //*   hughperkins@gmail.com  http://manageddreams.com    *
+ //*                                                                         *
+ //*   This program is free software; you can redistribute it and/or modify  *
+ //*   it under the terms of the GNU Lesser General Public License as       *
+ //*   published by the Free Software Foundation; either version 2 of the    *
+ //*   License, or (at your option) any later version.                       *
  //*                                                                         *
  //*   This program is distributed in the hope that it will be useful,       *
  //*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -32,95 +41,146 @@ namespace MathGl
 	/// <summary>
 	/// A 4D matrix for math calculations
 	/// </summary>
-	
-    public class GLMatrix4d
+    public class GLMatrix4D
     {
+    	/// <summary>
+    	/// Indices of our matrix
+    	/// </summary>
         double[]m = new double[16];
+        
+         /// <summary>
+        /// Construct a matrix from string
+        /// </summary>
+        /// <param name="inputstring">String representation of a matrix</param>
+        /// <remarks>Row major order is expected to conform with standard output</remarks>
+        public GLMatrix4D( string inputstring )
+        {
+            string[]splitinputstring = inputstring.Split(new char[]{'\n'});
+            for(int j = 0; j < 4; ++j)
+            {
+                string[]splitsingleline = splitinputstring[j].Split( new char[]{' '} );
+                for(int i = 0; i < 4; ++i)
+                {
+                    m[i*4+j] = Convert.ToDouble( splitsingleline[i] );
+                }
+            }
+        }
         
 		/// <summary>
 		/// Create an uninitialized matrix
 		/// </summary>
-        public GLMatrix4d()
-        { }
+        public GLMatrix4D() { }
     
 		/// <summary>
 		/// Create an initialised matrix
 		/// </summary>
 		/// <param name="val">A value to initialize all fields of the matrix</param>
-        public GLMatrix4d(double val)
-        { m[0]=m[1]=m[2]=m[3]=m[4]=m[5]=m[6]=m[7]=m[8]=m[9]=m[10]=m[11]=m[12]=m[13]=m[14]=m[15]=val; }
+        public GLMatrix4D(double val)
+        { 
+        	m[0]=m[1]=m[2]=m[3]=m[4]=m[5]=m[6]=m[7]=m[8]=m[9]=m[10]=m[11]=m[12]=m[13]=m[14]=m[15]=val; 
+        	
+        	return;
+        }
     
 		/// <summary>
 		/// Create a matrix from an array
 		/// </summary>
 		/// <param name="val">Array of values to initialize the matrix with</param>
-        public GLMatrix4d( double[] val)
+        public GLMatrix4D( double[] val)
         {
             Buffer.BlockCopy( val, 0, m, 0, Buffer.ByteLength( val ) );
+            
+            return;
         }
     
 		/// <summary>
 		/// Copy a matrix
 		/// </summary>
 		/// <param name="mat">Source matrix to copy from</param>
-        public GLMatrix4d(GLMatrix4d mat)
+        public GLMatrix4D(GLMatrix4D mat)
         { 
             Buffer.BlockCopy( mat.m, 0, m, 0, Buffer.ByteLength( mat.m ) );
+            
+            return;
         }
         
+        /// <summary>
+        /// Convert to matrix to an array of double values
+        /// </summary>
+        /// <returns>Array of the matrice's indicies</returns>
         public double[] ToArray()
         {
             double[]arraycopy = new double[16];
             Buffer.BlockCopy( m, 0, arraycopy, 0, Buffer.ByteLength( m ) );
+           
             return arraycopy;
         }
     
-        //!Get the matrix determinant
-        public double det() { return m[0]*cofactorm0() - m[1]*cofactorm1() + m[2]*cofactorm2() - m[3]*cofactorm3(); }
+        /// <summary>
+        /// Get the matrix determinant
+        /// </summary>
+        /// <returns>Determinant</returns>
+        public double Det() 
+        { 
+        	return m[0]*CofactorM0() - m[1]*CofactorM1() + m[2]*CofactorM2() - m[3]*CofactorM3(); 
+        }
     
-        //!Get the adjoint matrix
-        public GLMatrix4d adjoint()
+        /// <summary>
+        /// Get the adjoint matrix
+        /// </summary>
+        /// <returns>A new matrix that is adjoint to this one</returns>
+        public GLMatrix4D adjoint()
         {
-            GLMatrix4d ret = new GLMatrix4d();
+            GLMatrix4D ret = new GLMatrix4D();
     
-            ret.m[0] = cofactorm0();
-            ret.m[1] = -cofactorm4();
-            ret.m[2] = cofactorm8();
-            ret.m[3] = -cofactorm12();
+            ret.m[0] = CofactorM0();
+            ret.m[1] = -CofactorM4();
+            ret.m[2] = CofactorM8();
+            ret.m[3] = -CofactorM12();
     
-            ret.m[4] = -cofactorm1();
-            ret.m[5] = cofactorm5();
-            ret.m[6] = -cofactorm9();
-            ret.m[7] = cofactorm13();
+            ret.m[4] = -CofactorM1();
+            ret.m[5] = CofactorM5();
+            ret.m[6] = -CofactorM9();
+            ret.m[7] = CofactorM13();
     
-            ret.m[8] = cofactorm2();
-            ret.m[9] = -cofactorm6();
-            ret.m[10] = cofactorm10();
-            ret.m[11] = -cofactorm14();
+            ret.m[8] = CofactorM2();
+            ret.m[9] = -CofactorM6();
+            ret.m[10] = CofactorM10();
+            ret.m[11] = -CofactorM14();
     
-            ret.m[12] = -cofactorm3();
-            ret.m[13] = cofactorm7();
-            ret.m[14] = -cofactorm11();
-            ret.m[15] = cofactorm15();
+            ret.m[12] = -CofactorM3();
+            ret.m[13] = CofactorM7();
+            ret.m[14] = -CofactorM11();
+            ret.m[15] = CofactorM15();
     
             return ret;
         }
     
-        //!Adjoint method inverse, constant time inversion implementation
-        public GLMatrix4d inverse() 
+        /// <summary>
+        /// Adjoint method inverse, constant time inversion implementation
+        /// </summary>
+        /// <returns>A new matrix that is inverse to this one</returns>
+        public GLMatrix4D inverse() 
         {
-            GLMatrix4d ret = new GLMatrix4d(adjoint());
+            GLMatrix4D ret = new GLMatrix4D(adjoint());
     
             double determinant = m[0]*ret[0] + m[1]*ret[4] + m[2]*ret[8] + m[3]*ret[12];
+           
             //assert(determinant!=0 && "Singular matrix has no inverse");
     
             ret /= determinant;
+            
             return ret;
         }
     
     
-        //!Equality check. 
-        public static bool operator== (GLMatrix4d one, GLMatrix4d two)
+        /// <summary>
+        /// Equality check. 
+        /// </summary>
+        /// <param name="one">First Matrix</param>
+        /// <param name="two">Second Matrix</param>
+        /// <returns>True if they are equal, false otherwise</returns>
+        public static bool operator== (GLMatrix4D one, GLMatrix4D two)
         {
             for( int i = 0; i < 16; i++ )
             {
@@ -129,10 +189,17 @@ namespace MathGl
                     return false;
                 }
             }
+            
             return true;
         }
-        // dot net requires we also define !=
-        public static bool operator!= (GLMatrix4d one, GLMatrix4d two)
+
+        /// <summary>
+        /// dot net requires we also define !=
+        /// </summary>
+     	/// <param name="one">First Matrix</param>
+        /// <param name="two">Second Matrix</param>
+        /// <returns>True if they are not equal, false otherwise</returns>
+        public static bool operator!= (GLMatrix4D one, GLMatrix4D two)
         {
             for( int i = 0; i < 16; i++ )
             {
@@ -141,11 +208,19 @@ namespace MathGl
                     return true;
                 }
             }
+            
             return false;
         }
+        
+        /// <summary>
+        /// Equality function override
+        /// </summary>
+        /// <param name="twoobject">Matrix object</param>
+        /// <returns>True if they are equal, false otherwise</returns>
         public override bool Equals( object twoobject )
         {
-            GLMatrix4d two = twoobject as GLMatrix4d;
+            GLMatrix4D two = twoobject as GLMatrix4D;
+           
             for( int i = 0; i < 16; i++ )
             {
                 if( m[i] != two.m[i] )
@@ -153,17 +228,18 @@ namespace MathGl
                     return false;
                 }
             }
+            
             return true;
         }
     
-        //!Direct access to the matrix elements, just remember they are in column major format!!
+        /// <summary>
+        /// Direct access to the matrix elements
+        /// </summary>
+        /// <remarks>just remember they are in column major format</remarks>
         public virtual double this[ int ind ]{
             get{
                 return m[ ind ];
             }
-        //    set{
-         //       base[ ind ] = value;
-          //  }
         }
     
         //!Implicit cast vector access as suggested by maquinn
@@ -171,65 +247,108 @@ namespace MathGl
     
         //!Implicit cast vector access as suggested by maquinn
         //operator double*(void) { return m; }
-    
-        //!Multiply this matrix by a scalar
-        public static GLMatrix4d operator*( GLMatrix4d mat, double val)
+
+        /// <summary>
+        /// Multiply this matrix by a scalar
+        /// </summary>
+        /// <param name="mat">Matrix</param>
+        /// <param name="val">Scalar</param>
+        /// <returns>New resulting matrix</returns>
+        public static GLMatrix4D operator*( GLMatrix4D mat, double val)
         {
-            GLMatrix4d result = new GLMatrix4d();
-            for(byte i = 0; i < 16; ++i)
+            GLMatrix4D result = new GLMatrix4D();
+           
+            for( byte i = 0; i < 16; ++i )
             {
                 result.m[i] = mat.m[i] * val;
             }
+            
             return result;
         }
-        public static GLMatrix4d operator*( double val, GLMatrix4d mat )
+        
+        /// <summary>
+        /// Multiply this matrix by a scalar
+        /// </summary>
+        /// <param name="val">Scalar</param>
+        /// <param name="mat">Matrix</param>
+        /// <returns>New resulting matrix</returns>
+        public static GLMatrix4D operator*( double val, GLMatrix4D mat )
         {
-            GLMatrix4d result = new GLMatrix4d();
-            for(byte i = 0; i < 16; ++i)
+            GLMatrix4D result = new GLMatrix4D();
+           
+            for( byte i = 0; i < 16; ++i )
             {
                 result.m[i] = mat.m[i] * val;
             }
+            
             return result;
         }
     
-        //!Divide this matrix by a scalar
-        public static GLMatrix4d operator/( GLMatrix4d mat, double val)
+        /// <summary>
+        /// Divide this matrix by a scalar
+        /// </summary>
+        /// <param name="mat">Matrix</param>
+        /// <param name="val">Scalar</param>
+        /// <returns>New resulting matrix</returns>
+        public static GLMatrix4D operator/( GLMatrix4D mat, double val)
         {
-            GLMatrix4d result = new GLMatrix4d();
-            for(byte i = 0; i < 16; ++i)
+            GLMatrix4D result = new GLMatrix4D();
+           
+            for( byte i = 0; i < 16; ++i )
             {
                 result.m[i] = mat.m[i] / val;
             }
+            
             return result;
         }
     
-        //!Add a matrix to this matrix
-        public static GLMatrix4d operator+( GLMatrix4d one, GLMatrix4d two)
+        /// <summary>
+        /// Add two matrices together
+        /// </summary>
+        /// <param name="one">Left Matrix</param>
+        /// <param name="two">Right Matrix</param>
+        /// <returns>New resulting matrix</returns>
+        public static GLMatrix4D operator+( GLMatrix4D one, GLMatrix4D two)
         {
-            GLMatrix4d result = new GLMatrix4d();
-            for(byte i = 0; i < 16; ++i)
+            GLMatrix4D result = new GLMatrix4D();
+           
+            for( byte i = 0; i < 16; ++i )
             {
                 result.m[i] = one.m[i] + two.m[i];
             }
+            
             return result;
         }
     
-        //!Subtract a matrix from this matrix
-        public static GLMatrix4d operator-( GLMatrix4d one, GLMatrix4d two)
+       /// <summary>
+        /// Subtract one matrix from another
+        /// </summary>
+        /// <param name="one">Left Matrix</param>
+        /// <param name="two">Right Matrix</param>
+        /// <returns>New resulting matrix</returns>
+        public static GLMatrix4D operator-( GLMatrix4D one, GLMatrix4D two)
         {
-            GLMatrix4d result = new GLMatrix4d();
-            for(byte i = 0; i < 16; ++i)
+            GLMatrix4D result = new GLMatrix4D();
+            
+            for( byte i = 0; i < 16; ++i )
             {
                 result.m[i] = one.m[i] - two.m[i];
             }
+            
             return result;
         }
     
-        //!Get the matrix dot product, most commonly used form of matrix multiplication
-        public static GLMatrix4d operator* ( GLMatrix4d one, GLMatrix4d two )
+        /// <summary>
+        /// Get the matrix dot product, the most commonly used form of matrix multiplication
+        /// </summary>
+        /// <param name="one">Left Matrix</param>
+        /// <param name="two">Right Matrix</param>
+        /// <returns>New resulting matrix</returns>
+        public static GLMatrix4D operator* ( GLMatrix4D one, GLMatrix4D two )
         {
-            GLMatrix4d ret = new GLMatrix4d();
-            for(byte j = 0; j < 4; ++j)
+            GLMatrix4D ret = new GLMatrix4D();
+           
+            for( byte j = 0; j < 4; ++j )
             {
                 ret.m[j] = one.m[j]*two.m[0]
                          + one.m[j+4]*two.m[1]
@@ -251,14 +370,20 @@ namespace MathGl
                             + one[j+8]*two.m[14]
                             + one[j+12]*two.m[15];
             }
+            
             return ret;
         }
     
-        //!Apply the matrix dot product to this matrix
-        //!unrolling by sebastien bloc
-        public GLMatrix4d mult3by3(GLMatrix4d mat)
+        /// <summary>
+        /// Apply the matrix dot product to this matrix
+        /// </summary>
+        /// <param name="mat">Right Side Matrix</param>
+        /// <returns>This Matrix</returns>
+        /// <remarks>unrolling by sebastien bloc</remarks>
+        public GLMatrix4D Multiply3By3( GLMatrix4D mat )
         {
-            GLMatrix4d temp = new GLMatrix4d(this);
+            GLMatrix4D temp = new GLMatrix4D( this );
+            
             m[0] = temp.m[0]*mat.m[0]+temp.m[4]*mat.m[1]+temp.m[8]*mat.m[2];
             m[4] = temp.m[0]*mat.m[4]+temp.m[4]*mat.m[5]+temp.m[8]*mat.m[6];
             m[8] = temp.m[0]*mat.m[8]+temp.m[4]*mat.m[9]+temp.m[8]*mat.m[10];
@@ -274,77 +399,121 @@ namespace MathGl
             m[3] = temp.m[3]*mat.m[0]+temp.m[7]*mat.m[1]+temp.m[11]*mat.m[2];
             m[7] = temp.m[3]*mat.m[4]+temp.m[7]*mat.m[5]+temp.m[11]*mat.m[6];
             m[11] = temp.m[3]*mat.m[8]+temp.m[7]*mat.m[9]+temp.m[11]*mat.m[10];
+           
             return this;
         }
     
-        //!Get the matrix vector dot product, used to transform vertecies
-        public static GLVector4d operator* ( GLMatrix4d mat, GLVector4d vec)
+        /// <summary>
+        /// Get the matrix vector dot product, used to transform vertices
+        /// </summary>
+        /// <param name="mat">Left Side Matrix</param>
+        /// <param name="vec">Right Side Vector</param>
+        /// <returns>Resulting Vector</returns>
+        public static GLVector4d operator* ( GLMatrix4D mat, GLVector4d vec)
         {
             GLVector4d ret = new GLVector4d();
-            for(byte j = 0; j < 4; ++j)
+           
+            for( byte j = 0; j < 4; ++j )
             {
                 ret.val[j] = vec.x*mat[j]
                            + vec.y*mat[j+4]
                            + vec.z*mat[j+8]
                            + vec.w*mat[j+12];
             }
+            
             return ret;
         }
     
-        //!Get the matrix vector dot product with w = 1, use for transforming non 4D vectors
-        public static GLVector3d operator* ( GLMatrix4d mat, GLVector3d vec)
+        /// <summary>
+        /// Get the matrix vector dot product with w = 1, use for transforming non 4D vectors
+        /// </summary>
+        /// <param name="mat">Left Side Matrix</param>
+        /// <param name="vec">Right Side Vector</param>
+        /// <returns>Resulting  vector</returns>
+        public static GLVector3d operator* ( GLMatrix4D mat, GLVector3d vec)
         {
             GLVector3d ret = new GLVector3d();
-            for(byte j = 0; j < 3; ++j)
-                for(byte i = 0; i < 3; ++i)
+            for( byte j = 0; j < 3; ++j )
+            {
+            	for( byte i = 0; i < 3; ++i )
+            	{
                     ret.val[j] += vec.val[i]*mat.m[j+i*4]; //scale and rotate disregarding w scaling
+            	}
+            }
     
-            for(byte i = 0; i < 3; ++i)
+            for( byte i = 0; i < 3; ++i )
+            {
                 ret.val[i] += mat.m[i+3*4]; //translate
+            }
     
             //do w scaling
             double w = mat.m[15];
-            for(byte i = 0; i < 3; ++i)
+            for( byte i = 0; i < 3; ++i )
+            {
                 w += vec.val[i]*mat.m[3+i*4];
+            }
     
             double resip = 1/w;
     
-            for(byte i = 0; i < 3; ++i)
+            for( byte i = 0; i < 3; ++i )
+            {
                 ret.val[i] *= resip;
+            }
     
             return ret;
         }
     
     
         //!Transpose the matrix
-        public GLMatrix4d transpose()
+        /// <summary>
+        /// Transpose this matrix
+        /// </summary>
+        /// <returns>This matrix in transposed form</returns>
+        public GLMatrix4D Transpose()
         {
             double temp;
-            for( int i = 0; i < 4; ++i)
-                for( int j = 0; j < 4; ++j)
+            
+            for( int i = 0; i < 4; ++i ) 
+            {
+                for( int j = 0; j < 4; ++j )
                 {
                     temp = m[j+i*4];
                     m[j+i*4] = m[i+j*4];
                     m[i+j*4] = temp;
-                };
+                }
+            }
+            
             return this;
         }
     
         //!Return the transpose
-        public GLMatrix4d getTranspose()
+        
+        /// <summary>
+        /// Get a transposed matrix
+        /// </summary>
+        /// <returns>A new matrix that is the transposed form of this</returns>
+        public GLMatrix4D GetTranspose()
         {
-            GLMatrix4d temp = new GLMatrix4d();
+            GLMatrix4D temp = new GLMatrix4D();
+           
             for( int i = 0; i < 4; ++i)
+            {
                 for( int j = 0; j < 4; ++j)
+                {
                     temp.m[j+i*4] = m[i+j*4];
+                }
+            }
+            
             return temp;
         }
     
-        //!Special glMatricies
-        //!Identity matrix
-        public static GLMatrix4d identity()
+        /// <summary>
+        /// Identity matrix
+        /// </summary>
+        /// <returns>A new identity matrix</returns>
+        public static GLMatrix4D Identity()
         {
-            GLMatrix4d ret = new GLMatrix4d();
+            GLMatrix4D ret = new GLMatrix4D();
     
             ret.m[0] = 1;   ret.m[4] = 0;   ret.m[8]  = 0;  ret.m[12] = 0;
             ret.m[1] = 0;   ret.m[5] = 1;   ret.m[9]  = 0;  ret.m[13] = 0;
@@ -354,8 +523,11 @@ namespace MathGl
             return ret;
         }
     
-        //!Make this an identity matrix
-        public GLMatrix4d loadIdentity()
+        /// <summary>
+        /// Make this an identity matrix
+        /// </summary>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D LoadIdentity()
         {
             m[0] = 1;   m[4] = 0;   m[8]  = 0;  m[12] = 0;
             m[1] = 0;   m[5] = 1;   m[9]  = 0;  m[13] = 0;
@@ -365,19 +537,30 @@ namespace MathGl
             return this;
         }
     
-        //!Make this an OpenGL rotation matrix
-        public GLMatrix4d loadRotate(double angle, double x, double y, double z)
+        //!
+        /// <summary>
+        /// Make this an OpenGL rotation matrix
+        /// </summary>
+        /// <param name="angle">Angle of the rotation</param>
+        /// <param name="x">X value of the rotation vector</param>
+        /// <param name="y">Y value of the rotation vector</param>
+        /// <param name="z">Z value of the rotation vector</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D LoadRotate( double angle, double x, double y, double z )
         {
             double magSqr = x*x + y*y + z*z;
-            if(magSqr != 1.0)
+           
+            if( magSqr != 1.0 )
             {
-                double mag = Math.Sqrt(magSqr);
+                double mag = Math.Sqrt( magSqr );
                 x/=mag;
                 y/=mag;
                 z/=mag;
             }
-            double c = Math.Cos(angle*Math.PI/180);
-            double s = Math.Sin(angle*Math.PI/180);
+            
+            double c = Math.Cos( angle*Math.PI/180 );
+            double s = Math.Sin( angle*Math.PI/180 );
+            
             m[0] = x*x*(1-c)+c;
             m[1] = y*x*(1-c)+z*s;
             m[2] = z*x*(1-c)-y*s;
@@ -401,12 +584,17 @@ namespace MathGl
             return this;
         }
     
-        //!Load rotate[X,Y,Z,XYZ] specialisations by sebastien bloc
-        //!Make this an OpenGL rotation matrix: same as loadRotate(angle,1,0,0)
-        public GLMatrix4d loadRotateX(double angle)
+        /// <summary>
+        /// Make this an X rotation matrix
+        /// </summary>
+        /// <param name="angle">Angle of rotation</param>
+        /// <returns>This matrix</returns>
+        /// <remarks>Load rotate[X,Y,Z,XYZ] specialisations by sebastien bloc. Same as loadRotate(angle,1,0,0)</remarks>
+        public GLMatrix4D LoadRotateX( double angle )
         {
-            double c = Math.Cos(angle*Math.PI/180);
-            double s = Math.Sin(angle*Math.PI/180);
+            double c = Math.Cos( angle*Math.PI/180 );
+            double s = Math.Sin( angle*Math.PI/180 );
+            
             m[0] = 1;
             m[1] = 0;
             m[2] = 0;
@@ -430,11 +618,17 @@ namespace MathGl
             return this;
         }
     
-        //!Make this an OpenGL rotation matri0: same as loadRotate(angle,0,1,0)
-        public GLMatrix4d loadRotateY(double angle)
+         /// <summary>
+        /// Make this an Y rotation matrix
+        /// </summary>
+        /// <param name="angle">Angle of rotation</param>
+        /// <returns>This matrix</returns>
+        /// <remarks>Load rotate[X,Y,Z,XYZ] specialisations by sebastien bloc. Same as loadRotate(angle,0,1,0)</remarks>
+        public GLMatrix4D loadRotateY( double angle )
         {
-            double c = Math.Cos(angle*Math.PI/180);
-            double s = Math.Sin(angle*Math.PI/180);
+            double c = Math.Cos( angle*Math.PI/180 );
+            double s = Math.Sin( angle*Math.PI/180 );
+            
             m[0] = c;
             m[1] = 0;
             m[2] = -s;
@@ -458,11 +652,17 @@ namespace MathGl
             return this;
         }
     
-        //!Make this an OpenGL rotation matrix: same as loadRotateZ(angle,0,0,1)
-        public GLMatrix4d loadRotateZ(double angle)
+         /// <summary>
+        /// Make this an Z rotation matrix
+        /// </summary>
+        /// <param name="angle">Angle of rotation</param>
+        /// <returns>This matrix</returns>
+        /// <remarks>Load rotate[X,Y,Z,XYZ] specialisations by sebastien bloc. Same as loadRotate(angle,0,0,1)</remarks>
+        public GLMatrix4D loadRotateZ( double angle )
         {
-            double c = Math.Cos(angle*Math.PI/180);
-            double s = Math.Sin(angle*Math.PI/180);
+            double c = Math.Cos( angle*Math.PI/180 );
+            double s = Math.Sin( angle*Math.PI/180 );
+            
             m[0] = c;
             m[1] = s;
             m[2] = 0;
@@ -486,53 +686,92 @@ namespace MathGl
             return this;
         }
     
-        //!Apply an OpenGL rotation matrix to this
-        public GLMatrix4d applyRotate(double angle, double x, double y, double z)
+        /// <summary>
+        /// Apply a rotation to this matrix
+        /// </summary>
+        /// <param name="angle">Angle of rotation</param>
+        /// <param name="x">X value of the rotation vector</param>
+        /// <param name="y">Y value of the rotation vector</param>
+        /// <param name="z">Z value of the rotation vector</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D applyRotate( double angle, double x, double y, double z )
         {
-            GLMatrix4d temp = new GLMatrix4d();
-            temp.loadRotate(angle,x,y,z);
-            return mult3by3(temp);
+            GLMatrix4D temp = new GLMatrix4D();
+            temp.LoadRotate( angle,x,y,z );
+            
+            return Multiply3By3( temp );
         }
     
-        //!Apply rotate[X,Y,Z,XYZ] specialisations by sebastien bloc
-        //!Apply an OpenGL rotation matrix to this
-        public GLMatrix4d applyRotateX(double angle)
+        /// <summary>
+        /// Apply a X rotation to this matrix
+        /// </summary>
+        /// <param name="angle">Angle of rotation</param>
+        /// <returns>This matrix</returns>
+        /// <remarks>Apply rotate[X,Y,Z,XYZ] specialisations by sebastien bloc</remarks>
+        public GLMatrix4D ApplyRotateX( double angle )
         {
-            GLMatrix4d temp = new GLMatrix4d();
-            temp.loadRotateX(angle);
-            return mult3by3(temp);
+            GLMatrix4D temp = new GLMatrix4D();
+            temp.LoadRotateX( angle );
+            
+            return Multiply3By3( temp );
         }
     
-        //!Apply an OpenGL rotation matrix to this
-        public GLMatrix4d applyRotateY(double angle)
+        /// <summary>
+        /// Apply a Y rotation to this matrix
+        /// </summary>
+        /// <param name="angle">Angle of rotation</param>
+        /// <returns>This matrix</returns>
+        /// <remarks>Apply rotate[X,Y,Z,XYZ] specialisations by sebastien bloc</remarks>
+        public GLMatrix4D ApplyRotateY( double angle )
         {
-            GLMatrix4d temp = new GLMatrix4d();
-            temp.loadRotateY(angle);
-            return mult3by3(temp);
+            GLMatrix4D temp = new GLMatrix4D();
+            temp.loadRotateY( angle );
+            
+            return Multiply3By3( temp );
         }
     
-        //!Apply an OpenGL rotation matrix to this
-        public GLMatrix4d applyRotateZ(double angle)
+        /// <summary>
+        /// Apply a Z rotation to this matrix
+        /// </summary>
+        /// <param name="angle">Angle of rotation</param>
+        /// <returns>This matrix</returns>
+        /// <remarks>Apply rotate[X,Y,Z,XYZ] specialisations by sebastien bloc</remarks>
+        public GLMatrix4D ApplyRotateZ( double angle )
         {
-            GLMatrix4d temp = new GLMatrix4d();
-            temp.loadRotateZ(angle);
-            return mult3by3(temp);
+            GLMatrix4D temp = new GLMatrix4D();
+            temp.loadRotateZ( angle );
+            
+            return Multiply3By3( temp );
         }
     
-        //!Apply an OpenGL rotation matrix to this
-        public GLMatrix4d applyRotateXYZ(double x,double y,double z)
+        /// <summary>
+        /// Apply a XYZ rotation to this matrix
+        /// </summary>
+        /// <param name="angle">Angle of rotation around X axis</param>
+        /// <param name="angle">Angle of rotation around Y axis</param>
+        /// <param name="angle">Angle of rotation around Z axis</param>
+        /// <returns>This matrix</returns>
+        /// <remarks>Apply rotate[X,Y,Z,XYZ] specialisations by sebastien bloc</remarks>
+        public GLMatrix4D ApplyRotateXYZ( double x,double y,double z )
         {
-            GLMatrix4d temp = new GLMatrix4d();
-            temp.loadRotateX(x);
-            mult3by3(temp);
-            temp.loadRotateY(y);
-            mult3by3(temp);
-            temp.loadRotateZ(z);
-            return mult3by3(temp);
+            GLMatrix4D temp = new GLMatrix4D();
+            temp.LoadRotateX( x );
+            Multiply3By3( temp );
+            temp.loadRotateY( y );
+            Multiply3By3( temp );
+            temp.loadRotateZ( z );
+            
+            return Multiply3By3( temp );
         }
     
-        //!Make this an OpenGL scale matrix
-        public GLMatrix4d loadScale(double x, double y, double z)
+        /// <summary>
+        /// Make this an OpenGL scale matrix
+        /// </summary>
+        /// <param name="x">X scale value</param>
+        /// <param name="y">Y scale value</param>
+        /// <param name="z">Z scale value</param>
+        /// <returns>This Matrix</returns>
+        public GLMatrix4D LoadScale( double x, double y, double z )
         {
             m[0] = x;   m[4] = 0;   m[8]  = 0;  m[12] = 0;
             m[1] = 0;   m[5] = y;   m[9]  = 0;  m[13] = 0;
@@ -542,50 +781,81 @@ namespace MathGl
             return this;
         }
     
-        //!Apply an OpenGL scale matrix to this
-        public GLMatrix4d applyScale(double x, double y)
+        /// <summary>
+        /// Apply an XY scale to this matrix
+        /// </summary>
+        /// <param name="x">X scale value</param>
+        /// <param name="y">Y scale value</param>
+        /// <returns>This Matrix</returns>
+        public GLMatrix4D ApplyScale( double x, double y )
         {
             //improved version
             //assuming z = 1
             m[0]*=x;    m[1]*=x;    m[2]*=x;    m[3]*=x;
             m[4]*=y;    m[5]*=y;    m[6]*=y;    m[7]*=y;
+            
             return this;
         }
     
-        //!Apply an OpenGL scale matrix to this
-        public GLMatrix4d applyScale(double x, double y, double z)
+        /// <summary>
+        /// Apply an XYZ scale to this matrix
+        /// </summary>
+        /// <param name="x">X scale value</param>
+        /// <param name="y">Y scale value</param>
+        /// <param name="z">Z scale value</param>
+        /// <returns>This Matrix</returns>
+        public GLMatrix4D ApplyScale( double x, double y, double z )
         {
             //improved version
             m[0]*=x;    m[1]*=x;    m[2]*=x;    m[3]*=x;
             m[4]*=y;    m[5]*=y;    m[6]*=y;    m[7]*=y;
             m[8]*=z;    m[9]*=z;    m[10]*=z;   m[11]*=z;
+            
             return this;
         }
     
-        //!Apply an OpenGL scale matrix to this
-        public GLMatrix4d applyScale( GLVector2d scale)
+         /// <summary>
+        /// Apply an XY scale vector to this matrix
+        /// </summary>
+        /// <param name="scale">2D scale vector</param>
+        /// <returns>This Matrix</returns>
+        public GLMatrix4D ApplyScale( GLVector2d scale)
         {
             //improved version
             //Assuming z = 1
            m[0]*=scale.x;    m[1]*=scale.x;    m[2]*=scale.x;    m[3]*=scale.x;
            m[4]*=scale.y;    m[5]*=scale.y;    m[6]*=scale.y;    m[7]*=scale.y;
+           
            return this;
         }
     
-        //!Apply an OpenGL scale matrix to this
-        public GLMatrix4d applyScale( GLVector3d scale)
+        /// <summary>
+        /// Apply an XYZ scale vector to this matrix
+        /// </summary>
+        /// <param name="scale">3D scale vector</param>
+        /// <returns>This Matrix</returns>
+        public GLMatrix4D applyScale( GLVector3d scale)
         {
             //improved version
             m[0]*=scale.x;    m[1]*=scale.x;    m[2]*=scale.x;    m[3]*=scale.x;
             m[4]*=scale.y;    m[5]*=scale.y;    m[6]*=scale.y;    m[7]*=scale.y;
             m[8]*=scale.z;    m[9]*=scale.z;    m[10]*=scale.z;   m[11]*=scale.z;
+            
             return this;
         }
     
         //!Make this an OpenGL translate matrix
-        public GLMatrix4d loadTranslate(double x, double y, double z)
+        /// <summary>
+        /// Make this a translation matrix
+        /// </summary>
+        /// <param name="x">X translation</param>
+        /// <param name="y">Y translation</param>
+        /// <param name="z">Z translation</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D LoadTranslation( double x, double y, double z )
         {
-            m[0] = 1;   m[4] = 0;   m[8]  = 0;  m[12] = x;
+           
+        	m[0] = 1;   m[4] = 0;   m[8]  = 0;  m[12] = x;
             m[1] = 0;   m[5] = 1;   m[9]  = 0;  m[13] = y;
             m[2] = 0;   m[6] = 0;   m[10] = 1;  m[14] = z;
             m[3] = 0;   m[7] = 0;   m[11] = 0;  m[15] = 1;
@@ -593,54 +863,85 @@ namespace MathGl
             return this;
         }
     
-        //!Apply an OpenGL translate matrix to this
-        public GLMatrix4d applyTranslate(double x, double y)
+        /// <summary>
+        /// Apply a XY translation to this matrix
+        /// </summary>
+        /// <param name="x">X translation</param>
+        /// <param name="y">Y translation</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D ApplyTranslation( double x, double y )
         {
             //improved version
             //assuming z = 0
             m[12] += m[0]*x + m[4]*y;
             m[13] += m[1]*x + m[5]*y;
             m[14] += m[2]*x + m[6]*y;
+            
             return this;
         }
     
-        //!Apply an OpenGL translate matrix to this
-        public GLMatrix4d applyTranslate(double x, double y, double z)
+        /// <summary>
+        /// Apply a XY translation to this matrix
+        /// </summary>
+        /// <param name="x">X translation</param>
+        /// <param name="y">Y translation</param>
+        /// <param name="z">Z translation</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D ApplyTranslation( double x, double y, double z )
         {
             //improved version
             m[12] += m[0]*x + m[4]*y + m[8]*z;
             m[13] += m[1]*x + m[5]*y + m[9]*z;
             m[14] += m[2]*x + m[6]*y + m[10]*z;
+            
             return this;
         }
     
-        //!Apply an OpenGL translate matrix to this
-        public GLMatrix4d applyTranslate( GLVector2d trans)
+        /// <summary>
+        /// Apply a XY translation to this matrix
+        /// </summary>
+        /// <param name="trans">2D vector</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D ApplyTranslation( GLVector2d trans)
         {
             ////improved version
             ////assuming z = 0
             m[12] += m[0]*trans.x + m[4]*trans.y;
             m[13] += m[1]*trans.x + m[5]*trans.y;
             m[14] += m[2]*trans.x + m[6]*trans.y;
+            
             return this;
         }
     
-        //!Apply an OpenGL translate matrix to this
-        public GLMatrix4d applyTranslate( GLVector3d trans)
+        /// <summary>
+        /// Apply a XYZ translation to this matrix
+        /// </summary>
+        /// <param name="trans">3D vector</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D applyTranslate( GLVector3d trans)
         {
             //improved version
             m[12] += m[0]*trans.x + m[4]*trans.y + m[8]*trans.z;
             m[13] += m[1]*trans.x + m[5]*trans.y + m[9]*trans.z;
             m[14] += m[2]*trans.x + m[6]*trans.y + m[10]*trans.z;
+            
             return this;
         }
     
-        //!OpenGL frustum matrix
-        public static GLMatrix4d glFrustum(double left, double right,
-                           double bottom, double top,
-                       double zNear, double zFar)
+        
+        /// <summary>
+        /// Create a frustrum matrix
+        /// </summary>
+        /// <param name="left">Left value</param>
+        /// <param name="right">Right value</param>
+        /// <param name="bottom">Bottom value</param>
+        /// <param name="top">Top value</param>
+        /// <param name="zNear">Near z plane distance</param>
+        /// <param name="zFar">Far z plane distance</param>
+        /// <returns>Frustrum matrix</returns>
+        public static GLMatrix4D glFrustrum( double left, double right, double bottom, double top, double zNear, double zFar )
         {
-            GLMatrix4d ret = new GLMatrix4d();
+            GLMatrix4D ret = new GLMatrix4D();
             ret.m[0] = 2*zNear/(right-left);
             ret.m[1] = 0;
             ret.m[2] = 0;
@@ -664,10 +965,18 @@ namespace MathGl
             return ret;
         }
     
-        //!Make this with an OpenGL frustum matrix
-        public GLMatrix4d loadFrustum(double left, double right,
-                         double bottom, double top,
-                     double zNear, double zFar)
+        
+        /// <summary>
+        /// Make this a frustrum matrix
+        /// </summary>
+        /// <param name="left">Left value</param>
+        /// <param name="right">Right value</param>
+        /// <param name="bottom">Bottom value</param>
+        /// <param name="top">Top value</param>
+        /// <param name="zNear">Near z plane distance</param>
+        /// <param name="zFar">Far z plane distance</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D LoadFrustum( double left, double right, double bottom, double top, double zNear, double zFar )
         {
             m[0] = 2*zNear/(right-left);
             m[1] = 0;
@@ -692,12 +1001,19 @@ namespace MathGl
             return this;
         }
     
-        //!OpenGL orthogonal matrix
-        public static GLMatrix4d glOrtho(double left, double right,
-                        double bottom, double top,
-                    double zNear, double zFar)
+        /// <summary>
+        /// Make an orthogonal matrix
+        /// </summary>
+        /// <param name="left">Left value</param>
+        /// <param name="right">Right value</param>
+        /// <param name="bottom">Bottom value</param>
+        /// <param name="top">Top value</param>
+        /// <param name="zNear">Near z plane distance</param>
+        /// <param name="zFar">Far z plane distance</param>
+        /// <returns>Frustrum matrix</returns>
+        public static GLMatrix4D Orthogonal( double left, double right, double bottom, double top, double zNear, double zFar )
         {
-            GLMatrix4d ret = new GLMatrix4d();
+            GLMatrix4D ret = new GLMatrix4D();
     
             ret.m[0] = 2/(right-left);
             ret.m[1] = 0;
@@ -722,10 +1038,17 @@ namespace MathGl
             return ret;
         }
     
-        //!OpenGL orthogonal matrix
-        public GLMatrix4d loadOrtho(double left, double right,
-                        double bottom, double top,
-                    double zNear, double zFar)
+        /// <summary>
+        /// Make this an orthogonal matrix
+        /// </summary>
+        /// <param name="left">Left value</param>
+        /// <param name="right">Right value</param>
+        /// <param name="bottom">Bottom value</param>
+        /// <param name="top">Top value</param>
+        /// <param name="zNear">Near z plane distance</param>
+        /// <param name="zFar">Far z plane distance</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D LoadOrthogonal(double left, double right, double bottom, double top, double zNear, double zFar )
         {
             m[0] = 2/(right-left);
             m[1] = 0;
@@ -750,8 +1073,14 @@ namespace MathGl
             return this;
         }
     
-        //!OpenGL View Matrix.
-        public GLMatrix4d loadView( GLVector3d front, GLVector3d up, GLVector3d side)
+        /// <summary>
+        /// Make this a view matrix
+        /// </summary>
+        /// <param name="front">Front vector</param>
+        /// <param name="up">Up vector</param>
+        /// <param name="side">Side vector</param>
+        /// <returns>This matrix</returns>
+        public GLMatrix4D LoadView( GLVector3d front, GLVector3d up, GLVector3d side )
         {
             m[0] = side.x;
             m[1] = up.x;
@@ -776,94 +1105,172 @@ namespace MathGl
             return this;
         }
     
-        //!Row major order is expected to conform with standard output
-        // here, we create a new constructor to handle strings
-        public GLMatrix4d( string inputstring )
-        {
-            string[]splitinputstring = inputstring.Split(new char[]{'\n'});
-            for(int j = 0; j < 4; ++j)
-            {
-                string[]splitsingleline = splitinputstring[j].Split( new char[]{' '} );
-                for(int i = 0; i < 4; ++i)
-                {
-                    m[i*4+j] = Convert.ToDouble( splitsingleline[i] );
-                }
-            }
-        }
+        
+       
     
-        //!Row major order is expected to conform with standard input
+        /// <summary>
+        /// Get a string version of this matrix
+        /// </summary>
+        /// <returns>String representation</returns>
+        /// <remarks>Row major order is expected to conform with standard input</remarks>
         public override string ToString()
         {
             string outstring = "";
-            for(int j = 0; j < 4; ++j)
+            for( int j = 0; j < 4; ++j )
             {
-                for(int i = 0; i < 4; ++i)
+                for( int i = 0; i < 4; ++i )
                 {
                     outstring += m[i*4+j] + " ";
                 }
                 outstring += "\n";
             }
+          
             return outstring;
         }
     
-        //*Cofactor maker after the looping determinant theory I'm sure we all learnt in high-school
-        //  *  factor1 |   ^          |
-        //  *  ------------|----------v----
-        //  *          | major   |
-        //  *          |         |  minor
-        //  *              ^          |
-        //  *  factor2 |   |          |
-        //  *  ------------|----------v----
-        //  *          | major   |
-        //  *          |         |  minor
-        //  *              ^          |
-        //  *  factor3 |   |          |
-        //  *  ------------|----------v----
-        //  *          | major   |
-        //  *          |         |  minor
-        //  *              ^          |
-        //  *              |          v
-         
-        double cofactor_maker(double f1,double mj1,double mi1, double f2,double mj2,double mi2, double f3,double mj3,double mi3)
+        /// <summary>
+        /// Helper function for creating cofactors
+        /// </summary>
+        /// <param name="f1">Factor 1</param>
+        /// <param name="mj1">Major 1</param>
+        /// <param name="mi1">Minor 1</param>
+        /// <param name="f2">Factor 2</param>
+        /// <param name="mj2">Major 2</param>
+        /// <param name="mi2">Minor 2</param>
+        /// <param name="f3">Factor 3</param>
+        /// <param name="mj3">Major 3</param>
+        /// <param name="mi3">Minor 3</param>
+        /// <returns>Cofactor</returns>
+        /// <remarks>
+        ///  Cofactor maker after the looping determinant theory I'm sure we all learnt in high-school
+        ///  *  factor1 |   ^          |
+        ///  *  ------------|----------v----
+        ///  *          | major   |
+        ///  *          |         |  minor
+        ///  *              ^          |
+        ///  *  factor2 |   |          |
+        ///  *  ------------|----------v----
+        ///  *          | major   |
+        ///  *          |         |  minor
+        ///  *              ^          |
+        ///  *  factor3 |   |          |
+        ///  *  ------------|----------v----
+        ///  *          | major   |
+        ///  *          |         |  minor
+        ///  *              ^          |
+        ///  *              |          v
+        /// </remarks>
+        private double CofactorHelper( double f1,double mj1,double mi1, double f2,double mj2,double mi2, double f3,double mj3,double mi3 )
         {
             return f1*(mj1*mi1-mj2*mi3) + f2*(mj2*mi2-mj3*mi1) + f3*(mj3*mi3-mj1*mi2);
         }
     
         //T cofactorm0()const { return m[5]*(m[10]*m[15]-m[11]*m[14])+m[6]*(m[11]*m[13]-m[8]*m[15])+m[7]*(m[8]*m[14]*m[10]*m[13]);  }
-        //!Cofactor of m[0]
-        double cofactorm0() { return cofactor_maker(m[5],m[10],m[15], m[6],m[11],m[13], m[7],m[9],m[14]); }
-        //!Cofactor of m[1]
-        double cofactorm1() { return cofactor_maker(m[6],m[11],m[12], m[7],m[8],m[14], m[4],m[10],m[15]); }
-        //!Cofactor of m[2]
-        double cofactorm2() { return cofactor_maker(m[7],m[8],m[13], m[4],m[9],m[15], m[5],m[11],m[12]); }
-        //!Cofactor of m[3]
-        double cofactorm3() { return cofactor_maker(m[4],m[9],m[14], m[5],m[10],m[12], m[6],m[8],m[13]); }
+        
+        
+        /// <summary>
+        /// Cofactor of m[0]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM0() { return CofactorHelper(m[5],m[10],m[15], m[6],m[11],m[13], m[7],m[9],m[14]); }
+        
+        /// <summary>
+        /// Cofactor of m[1]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM1() { return CofactorHelper(m[6],m[11],m[12], m[7],m[8],m[14], m[4],m[10],m[15]); }
+        
+        /// <summary>
+        /// Cofactor of m[2]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM2() { return CofactorHelper(m[7],m[8],m[13], m[4],m[9],m[15], m[5],m[11],m[12]); }
+        
+        /// <summary>
+        /// Cofactor of m[3]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM3() { return CofactorHelper(m[4],m[9],m[14], m[5],m[10],m[12], m[6],m[8],m[13]); }
     
-        //!Cofactor of m[4]
-        double cofactorm4() { return cofactor_maker(m[9],m[14],m[3], m[10],m[15],m[1], m[11],m[13],m[2]); }
-        //!Cofactor of m[5]
-        double cofactorm5() { return cofactor_maker(m[10],m[15],m[0], m[11],m[12],m[2], m[8],m[14],m[3]); }
-        //!Cofactor of m[6]
-        double cofactorm6() { return cofactor_maker(m[11],m[12],m[1], m[8],m[13],m[3], m[9],m[15],m[0]); }
-        //!Cofactor of m[7]
-        double cofactorm7() { return cofactor_maker(m[8],m[13],m[2], m[9],m[14],m[0], m[10],m[12],m[1]); }
+        /// <summary>
+        /// Cofactor of m[4]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM4() { return CofactorHelper(m[9],m[14],m[3], m[10],m[15],m[1], m[11],m[13],m[2]); }
+        
+        /// <summary>
+        /// Cofactor of m[5]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM5() { return CofactorHelper(m[10],m[15],m[0], m[11],m[12],m[2], m[8],m[14],m[3]); }
+        
+        /// <summary>
+        /// Cofactor of m[6]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM6() { return CofactorHelper(m[11],m[12],m[1], m[8],m[13],m[3], m[9],m[15],m[0]); }
+        
+        /// <summary>
+        /// Cofactor of m[7]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM7() { return CofactorHelper(m[8],m[13],m[2], m[9],m[14],m[0], m[10],m[12],m[1]); }
     
-        //!Cofactor of m[8]
-        double cofactorm8() { return cofactor_maker(m[13],m[2],m[7], m[14],m[3],m[5], m[15],m[1],m[6]); }
-        //!Cofactor of m[9]
-        double cofactorm9() { return cofactor_maker(m[14],m[13],m[4], m[15],m[0],m[6], m[12],m[2],m[7]); }
-        //!Cofactor of m[10]
-        double cofactorm10() { return cofactor_maker(m[15],m[0],m[5], m[12],m[1],m[7], m[13],m[3],m[4]); }
-        //!Cofactor of m[11]
-        double cofactorm11() { return cofactor_maker(m[12],m[1],m[6], m[13],m[2],m[4], m[14],m[0],m[5]); }
-    
-        //!Cofactor of m[12]
-        double cofactorm12() { return cofactor_maker(m[1],m[6],m[11], m[2],m[7],m[9], m[3],m[5],m[10]); }
-        //!Cofactor of m[13]
-        double cofactorm13() { return cofactor_maker(m[2],m[7],m[8], m[3],m[4],m[10], m[10],m[6],m[11]); }
-        //!Cofactor of m[14]
-        double cofactorm14() { return cofactor_maker(m[3],m[4],m[9], m[0],m[5],m[11], m[1],m[7],m[8]); }
-        //!Cofactor of m[15]
-        double cofactorm15() { return cofactor_maker(m[0],m[5],m[10], m[1],m[6],m[8], m[2],m[4],m[9]); }
+        /// <summary>
+        /// Cofactor of m[8]
+        /// </summary>
+        /// <returns></returns>
+        private double CofactorM8() { return CofactorHelper(m[13],m[2],m[7], m[14],m[3],m[5], m[15],m[1],m[6]); }
+        
+        /// <summary>
+        /// Cofactor of m[9]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM9() { return CofactorHelper(m[14],m[13],m[4], m[15],m[0],m[6], m[12],m[2],m[7]); }
+        
+        /// <summary>
+        /// Cofactor of m[10]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM10() { return CofactorHelper(m[15],m[0],m[5], m[12],m[1],m[7], m[13],m[3],m[4]); }
+        
+        /// <summary>
+        /// Cofactor of m[11]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM11() { return CofactorHelper(m[12],m[1],m[6], m[13],m[2],m[4], m[14],m[0],m[5]); }
+            
+        /// <summary>
+        /// Cofactor of m[12]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM12() { return CofactorHelper(m[1],m[6],m[11], m[2],m[7],m[9], m[3],m[5],m[10]); }
+        
+        /// <summary>
+        /// Cofactor of m[13]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM13() { return CofactorHelper(m[2],m[7],m[8], m[3],m[4],m[10], m[10],m[6],m[11]); }
+        
+        /// <summary>
+        /// Cofactor of m[14]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM14() { return CofactorHelper(m[3],m[4],m[9], m[0],m[5],m[11], m[1],m[7],m[8]); }
+
+        /// <summary>
+        /// Cofactor of m[15]
+        /// </summary>
+        /// <returns>Cofactor</returns>
+        private double CofactorM15() { return CofactorHelper(m[0],m[5],m[10], m[1],m[6],m[8], m[2],m[4],m[9]); }
+        
+        /// <summary>
+        /// Get the hashcode of this matrix
+        /// </summary>
+        /// <returns>Integer hashcode</returns>
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		} 
     }
 }

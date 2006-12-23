@@ -7,6 +7,8 @@ namespace Metaverse.Scripting
 	
 	public interface IScriptPackage
 	{
+		string Name { get; }
+		
 		IScript CompiledScript { get; }
 		
 		bool Compiled { get; }

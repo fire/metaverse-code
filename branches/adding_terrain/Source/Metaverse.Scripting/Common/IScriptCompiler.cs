@@ -1,5 +1,5 @@
 using System;
-namespace Metaverse.Scripting 
+namespace Metaverse.Scripting
 {
 		
 	public interface IScriptCompiler 

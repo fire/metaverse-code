@@ -33,22 +33,23 @@
     <Compile Include="AssemblyScriptGenerator.cs" />
     <Compile Include="ACSScriptCompiler.cs" />
     <Compile Include="CSScriptFile.cs" />
-    <Compile Include="Enumerations.cs" />
-    <Compile Include="INantBuilder.cs" />
-    <Compile Include="IScriptCompiler.cs" />
-    <Compile Include="IScriptFile.cs" />
-    <Compile Include="IScriptGenerator.cs" />
-    <Compile Include="IScriptPackage.cs" />
     <Compile Include="SingleBuildFile.cs" />
     <Compile Include="SingleFileProjectNantBuilder.cs" />
     <Compile Include="SingleFileProjectCompiler.cs" />
-    <Compile Include="IScriptController.cs" />
+    <Compile Include="Common\IScriptPackage.cs" />
+    <Compile Include="Common\Enumerations.cs" />
+    <Compile Include="Common\INantBuilder.cs" />
+    <Compile Include="Common\IScriptCompiler.cs" />
+    <Compile Include="Common\IScriptController.cs" />
+    <Compile Include="Common\IScriptFile.cs" />
+    <Compile Include="Common\IScriptGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Metaverse.Common\Metaverse.Common.csproj">
       <Project>{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}</Project>
       <Name>Metaverse.Common</Name>
     </ProjectReference>
+    <Folder Include="Common" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>
