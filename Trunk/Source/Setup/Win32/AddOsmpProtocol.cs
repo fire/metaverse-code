@@ -14,7 +14,7 @@ namespace Setup
             string metaversedirectory = EnvironmentHelper.GetExeDirectory();
             string metaverseclientexe = metaversedirectory + "/metaverse.client.exe";
 
-            RegistryKey osmpkey = Registry.ClassesRoot.CreateSubKey( "osmp" );
+            RegistryKey osmpkey = Registry.ClassesRoot.CreateSubKey( "mtvs" );
             osmpkey.SetValue( "", "URL:OSMP Protocol", RegistryValueKind.String );
             osmpkey.SetValue( "URL Protocol", "", RegistryValueKind.String );
 
