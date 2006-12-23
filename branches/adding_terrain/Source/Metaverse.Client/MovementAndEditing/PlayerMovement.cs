@@ -37,7 +37,7 @@ namespace OSMP
         Vector3 WorldBoundingBoxMin;
         Vector3 WorldBoundingBoxMax;
 
-        public Vector3 avatarpos = new Vector3( 0, 0, 0.5 );
+        public Vector3 avatarpos = new Vector3( 0, 0, 10 );
         public Rot avatarrot = new Rot();
 
         public bool bAvatarMoved;  //! If avatar has moved (so it should be synchronized to server)
@@ -47,6 +47,8 @@ namespace OSMP
         double fAvatarMoveSpeed;   //! movespeed of avatar (constant)
         double fVerticalMoveSpeed;
         double fDeceleration;
+
+        public double avatarradius = 2;
         
         public bool kMovingLeft;    //!< set by keyboardandmouse, and used by playermovement to set current player object velocity
         public bool kMovingRight;//!< set by keyboardandmouse, and used by playermovement to set current player object velocity
@@ -95,10 +97,10 @@ namespace OSMP
             Test.Debug("instantiating PlayerMovement()");
             
             Config config = Config.GetInstance();
-            XmlElement minnode = (XmlElement)config.clientconfig.SelectSingleNode("worldboundingboxmin");
-            XmlElement maxnode =(XmlElement) config.clientconfig.SelectSingleNode("worldboundingboxmax");
-            WorldBoundingBoxMin = new Vector3( minnode );
-            WorldBoundingBoxMax = new Vector3( maxnode );
+            //XmlElement minnode = (XmlElement)config.clientconfig.SelectSingleNode("worldboundingboxmin");
+            //XmlElement maxnode =(XmlElement) config.clientconfig.SelectSingleNode("worldboundingboxmax");
+            WorldBoundingBoxMin = new Vector3(0,0,config.mingroundheight );
+            WorldBoundingBoxMax = new Vector3( config.world_xsize, config.world_ysize, config.ceiling );
             Test.WriteOut( WorldBoundingBoxMin );
             Test.WriteOut( WorldBoundingBoxMax );
             
@@ -230,7 +232,7 @@ namespace OSMP
         public void UpdateAvatarObjectRotAndPos()
         {
             avatarrot = mvMath.AxisAngle2Rot( mvMath.ZAxis, ( avatarzrot * Math.PI / 180 ) );
-            avatarrot = avatarrot * mvMath.AxisAngle2Rot( mvMath.YAxis, avataryrot * Math.PI / 180 );
+            avatarrot *= mvMath.AxisAngle2Rot( mvMath.YAxis, avataryrot * Math.PI / 180 );
             
             Entity avatar = MetaverseClient.GetInstance().myavatar;
         
@@ -304,6 +306,9 @@ namespace OSMP
                         avatarpos.x = Math.Min( avatarpos.x, WorldBoundingBoxMax.x );
                         avatarpos.y = Math.Min( avatarpos.y, WorldBoundingBoxMax.y );
                         avatarpos.z = Math.Min( avatarpos.z, WorldBoundingBoxMax.z );
+
+                        avatarpos.z = Math.Max( avatarpos.z, Terrain.GetInstance().Map[
+                            (int)avatarpos.x, (int)avatarpos.y] + avatarradius );
                                 
                         break;
         

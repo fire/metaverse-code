@@ -1,3 +1,8 @@
+Next release:
+- changed world boundaries in config file from worldboundingbox to world node
+- changed near and far clip planes( near: 0.5 -> 10, far: 100 -> 2000)
+- world got a lot bigger
+
 Release 0.4:
 - migrated context menu to GTK#
 - migrated entity properties box to GTK#

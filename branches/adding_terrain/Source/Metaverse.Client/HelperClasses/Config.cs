@@ -82,8 +82,12 @@ namespace OSMP
         public string ServerIPAddress = "";
         public int ServerPort = 2501;
             
-        //public Hashtable CommandsByKeycode = new Hashtable();
-        //public Hashtable KeycodesByCommand = new Hashtable();
+        public int world_xsize;
+        public int world_ysize;
+        public double mingroundheight;
+        public double maxgroundheight;
+        public double ceiling;
+
         public List<CommandCombo> CommandCombos = new List<CommandCombo>();
         public Dictionary<string, MouseMoveConfig> MouseMoveConfigsByName = new Dictionary<string, MouseMoveConfig>();
 
@@ -94,6 +98,9 @@ namespace OSMP
 
         public int windowwidth;
         public int windowheight;
+
+        public double HeightEditingSpeed;
+        public int brushsize;
 
         static Config instance = new Config();
         public static Config GetInstance()
@@ -148,6 +155,17 @@ namespace OSMP
             XmlElement displaynode = clientconfig.SelectSingleNode("display") as XmlElement;
             windowwidth = GetInt(displaynode, "width");
             windowheight = GetInt(displaynode, "height");
+
+            XmlElement worldnode = clientconfig.SelectSingleNode( "world" ) as XmlElement;
+            world_xsize = GetInt( worldnode, "x_size" );
+            world_ysize = GetInt( worldnode, "y_size" );
+            mingroundheight = GetDouble( worldnode, "mingroundheight" );
+            maxgroundheight = GetDouble( worldnode, "maxgroundheight" );
+            ceiling = GetDouble( worldnode, "ceiling" );
+
+            XmlElement heighteditingnode = clientconfig.SelectSingleNode( "heightediting" ) as XmlElement;
+            HeightEditingSpeed = GetDouble( heighteditingnode, "speed" );
+            brushsize = GetInt( heighteditingnode, "defaultbrushsize" );
 
             XmlElement servernode = (XmlElement)configdoc.DocumentElement.SelectSingleNode("server");
             ServerPort = Convert.ToInt32( servernode.GetAttribute("port"));

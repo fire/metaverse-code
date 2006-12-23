@@ -70,7 +70,7 @@ namespace OSMP
                 Console.WriteLine( e );
                 string errorlogpath = EnvironmentHelper.GetExeDirectory() + "/error.log";
                 StreamWriter sw = new StreamWriter( errorlogpath, false );
-                sw.WriteLine( LogFile.GetInstance().logfilecontents );
+                sw.WriteLine( LogFile.GetInstance().logfilecontents.Replace("\n","\n\r" ) );
                 sw.WriteLine( e.ToString() );
                 sw.Close();
 
