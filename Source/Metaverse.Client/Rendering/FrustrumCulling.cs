@@ -44,6 +44,9 @@ namespace OSMP
         public double VNear;
         public double VFar;
 
+        double nearclip;
+        double farclip;
+
         public Vector3 fc, nc, ftl, ftr, fbl, fbr, ntl, ntr, nbl, nbr;
         public Plane[] planes = new Plane[6];
 
@@ -75,12 +78,14 @@ namespace OSMP
             right.Normalize();
             up.Normalize();
 
-            double nearclip = RendererFactory.GetInstance().NearClip;
-            double farclip = RendererFactory.GetInstance().FarClip;
+            nearclip = RendererFactory.GetInstance().NearClip;
+            farclip = RendererFactory.GetInstance().FarClip;
             VNear = 2 * Math.Tan(RendererFactory.GetInstance().FieldOfView / 2 * Math.PI / 180) * nearclip;
             VFar = VNear * farclip / nearclip;
             HNear = VNear * (double)RendererFactory.GetInstance().OuterWindowWidth / RendererFactory.GetInstance().OuterWindowHeight;
             HFar = HNear * farclip / nearclip;
+
+            //Console.WriteLine( "clips: " + nearclip + " " + farclip + " " + VNear + " " + VFar + " " + HNear + " " + HFar );
 
             fc = camerapos + viewray * farclip;
             ftl = fc + (up * VFar / 2) - (right * HFar / 2);
@@ -104,19 +109,19 @@ namespace OSMP
 
             vectoralongplane = (ntr - camerapos).Normalize();
             normal = (up * vectoralongplane).Normalize();
-            planes[2] = new Plane(normal, camerapos);
+            planes[2] = new Plane( - normal, camerapos);
 
             vectoralongplane = (nbr - camerapos).Normalize();
             normal = (right * vectoralongplane).Normalize();
-            planes[3] = new Plane(normal, camerapos);
+            planes[3] = new Plane(- normal, camerapos);
 
             vectoralongplane = (nbl - camerapos).Normalize();
             normal = -(up * vectoralongplane).Normalize();
-            planes[4] = new Plane(normal, camerapos);
+            planes[4] = new Plane(- normal, camerapos);
 
             vectoralongplane = (ntl - camerapos).Normalize();
             normal = -(right * vectoralongplane).Normalize();
-            planes[5] = new Plane(normal, camerapos);
+            planes[5] = new Plane(- normal, camerapos);
         }
 
         //public FrustrumCulling( Vector3 camerapos, Rot camerarot, float nearclip, float farclip)
@@ -134,25 +139,26 @@ namespace OSMP
             
             g.SetMaterialColor(new Color(1, 1, 0));
             Gl.glBegin(Gl.GL_LINES);
-            g.Vertex( viewray * 0.51 + HNear / 2 * 0.95 * right + VNear / 2 * 0.95 * up);
-            g.Vertex( viewray * 0.51 - HNear / 2 * 0.95 * right + VNear / 2 * 0.95 * up);
+            g.Vertex( camerapos + viewray * nearclip * 1.1 + HNear / 2 * 0.95 * right + VNear / 2 * 0.95 * up );
+            g.Vertex( camerapos + viewray * nearclip * 1.1 - HNear / 2 * 0.95 * right + VNear / 2 * 0.95 * up );
             Gl.glEnd();
             Gl.glBegin(Gl.GL_LINES);
-            g.Vertex( viewray * 0.51 - HNear / 2 * 0.95 * right - VNear / 2 * 0.95 * up);
-            g.Vertex( viewray * 0.51 + HNear / 2 * 0.95 * right - VNear / 2 * 0.95 * up);
+            g.Vertex( camerapos + viewray * nearclip * 1.1 - HNear / 2 * 0.95 * right - VNear / 2 * 0.95 * up );
+            g.Vertex( camerapos + viewray * nearclip * 1.1 + HNear / 2 * 0.95 * right - VNear / 2 * 0.95 * up );
             Gl.glEnd();
              
 
             g.SetMaterialColor(new Color(1, 0, 1));
             Gl.glBegin(Gl.GL_LINES);
-            g.Vertex(camerapos + viewray * 1050 + HFar / 2 * 0.95 * right + VFar / 2 * 0.95 * up);
-            g.Vertex(camerapos + viewray * 1050 - HFar / 2 * 0.95 * right + VFar / 2 * 0.95 * up);
+            g.Vertex(camerapos + viewray * farclip * 0.95 + HFar / 2 * 0.95 * right + VFar / 2 * 0.9 * up);
+            g.Vertex( camerapos + viewray * farclip * 0.95 - HFar / 2 * 0.95 * right + VFar / 2 * 0.9 * up );
             Gl.glEnd();
             Gl.glBegin(Gl.GL_LINES);
-            g.Vertex(camerapos + viewray * 1050 - HFar / 2 * 0.95 * right - VFar / 2 * 0.95 * up);
-            g.Vertex(camerapos + viewray * 1050 + HFar / 2 * 0.95 * right - VFar / 2 * 0.95 * up);
+            g.Vertex( camerapos + viewray * farclip * 0.95 - HFar / 2 * 0.95 * right - VFar / 2 * 0.9 * up );
+            g.Vertex( camerapos + viewray * farclip * 0.95 + HFar / 2 * 0.95 * right - VFar / 2 * 0.9 * up );
             Gl.glEnd();
 
+            /*
             g.SetMaterialColor(new Color(1, 0, 0));
             Gl.glBegin(Gl.GL_LINES);
             g.Vertex(viewray * 10);
@@ -179,24 +185,27 @@ namespace OSMP
                 g.Vertex(planes[i].point + planes[i].normalizednormal * 100 + viewray * 100);
                 Gl.glEnd();
             }
+             */
 
-            //Console.WriteLine( CheckObject(camerapos - 3 * viewray, 2) );
-            //System.Environment.Exit(0);
+            //Console.WriteLine( camerapos + " " + viewray );
+            //Console.WriteLine( IsInsideFrustum( camerapos + viewray * nearclip * 1.5, 0 ) );
+            //Console.WriteLine( IsInsideFrustum( camerapos + viewray * farclip * 0.9, 0 ) );
+            //System.Environment.Exit( 0 );
         }
 
         public bool IsInsideFrustum(Vector3 centrepos, double boundingradius)
         {
-            //Console.WriteLine("IsInsideFrustrum " + centrepos + " " + boundingradius);
             foreach (Plane plane in planes)
             {
                 double distance = plane.GetDistance(centrepos);
-                //Console.WriteLine( "plane distance: " + distance );
+              //  Console.WriteLine( "plane " + plane + " distance: " + distance );
                 if (distance > boundingradius)
                 {
                     //System.Environment.Exit(0);
                     return false;
                 }
             }
+            //Console.WriteLine( "IsInsideFrustrum " + centrepos + " " + boundingradius );
             return true;
         }
     }

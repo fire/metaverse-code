@@ -20,5 +20,9 @@ namespace OSMP
         {
             return Vector3.DotProduct((candidate - point), normalizednormal);
         }
+        public override string ToString()
+        {
+            return "Plane: point: " + point + " normal: " + normalizednormal;
+        }
     }
 }

@@ -60,6 +60,7 @@ namespace OSMP
 
         event TickHandler Tick;
         event WriteNextFrameCallback WriteNextFrameEvent;
+        event WriteNextFrameCallback WriteAlpha;
         event PreDrawCallback PreDrawEvent;
 
         event MouseMotionEventHandler MouseMotion;

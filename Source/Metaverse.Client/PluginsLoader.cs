@@ -43,6 +43,8 @@ namespace OSMP
             }
             LoadGlobalPlugins();
 
+            Terrain.GetInstance();
+
             UIEntityPropertiesDialog.GetInstance();
             Editing3d.GetInstance();
             SelectionController.GetInstance();
