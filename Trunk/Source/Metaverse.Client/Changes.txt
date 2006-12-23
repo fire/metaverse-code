@@ -1,3 +1,8 @@
+Next release:
+- world format changed to be inter-compatible between mono and .net
+- osmp shortcut added to setup project for windows
+- setup detects automatically whether to create shortcuts for mono or .net
+
 Release 0.4:
 - migrated context menu to GTK#
 - migrated entity properties box to GTK#
