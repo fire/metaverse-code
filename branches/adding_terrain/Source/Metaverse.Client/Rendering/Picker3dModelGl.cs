@@ -138,7 +138,12 @@ namespace OSMP
             hittargets = new ArrayList();
             renderable.Render();            
             bAddingNames = false;
-            
+
+            if (hittargets.Count == 0)
+            {
+                return null;
+            }
+
             // return projection matrix to normal
             Gl.glMatrixMode(Gl.GL_PROJECTION);
             Gl.glPopMatrix();        
@@ -153,7 +158,7 @@ namespace OSMP
             }
             int hitname = GetNearestBufferName( iNumHits );
             Console.WriteLine( "hitname: " + hitname.ToString() );
-            if( hitname == -1 )
+            if( hitname == -1 || hitname == 0 )
             {
                 Console.WriteLine("not in buffer");
                 return null;
@@ -161,7 +166,6 @@ namespace OSMP
 
             FreeSelectBuffer();
 
-            //Console.WriteLine(hittargets[hitname - 1]);
             return (HitTarget)hittargets[ hitname - 1 ];
         }        
     }
