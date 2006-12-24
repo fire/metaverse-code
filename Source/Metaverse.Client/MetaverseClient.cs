@@ -62,7 +62,7 @@ namespace OSMP
             }
     
             playermovement.MovePlayer();
-          //  Console.WriteLine( playermovement.avatarpos );
+          //  LogFile.WriteLine( playermovement.avatarpos );
         }
 
         public delegate void TickHandler();
@@ -71,7 +71,7 @@ namespace OSMP
         //! Main loop, called by SDL once a frame
         void MainLoop()
         {
-            //Console.WriteLine("Tick");
+            //LogFile.WriteLine("Tick");
             if (targettoload != "" && !waitingforserverconnection )
             {
                 // note to self: should shift this comparison into WorldPersist really
@@ -145,12 +145,12 @@ namespace OSMP
 
             if( arguments.Named.ContainsKey( "url" ) )
             {
-                Console.WriteLine( "url: " + arguments.Named["url"] );
+                LogFile.WriteLine( "url: " + arguments.Named["url"] );
                 string urlarg = arguments.Named["url"];
                 if (urlarg.StartsWith( "osmp://" ))
                 {
                     targettoload = "http://" + urlarg.Substring( "osmp://".Length );
-                    Console.WriteLine( "target: " + targettoload );
+                    LogFile.WriteLine( "target: " + targettoload );
                 }
                 else
                 {
@@ -174,7 +174,7 @@ namespace OSMP
                 return;
             }
             IPAddress ipaddress = addresses[0];
-            Console.WriteLine("Resolved server address to : " + ipaddressstring);
+            LogFile.WriteLine("Resolved server address to : " + ipaddressstring);
 
             try
             {
@@ -183,7 +183,7 @@ namespace OSMP
             catch (Exception e)
             {
                 DialogHelpers.ShowErrorMessageModal( null, "Failed to connect to server");
-                Console.WriteLine(e.ToString());
+                LogFile.WriteLine(e.ToString());
             }
 
             SelectionModel.GetInstance().Clear();
@@ -192,7 +192,7 @@ namespace OSMP
 
         void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
-            Console.WriteLine("client connected to server");
+            LogFile.WriteLine("client connected to server");
             waitingforserverconnection = false;
 
             InitializePlayermovement();

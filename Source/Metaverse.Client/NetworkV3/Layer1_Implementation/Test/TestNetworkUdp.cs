@@ -43,7 +43,7 @@ namespace OSMP
 
             void net_ReceivedPacket( INetworkImplementation source, ConnectionInfo connectioninfo, byte[] data, int offset, int length )
             {
-                Console.WriteLine("Received packet: " + Encoding.UTF8.GetString(data));
+                LogFile.WriteLine("Received packet: " + Encoding.UTF8.GetString(data));
                 net.Send(connectioninfo.Connection, Encoding.UTF8.GetBytes( "Hello from server!" ) );
             }
         }
@@ -65,7 +65,7 @@ namespace OSMP
 
             void net_ReceivedPacket( INetworkImplementation source, ConnectionInfo connectioninfo, byte[] data, int offset, int length )
             {
-                Console.WriteLine("Received packet: " + Encoding.UTF8.GetString(data));
+                LogFile.WriteLine( "Received packet: " + Encoding.UTF8.GetString( data ) );
             }
         }
 
@@ -74,8 +74,8 @@ namespace OSMP
 
         public static void Go(string[] args)
         {
-            //Console.WriteLine(Int32.MaxValue);
-            //Console.WriteLine((int)DateTime.Now.Ticks);
+            //LogFile.WriteLine(Int32.MaxValue);
+            //LogFile.WriteLine((int)DateTime.Now.Ticks);
 
             try
             {
@@ -95,7 +95,7 @@ namespace OSMP
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogFile.WriteLine(e);
             }
         }
     }

@@ -64,7 +64,7 @@ namespace OSMP
 
         void network_ReceivedPacket( NetworkLevel2Connection connection, byte[] data, int offset, int length )
         {
-            //Console.WriteLine("rpc received packet " + Encoding.UTF8.GetString(data, offset, length));
+            //LogFile.WriteLine("rpc received packet " + Encoding.UTF8.GetString(data, offset, length));
             try
             {
                 if (length > 1)
@@ -75,7 +75,7 @@ namespace OSMP
                     //{
                         string typename = (string)binarypacker.ReadValueFromBuffer(data, ref position, typeof(string));
                         string methodname = (string)binarypacker.ReadValueFromBuffer(data, ref position, typeof(string));
-                        //Console.WriteLine("Got rpc [" + typename + "] [" + methodname + "]");
+                        //LogFile.WriteLine("Got rpc [" + typename + "] [" + methodname + "]");
                         if( TypeIsAllowed( typename ) ) // security check to prevent arbitrary activation
                         //if (ArrayHelper.IsInArray(allowedtypes, typename))
                         {
@@ -91,19 +91,19 @@ namespace OSMP
                             {
                                 interfacename = typename;
                             }
-                            //Console.WriteLine("[" + namespacename + "][" + interfacename + "]");
+                            //LogFile.WriteLine("[" + namespacename + "][" + interfacename + "]");
 
                             string serverwrapperclassname = "OSMP." + interfacename.Substring(1) + "";
                             //if (namespacename != "")
                             //{
                               //  serverwrapperclassname = namespacename + "." + serverwrapperclassname;
                             //}
-                            //Console.WriteLine("[" + serverwrapperclassname + "]");
+                            //LogFile.WriteLine("[" + serverwrapperclassname + "]");
 
                             Type interfacetype = Type.GetType(typename);
 
                             Type serverwrapperttype = Type.GetType(serverwrapperclassname);
-                            Console.WriteLine("RpcController, instantiating [" + serverwrapperttype + "]");
+                            LogFile.WriteLine("RpcController, instantiating [" + serverwrapperttype + "]");
                             object serverwrapperobject = Activator.CreateInstance(serverwrapperttype, new object[] { connection.connectioninfo.Connection });
                             MethodInfo methodinfo = serverwrapperttype.GetMethod(methodname);
 
@@ -116,20 +116,20 @@ namespace OSMP
 
                             //foreach (object parameter in parameters)
                             //{
-                             //   Console.WriteLine(parameter.GetType().ToString() + " " + parameter.ToString());
+                             //   LogFile.WriteLine(parameter.GetType().ToString() + " " + parameter.ToString());
                             //}
                             methodinfo.Invoke(serverwrapperobject, parameters);
                         }
                         else
                         {
-                            Console.WriteLine("Warning: unauthorized RPC type " + typename + ". Check has attribute [AuthorizedRpcInterface]");
+                            LogFile.WriteLine("Warning: unauthorized RPC type " + typename + ". Check has attribute [AuthorizedRpcInterface]");
                         }
                     //}
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                LogFile.WriteLine(ex);
             }
         }
         
@@ -148,10 +148,10 @@ namespace OSMP
         public void SendRpc(IPEndPoint connection, string typename, string methodname, object[] args)
         {
             // Test.WriteOut( args );
-            //Console.WriteLine( "SendRpc " + typename + " " + methodname );
+            //LogFile.WriteLine( "SendRpc " + typename + " " + methodname );
             //for( int i = 0; i < args.GetUpperBound(0) + 1; i++ )
             //{
-              //  Console.WriteLine("  arg: " + args[i].ToString() );
+              //  LogFile.WriteLine("  arg: " + args[i].ToString() );
             //}
             
             byte[]packet = new byte[1400]; // note to self: make this a little more dynamic...
@@ -165,8 +165,8 @@ namespace OSMP
                 binarypacker.WriteValueToBuffer(packet, ref nextposition, parameter);
             }
 
-            //Console.WriteLine("Sending " + Encoding.UTF8.GetString(packet, 0, nextposition));
-            //Console.WriteLine( nextposition + " bytes " + Encoding.ASCII.GetString( packet, 0, nextposition ) );
+            //LogFile.WriteLine("Sending " + Encoding.UTF8.GetString(packet, 0, nextposition));
+            //LogFile.WriteLine( nextposition + " bytes " + Encoding.ASCII.GetString( packet, 0, nextposition ) );
             network.Send(connection,RpcType, packet, 0, nextposition );
         }
     }

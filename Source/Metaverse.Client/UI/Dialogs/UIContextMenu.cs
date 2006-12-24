@@ -78,7 +78,7 @@ namespace OSMP
         //void UIContextMenu_MouseDown(object sender, MouseButtonEventArgs e)
         //void OpenContextMenu(string command, bool down)
         //{
-            //Console.WriteLine(e.Button + " " + MouseFilterFormsMouseCache.GetInstance().RightMouseDown);
+            //LogFile.WriteLine(e.Button + " " + MouseFilterFormsMouseCache.GetInstance().RightMouseDown);
             //if (e. == System.Windows.Forms.MouseButtons.Left)
             //{
               //  if (contextmenu != null)
@@ -96,7 +96,7 @@ namespace OSMP
 
         void OpenContextMenu(string command, bool down)
         {
-            Console.WriteLine("opencontextmenu " + down);
+            LogFile.WriteLine("opencontextmenu " + down);
             if (!down)
             {
                 return;
@@ -138,9 +138,9 @@ namespace OSMP
 
         //void _menupositionfunc( Menu menu, out int x, out int y, out bool pushin )
         //{
-            //Console.WriteLine("_menupositionfunc mouse: " + MouseFilterFormsMouseCache.GetInstance().MouseX + " " + MouseFilterFormsMouseCache.GetInstance().MouseY );
+            //LogFile.WriteLine("_menupositionfunc mouse: " + MouseFilterFormsMouseCache.GetInstance().MouseX + " " + MouseFilterFormsMouseCache.GetInstance().MouseY );
             //Point renderertopleftscreencoords = RendererSdlCtrl.GetInstance().WindowTopLeftScreenCoords;
-            //Console.WriteLine(renderertopleftscreencoords.X + " " + renderertopleftscreencoords.Y);
+            //LogFile.WriteLine(renderertopleftscreencoords.X + " " + renderertopleftscreencoords.Y);
             //x = MouseFilterFormsMouseCache.GetInstance().MouseX - 1 + renderertopleftscreencoords.X;
             //y = MouseFilterFormsMouseCache.GetInstance().MouseY - 1 + renderertopleftscreencoords.Y;
             //pushin = true;
@@ -148,7 +148,7 @@ namespace OSMP
 
         void Testpluginmenuitem_Activated( object sender, EventArgs e )
         {
-            Console.WriteLine("testpluginmenuitem activated");
+            LogFile.WriteLine("testpluginmenuitem activated");
         }
 
         public void RegisterContextMenu( string[] contextmenupath, ContextMenuHandler callback )
@@ -160,7 +160,7 @@ namespace OSMP
         {
             MenuItem commanditem = null;
 
-            //Console.WriteLine("scan existing:");
+            //LogFile.WriteLine("scan existing:");
             Menu currentmenu = contextmenu;
             for (int i = 0; i < contextmenupath.Length - 1; i++)
             {
@@ -168,12 +168,12 @@ namespace OSMP
                 string thissegment = contextmenupath[i].Replace("&", "_");
                 foreach (Widget widget in currentmenu.Children)
                 {
-                    //Console.WriteLine(widget.GetType());
+                    //LogFile.WriteLine(widget.GetType());
                     foreach (Widget subwidget in (widget as MenuItem).Children)
                     {
-                        //Console.WriteLine(subwidget.GetType());
+                        //LogFile.WriteLine(subwidget.GetType());
                         string thismenulabel = (subwidget as AccelLabel).Text;
-                        //Console.WriteLine(thismenulabel + " " + thissegment);
+                        //LogFile.WriteLine(thismenulabel + " " + thissegment);
                         if (thismenulabel == thissegment.Replace("_",""))
                         {
                             foundpathsegment = true;
@@ -219,7 +219,7 @@ namespace OSMP
 
         void _ContextMenuClick(object o, EventArgs e)
         {
-            Console.WriteLine("contextmenuclick " + o);
+            LogFile.WriteLine("contextmenuclick " + o);
             for (int i = 0; i < contextmenucallbacks.Count; i++)
             {
                 if (contextmenucommanditems[i] == o)

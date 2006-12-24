@@ -54,7 +54,7 @@ namespace OSMP
 
             if (filename != "")
             {
-                Console.WriteLine(filename);
+                LogFile.WriteLine(filename);
                 Store(filename);
                 DialogHelpers.ShowInfoMessageModal(null, "World export to prim blender completed");
             }
@@ -71,7 +71,7 @@ namespace OSMP
 
             if (filename != "")
             {
-                Console.WriteLine(filename);
+                LogFile.WriteLine(filename);
                 Restore(filename);
                 DialogHelpers.ShowInfoMessageModal(null, "World load from prim blender completed");
             }

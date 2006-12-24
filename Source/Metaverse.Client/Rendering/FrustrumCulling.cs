@@ -59,7 +59,7 @@ namespace OSMP
 
         void SetupFrustrum()
         {
-            //Console.WriteLine("setup frustrum");
+            //LogFile.WriteLine("setup frustrum");
 
             camerapos = Camera.GetInstance().CameraPos;
             camerarot = Camera.GetInstance().CameraRot;
@@ -195,6 +195,7 @@ namespace OSMP
 
         public bool IsInsideFrustum(Vector3 centrepos, double boundingradius)
         {
+            //LogFile.WriteLine("IsInsideFrustrum " + centrepos + " " + boundingradius);
             foreach (Plane plane in planes)
             {
                 double distance = plane.GetDistance(centrepos);

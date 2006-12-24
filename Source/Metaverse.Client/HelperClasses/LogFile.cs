@@ -52,7 +52,15 @@ using System.IO;
         
         public bool AutoFlushOn = false;
 
-        public string logfilecontents = "";
+        StringWriter logfilecontentswriter;
+
+        public string logfilecontents
+        {
+            get
+            {
+                return logfilecontentswriter.ToString();
+            }
+        }
 
         public LogFile Init()
         {
@@ -64,6 +72,7 @@ using System.IO;
         public LogFile Init( string logfilepath )
         {
             this.filename = logfilepath;
+            logfilecontentswriter = new StringWriter();
             //sw = new StreamWriter(logfilepath, false);            
             //CSAI.GetInstance().RegisterVoiceCommand( "flushlog", new CSAI.VoiceCommandHandler( this.VCFlushLog ) );
             return this;
@@ -73,16 +82,31 @@ using System.IO;
         {
             //sw.Flush();
         }
-                    
+
+        public static void BlankLine()
+        {
+            instance.writeLine( "" );
+        }
+
+        public static void WriteLine( object o )
+        {
+            instance.writeLine( o.ToString() );
+        }
+
+        public void writeLine( object o )
+        {
+            writeLine( o.ToString() );
+        }
+
         // arguably we shouldnt auto-flush. because it slows writes, up to you
-        public void WriteLine( string message )
+        public void writeLine( string message )
         {
             //string finalmessage = prefix + " " + message;
-            logfilecontents += message + "\n";
+            //logfilecontents += message + "\n";
+            logfilecontentswriter.WriteLine( message );
             Console.WriteLine(message);
             //sw.WriteLine(DateTime.Now.ToString("hh:mm:ss.ff") + ": " + message);
             //sw.WriteLine( message);
-            //Console.WriteLine(message);
             //if( AutoFlushOn )
             //{
               //  sw.Flush();

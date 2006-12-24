@@ -61,13 +61,13 @@ using Gtk;
                 dialog.Hide();
                 if (response == ResponseType.Ok)
                 {
-                    LogFile.GetInstance().WriteLine( "got filepath: " + dialog.Filename );
+                    LogFile.WriteLine( "got filepath: " + dialog.Filename );
                     lastdirectorypath = Path.GetDirectoryName( dialog.Filename );
                     return dialog.Filename;
                 }
                 else
                 {
-                    LogFile.GetInstance().WriteLine( "Cancel pressed" );
+                    LogFile.WriteLine( "Cancel pressed" );
                     return "";
                 }
             }
@@ -82,9 +82,9 @@ using Gtk;
             OSMP.Color newcolor = null;
             if (response == ResponseType.Ok)
             {
-                Console.WriteLine( colorselectiondialog );
-                Console.WriteLine( colorselectiondialog.ColorSelection );
-                Console.WriteLine( colorselectiondialog.ColorSelection.CurrentColor.Red.ToString() + " " +
+                LogFile.WriteLine( colorselectiondialog );
+                LogFile.WriteLine( colorselectiondialog.ColorSelection );
+                LogFile.WriteLine( colorselectiondialog.ColorSelection.CurrentColor.Red.ToString() + " " +
                 colorselectiondialog.ColorSelection.CurrentColor.Green.ToString() + " " +
                     colorselectiondialog.ColorSelection.CurrentColor.Blue.ToString() );
                 Gdk.Color newgtkcolor = colorselectiondialog.ColorSelection.CurrentColor;
@@ -94,7 +94,7 @@ using Gtk;
             }
             else
             {
-                Console.WriteLine( "cancel pressed" );
+                LogFile.WriteLine( "cancel pressed" );
             }
 
             colorselectiondialog.Hide();

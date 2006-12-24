@@ -84,7 +84,7 @@ namespace OSMP
 
         public void ConnectAsClient( string ipaddress, int port )
         {
-            Console.WriteLine("NetworkController.  Connect as client to " + ipaddress + " " + port);
+            LogFile.WriteLine("NetworkController.  Connect as client to " + ipaddress + " " + port);
             IsServer = false;
             connections = null;
 //            connectionopen = false;
@@ -94,7 +94,7 @@ namespace OSMP
         
         public void ListenAsServer( int port )
         {
-            Console.WriteLine("NetworkController.  Listen as server port " + port);
+            LogFile.WriteLine("NetworkController.  Listen as server port " + port);
             IsServer = true;
             connectiontoserver = null;
             connections = new Dictionary<object,NetworkLevel2Connection>();
@@ -105,7 +105,7 @@ namespace OSMP
         {
             object connection = connectioninfo.Connection;
 
-            //Console.WriteLine("Connection: "  + connection);
+            //LogFile.WriteLine("Connection: "  + connection);
             if (IsServer)
             {
                 if (!connections.ContainsKey(connection))
@@ -140,7 +140,7 @@ namespace OSMP
 
         public void OnConnectionValidated(NetworkLevel2Connection netcon)
         {
-            Console.WriteLine("Networklevel2controller new connection: " + netcon.connectioninfo.IPAddress + " " + netcon.connectioninfo.Port);
+            LogFile.WriteLine("Networklevel2controller new connection: " + netcon.connectioninfo.IPAddress + " " + netcon.connectioninfo.Port);
             if (NewConnection != null)
             {
                 NewConnection(netcon, netcon.connectioninfo);
@@ -172,7 +172,7 @@ namespace OSMP
 
         public void Send(IPEndPoint connection, char packettype, byte[] data, int offset, int length)
         {
-            //Console.WriteLine("netcontroller Send isserver " + IsServer );
+            //LogFile.WriteLine("netcontroller Send isserver " + IsServer );
             if (IsServer)
             {
                 connections[connection].Send(packettype, data, offset, length);

@@ -40,7 +40,7 @@ namespace OSMP
         
         public IrcController()
         {
-            Console.WriteLine( this.GetType().ToString() + " IrcController()" );
+            LogFile.WriteLine( this.GetType().ToString() + " IrcController()" );
             ircclient = new IrcClient();
 
             ircclient.SendDelay = 200;
@@ -65,7 +65,7 @@ namespace OSMP
         public bool Login( string username, string password )
         {
             mylogin = username;
-            Console.WriteLine( this.GetType().ToString() + " Login()" );
+            LogFile.WriteLine( this.GetType().ToString() + " Login()" );
             InformClient( "test inform" );
             try
             {
@@ -87,7 +87,7 @@ namespace OSMP
         
         public void CheckMessages()
         {
-            // Console.WriteLine("listen once...");
+            // LogFile.WriteLine("listen once...");
             ircclient.ListenOnce( false );
         }
         
@@ -124,7 +124,7 @@ namespace OSMP
         
         void InformClient( string message )
         {
-            Console.WriteLine( "informclient: " + message );
+            LogFile.WriteLine( "informclient: " + message );
             if( MessageReceived != null )
             {
                 MessageReceived( this, new MessageReceivedArgs( message ) );
@@ -133,7 +133,7 @@ namespace OSMP
 
         public void OnRawMessage(object sender, IrcEventArgs e)
         {
-            Console.WriteLine("OnRawMessage Replycode " + e.Data.ReplyCode.ToString() + " Received: "+e.Data.RawMessage);
+            LogFile.WriteLine("OnRawMessage Replycode " + e.Data.ReplyCode.ToString() + " Received: "+e.Data.RawMessage);
             //InformClient( "*" + e.Data.Nick + "* " + e.Data.Message );
         }
         
@@ -164,7 +164,7 @@ namespace OSMP
         }
         public void OnError(object sender, ErrorEventArgs e)
         {
-            Console.WriteLine( "Error: "+e.ErrorMessage);
+            LogFile.WriteLine( "Error: "+e.ErrorMessage);
             InformClient("Error: "+e.ErrorMessage);
             IsConnected = false;
         }

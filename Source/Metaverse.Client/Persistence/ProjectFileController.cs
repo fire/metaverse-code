@@ -42,12 +42,12 @@ namespace OSMP
         }
         public void SetProjectPath( Uri projectpath )
         {
-            Console.WriteLine( "project path: " + projectpath );
+            LogFile.WriteLine( "project path: " + projectpath );
             this.ProjectDirectoryUri = projectpath;
         }
         public string GetRelativePath( Uri uri )
         {
-            Console.WriteLine( ProjectDirectoryUri + " " + uri );
+            LogFile.WriteLine( ProjectDirectoryUri + " " + uri );
             string relativepath = ProjectDirectoryUri.MakeRelativeUri( uri ).ToString();
             Test.Debug( uri + " -> " + relativepath );
             return relativepath;
