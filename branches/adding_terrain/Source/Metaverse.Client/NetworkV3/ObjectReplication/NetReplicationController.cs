@@ -184,7 +184,7 @@ namespace OSMP
             get{ return ismaster; }
             set{
                 ismaster = value;
-                Console.WriteLine( this.GetType().ToString() + " ismaster set to " + ismaster.ToString() );
+                LogFile.WriteLine( this.GetType().ToString() + " ismaster set to " + ismaster.ToString() );
             }
         }
         
@@ -211,7 +211,7 @@ namespace OSMP
         // on server, called from dirtyobjectqueuesingleclient
         public void ReplicateSingleEntityToSingleClient(IPEndPoint connection, IHasReference entity, Type[] dirtyattributes)
         {
-            Console.WriteLine("ReplicateSingleEntityToSingleClient " + entity.GetType() + " to " + connection);
+            LogFile.WriteLine("ReplicateSingleEntityToSingleClient " + entity.GetType() + " to " + connection);
             int bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap(dirtyattributes);
 
             byte[] entitydata = new byte[4096];
@@ -222,7 +222,7 @@ namespace OSMP
             byte[] entitydatatotransmit = new byte[nextposition];
             Buffer.BlockCopy(entitydata, 0, entitydatatotransmit, 0, nextposition);
 
-            //Console.WriteLine(Encoding.UTF8.GetString(entitydatatotransmit));
+            //LogFile.WriteLine(Encoding.UTF8.GetString(entitydatatotransmit));
 
             new NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy(
                 rpc, connection).ObjectModified(
@@ -231,7 +231,7 @@ namespace OSMP
 
         public void ReplicateDeletionToSingleClient(IPEndPoint connection, int reference, string typename)
         {
-            Console.WriteLine("ReplicateDeletionToSingleClient " + reference + " to " + connection);
+            LogFile.WriteLine("ReplicateDeletionToSingleClient " + reference + " to " + connection);
             new NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy(rpc, connection)
                 .ObjectDeleted(reference, typename );
         }
@@ -263,10 +263,10 @@ namespace OSMP
         // events for incoming changes from object controllers
         void controller_ObjectModified(object source, ObjectModifiedArgs e)
         {
-            Console.WriteLine("netreplicationcontroller controller_ObjectModified " + e.TargetObject.GetType());
+            LogFile.WriteLine("netreplicationcontroller controller_ObjectModified " + e.TargetObject.GetType());
             if (this.rpc.IsServer)
             {
-                //Console.WriteLine("controller_ObjectCreated() " + e.TargetObject);
+                //LogFile.WriteLine("controller_ObjectCreated() " + e.TargetObject);
                 //NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy objectreplicationproxy = new OSMP.NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy( rpc, 
                 // handled by something like DirtyCacheController
                 dirtyobjectcontroller.MarkDirty(e.TargetObject, e.modificationtypeattributes );
@@ -283,7 +283,7 @@ namespace OSMP
                 byte[] entitydatatotransmit = new byte[nextposition];
                 Buffer.BlockCopy(entitydata, 0, entitydatatotransmit, 0, nextposition);
 
-                //Console.WriteLine(Encoding.UTF8.GetString(entitydatatotransmit));
+                //LogFile.WriteLine(Encoding.UTF8.GetString(entitydatatotransmit));
 
                 NetworkInterfaces.ObjectReplicationClientToServer_ClientProxy objectreplicationproxy = new OSMP.NetworkInterfaces.ObjectReplicationClientToServer_ClientProxy(rpc, null);
                 objectreplicationproxy.ObjectModified(e.TargetObject.Reference, e.TargetObject.GetType().ToString(), bitmap, entitydatatotransmit);
@@ -307,15 +307,15 @@ namespace OSMP
         {
             if( this.rpc.IsServer )
             {
-                Console.WriteLine("netreplicationcontroller,server ObjectCreated " + e.TargetObject.GetType());
-                //Console.WriteLine("controller_ObjectCreated() " + e.TargetObject);
+                LogFile.WriteLine("netreplicationcontroller,server ObjectCreated " + e.TargetObject.GetType());
+                //LogFile.WriteLine("controller_ObjectCreated() " + e.TargetObject);
                 //NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy objectreplicationproxy = new OSMP.NetworkInterfaces.ObjectReplicationServerToClient_ClientProxy( rpc, 
                 // handled by something like DirtyCacheController
                 dirtyobjectcontroller.MarkDirty(e.TargetObject, new Type[] { typeof(Replicate) });
             }
             else
             {
-                Console.WriteLine("netreplicationcontroller,client ObjectCreated " + e.TargetObject.GetType());
+                LogFile.WriteLine("netreplicationcontroller,client ObjectCreated " + e.TargetObject.GetType());
                 int tempreference = GenerateTempReference();
                 tempreferences.Add( tempreference, e.TargetObject );
 
@@ -330,7 +330,7 @@ namespace OSMP
                 byte[]entitydatatotransmit = new byte[ nextposition ];
                 Buffer.BlockCopy( entitydata,0, entitydatatotransmit, 0, nextposition );
 
-                //Console.WriteLine(Encoding.UTF8.GetString(entitydatatotransmit));
+                //LogFile.WriteLine(Encoding.UTF8.GetString(entitydatatotransmit));
 
                 NetworkInterfaces.ObjectReplicationClientToServer_ClientProxy objectreplicationproxy = new OSMP.NetworkInterfaces.ObjectReplicationClientToServer_ClientProxy(rpc, null);
                 objectreplicationproxy.ObjectCreated(tempreference, e.TargetObject.GetType().ToString(), bitmap, entitydatatotransmit );
@@ -349,9 +349,9 @@ namespace OSMP
 
         public void ObjectCreatedRpcClientToServer(IPEndPoint connection, int remoteclientreference, string typename, int attributebitmap, byte[] entitydata )
         {
-            Console.WriteLine("ObjectCreatedRpcClientToServer " + typename );
+            LogFile.WriteLine("ObjectCreatedRpcClientToServer " + typename );
 
-            //Console.WriteLine(Encoding.UTF8.GetString(entitydata));
+            //LogFile.WriteLine(Encoding.UTF8.GetString(entitydata));
 
             // note to self: should probably make a whitelist of allowed typenames, maybe via primitive class registration
             Type newtype = Type.GetType(typename);
@@ -364,7 +364,7 @@ namespace OSMP
             int nextposition = 0;
             new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes(entitydata, ref nextposition,
                 newobject, new Type[] { typeof(Replicate) });
-            Console.WriteLine("server received replicated object: " + newobject.GetType());
+            LogFile.WriteLine("server received replicated object: " + newobject.GetType());
 
             int newobjectreference = 0;
             if (replicatedobjectcontroller != null && replicatedobjectcontroller is IReferenceGenerator)
@@ -377,7 +377,7 @@ namespace OSMP
                 nextreference++;
             }
 
-            Console.WriteLine("New object reference: " + newobjectreference);
+            LogFile.WriteLine("New object reference: " + newobjectreference);
             if( newobject is IHasReference )
             {
                 ( newobject as IHasReference ).Reference = newobjectreference;
@@ -399,14 +399,14 @@ namespace OSMP
 
         public void ObjectCreatedRpcServerToCreatorClient(IPEndPoint connection, int clientreference, int globalreference)
         {
-            Console.WriteLine("ObjectCreatedRpcServerToCreatorClient " + clientreference + " -> " + globalreference);
+            LogFile.WriteLine("ObjectCreatedRpcServerToCreatorClient " + clientreference + " -> " + globalreference);
             IHasReference thisobject = this.tempreferences[clientreference];
             //if (thisobject is IHasReference)
             //{
                 IReplicatedObjectController replicatedobjectcontroller = GetControllerForObject(thisobject);
                 if (replicatedobjectcontroller == null)
                 {
-                    Console.WriteLine("Warning, no replicatedobjectcontroller for type " + thisobject.GetType());
+                    LogFile.WriteLine("Warning, no replicatedobjectcontroller for type " + thisobject.GetType());
                     return;
                 }
                 replicatedobjectcontroller.AssignGlobalReference(thisobject, globalreference);
@@ -417,7 +417,7 @@ namespace OSMP
 
         public void ObjectCreatedRpcServerToClient(IPEndPoint connection, int reference, string typename, int attributebitmap, byte[] entitydata)
         {
-            Console.WriteLine("ObjectCreatedRpcServerToClient " + typename);
+            LogFile.WriteLine("ObjectCreatedRpcServerToClient " + typename);
 
             Type newtype = Type.GetType(typename);
             IHasReference newobject = (IHasReference)Activator.CreateInstance(newtype); // note to self: insecure
@@ -432,7 +432,7 @@ namespace OSMP
             }
             if (replicatedobjectcontroller == null)
             {
-                Console.WriteLine("Error: no controller for received type " + typename);
+                LogFile.WriteLine("Error: no controller for received type " + typename);
                 return;
             }
 
@@ -444,7 +444,7 @@ namespace OSMP
 
             if (!replicatedobjectcontroller.HasEntityForReference(newobject.Reference))
             {
-                Console.WriteLine("client received replicated object: " + newobject);
+                LogFile.WriteLine("client received replicated object: " + newobject);
                 replicatedobjectcontroller.ReplicatedObjectCreated(this,
         new ObjectCreatedArgs(DateTime.Now, newobject)); // note to self: untested cast
             }
@@ -459,7 +459,7 @@ namespace OSMP
                 IReplicatedObjectController replicatedobjectcontroller = GetControllerForType(modifiedobjecttype);
                 if (replicatedobjectcontroller == null)
                 {
-                    Console.WriteLine("ObjectModifiedRpc. Error: no controller for received type " + typename);
+                    LogFile.WriteLine("ObjectModifiedRpc. Error: no controller for received type " + typename);
                     return;
                 }
 
@@ -468,28 +468,28 @@ namespace OSMP
                 IHasReference thisobject = replicatedobjectcontroller.GetEntity(reference);
                 if (thisobject == null)
                 {
-                    Console.WriteLine("ObjectModifiedRpc received for unknown object " + reference);
+                    LogFile.WriteLine("ObjectModifiedRpc received for unknown object " + reference);
                     return;
                 }
                 int nextposition = 0;
                 new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes(entity, ref nextposition,
                     thisobject, new Type[] { typeof(Replicate) });
 
-                Console.WriteLine("server received replicated modified object: " + thisobject);
+                LogFile.WriteLine("server received replicated modified object: " + thisobject);
                 replicatedobjectcontroller.ReplicatedObjectModified(this,
                     new ObjectModifiedArgs(DateTime.Now, thisobject, AttributeTypeList.ToArray()));
                 dirtyobjectcontroller.MarkDirty(thisobject, AttributeTypeList.ToArray());
             }
             else
             {
-                Console.WriteLine("ObjectModifiedRpcServerToClient " + typename);
+                LogFile.WriteLine("ObjectModifiedRpcServerToClient " + typename);
 
                 Type modifiedobjecttype = Type.GetType(typename);
 
                 IReplicatedObjectController replicatedobjectcontroller = GetControllerForType(modifiedobjecttype);
                 if (replicatedobjectcontroller == null)
                 {
-                    Console.WriteLine("ObjectModifiedRpc. Error: no controller for received type " + typename);
+                    LogFile.WriteLine("ObjectModifiedRpc. Error: no controller for received type " + typename);
                     return;
                 }
 
@@ -499,7 +499,7 @@ namespace OSMP
                 bool objectisnew = false;
                 if (thisobject == null)
                 {
-                    Console.WriteLine("Creating new object");
+                    LogFile.WriteLine("Creating new object");
                     thisobject = Activator.CreateInstance(modifiedobjecttype) as IHasReference;
                     objectisnew = true;
                 }
@@ -507,7 +507,7 @@ namespace OSMP
                 new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes(entity, ref nextposition,
                     thisobject, new Type[] { typeof(Replicate) });
 
-                Console.WriteLine("client received replicated modified object: " + thisobject);
+                LogFile.WriteLine("client received replicated modified object: " + thisobject);
                 if (objectisnew)
                 {
                     replicatedobjectcontroller.ReplicatedObjectCreated(this,
@@ -527,18 +527,18 @@ namespace OSMP
             IReplicatedObjectController replicatedobjectcontroller = GetControllerForType(type);
             if (replicatedobjectcontroller == null)
             {
-                Console.WriteLine("Warning: no replicatedobjectcontroller found for type " + typename);
+                LogFile.WriteLine("Warning: no replicatedobjectcontroller found for type " + typename);
                 return;
             }
 
             if (rpc.isserver)
             {
-                Console.WriteLine("ObjectDeletedRpc, server " + reference);
+                LogFile.WriteLine("ObjectDeletedRpc, server " + reference);
                 dirtyobjectcontroller.MarkDeleted(reference, typename);
             }
             else
             {
-                Console.WriteLine("ObjectDeletedRpc, client " + reference);
+                LogFile.WriteLine("ObjectDeletedRpc, client " + reference);
                 replicatedobjectcontroller.ReplicatedObjectDeleted(this, new ObjectDeletedArgs(DateTime.Now, reference, typename));
             }
         }        

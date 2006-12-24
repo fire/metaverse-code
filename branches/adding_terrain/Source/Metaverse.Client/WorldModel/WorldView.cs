@@ -105,7 +105,7 @@ namespace OSMP
                     // dont draw own avatar in mouselook mode
                     if( worldmodel.entities[i] != myavatar )
                     {
-                        //Console.WriteLine("render entity " + i);
+                        //LogFile.WriteLine("render entity " + i);
                         Gl.glRasterPos3f((float)worldmodel.entities[i].pos.x, (float)worldmodel.entities[i].pos.y, (float)worldmodel.entities[i].pos.z);
                         picker3dcontroller.AddHitTarget( worldmodel.entities[i] );
                         worldmodel.entities[i].Draw();
@@ -129,7 +129,7 @@ namespace OSMP
         
         public void Render()
         {
-            //Console.WriteLine("render");
+            //LogFile.WriteLine("render");
             DrawLandscape();
             DrawEntities();
             SelectionView.GetInstance().Render();

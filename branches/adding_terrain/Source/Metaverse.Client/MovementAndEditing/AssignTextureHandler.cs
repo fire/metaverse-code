@@ -35,7 +35,7 @@ namespace OSMP
         
         public AssignTextureHandler()
         {
-            Console.WriteLine("instantiating AssignTextureHandler" );
+            LogFile.WriteLine("instantiating AssignTextureHandler" );
             ContextMenuController.GetInstance().ContextMenuPopup += new ContextMenuHandler( ContextMenuPopup );
         }
         
@@ -50,7 +50,7 @@ namespace OSMP
             entity = e.Entity;
             if( entity != null )
             {
-                Console.WriteLine("AssignTextureHandler registering in contextmenu");
+                LogFile.WriteLine("AssignTextureHandler registering in contextmenu");
                 ContextMenuController.GetInstance().RegisterContextMenu(new string[]{ "Assign &Texture..." }, new ContextMenuHandler( AssignTextureClick ) );
             }
         }

@@ -69,7 +69,7 @@ namespace OSMP
         
         public NetworkLevel2Connection( NetworkLevel2Controller parent, ConnectionInfo connectioninfo, bool isserver )
         {
-            Console.WriteLine("NetworkLevel2Connection()");
+            LogFile.WriteLine("NetworkLevel2Connection()");
 
             networkimplementation = parent.networkimplementation;
             this.connectioninfo = connectioninfo;
@@ -105,14 +105,14 @@ namespace OSMP
                 short packetref = (short)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(short));
                 char packetcode = (char)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(char));
                 
-                //Console.WriteLine( "Packet key: " + packetkey.ToString() + " packetref: " + packetref.ToString() + " packetcode: " + packetcode );
+                //LogFile.WriteLine( "Packet key: " + packetkey.ToString() + " packetref: " + packetref.ToString() + " packetcode: " + packetcode );
 
                 if( unsafepackethandlers.Contains( packetcode ) )
                 {
-                    //Console.WriteLine("calling unsafepackethandler...");
+                    //LogFile.WriteLine("calling unsafepackethandler...");
                     if( packetreferencecontroller.ValidateIncomingReference( packetref ) )
                     {
-                        //Console.WriteLine("Incoming reference validated");
+                        //LogFile.WriteLine("Incoming reference validated");
                         ((PacketHandler)unsafepackethandlers[packetcode])(this, new PacketHandlerArgs(
                             packetkey, packetcode, packetref, packet, nextposition ) );
                     }
@@ -134,7 +134,7 @@ namespace OSMP
                             }
                             else
                             {
-                                Console.WriteLine("Warning: unknown packet code " + packetcode.ToString() + " " + Encoding.ASCII.GetString(packet, 0, packet.Length));
+                                LogFile.WriteLine("Warning: unknown packet code " + packetcode.ToString() + " " + Encoding.ASCII.GetString(packet, 0, packet.Length));
                             }
                         }// else silently ignore duplicate packet
                     }
@@ -142,11 +142,11 @@ namespace OSMP
                     {
                         if (isserver)
                         {
-                            Console.WriteLine("WARNING: server received potentially spoofed packet allegedly from " + connection.ToString() + " " + Encoding.ASCII.GetString(packet, 0, packet.Length));
+                            LogFile.WriteLine("WARNING: server received potentially spoofed packet allegedly from " + connection.ToString() + " " + Encoding.ASCII.GetString(packet, 0, packet.Length));
                         }
                         else
                         {
-                            Console.WriteLine("WARNING: client received potentially spoofed packet allegedly from " + connection.ToString() + " " + Encoding.ASCII.GetString(packet, 0, packet.Length));
+                            LogFile.WriteLine("WARNING: client received potentially spoofed packet allegedly from " + connection.ToString() + " " + Encoding.ASCII.GetString(packet, 0, packet.Length));
                         }
                     }
                 }
@@ -218,7 +218,7 @@ namespace OSMP
             }
             if( !unsafepackethandlers.Contains( packetcode ) )
             {
-                //Console.WriteLine("Registering unsafe-packet handler " + packetcode.ToString() + " " + packethandler.ToString() );
+                //LogFile.WriteLine("Registering unsafe-packet handler " + packetcode.ToString() + " " + packethandler.ToString() );
                 unsafepackethandlers.Add( packetcode, packethandler );
             }
         }

@@ -21,7 +21,7 @@ namespace OSMP
             entity = e.Entity;
             if (entity != null)
             {
-                Console.WriteLine("EntityDelete registering in contextmenu");
+                LogFile.WriteLine("EntityDelete registering in contextmenu");
                 ContextMenuController.GetInstance().RegisterContextMenu(new string[] { "Delete" }, new ContextMenuHandler(DeleteClick));
             }
         }

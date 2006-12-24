@@ -164,7 +164,7 @@ namespace OSMP
 
         public void ActivateMouseLook(string command, bool down)
         {
-            Console.WriteLine("PlayerMovement.ActivateMouseLook " + down);
+            LogFile.WriteLine("PlayerMovement.ActivateMouseLook " + down);
             //bcapturing = down;
 
             if (down)
@@ -187,7 +187,7 @@ namespace OSMP
 
         void PlayerMovement_MouseMove()
         {
-            //Console.WriteLine("PlayerMovement.MouseMove " + bcapturing);
+            //LogFile.WriteLine("PlayerMovement.MouseMove " + bcapturing);
             if ( InMouseMoveDrag &&
                 ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.None)
             {
@@ -200,7 +200,7 @@ namespace OSMP
         public void MouseDown(string command, bool down)
         {
             //Test.Debug("Playermovement MouseDown " + e.ToString() );
-            //Console.WriteLine("PlayerMovement.MouseDown " + down + " " + bcapturing);
+            //LogFile.WriteLine("PlayerMovement.MouseDown " + down + " " + bcapturing);
             if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.None)
             {
                 InMouseMoveDrag = down;

@@ -53,13 +53,13 @@ namespace OSMP
 
         public void MarkAllDirty()
         {
-            Console.WriteLine("MarkAllDirty() client " + connection);
+            LogFile.WriteLine("MarkAllDirty() client " + connection);
             // note to self: this is a hack
             foreach (IHasReference entity in MetaverseServer.GetInstance().World.entities)
             {
                 if (!DirtyAttributesByEntity.ContainsKey(entity))
                 {
-                    Console.WriteLine("Marking dirty " + entity.GetType().ToString() + " " + entity.Reference );
+                    LogFile.WriteLine("Marking dirty " + entity.GetType().ToString() + " " + entity.Reference );
                     DirtyAttributesByEntity.Add(entity, new List<Type>());
                 }
                 if (!DirtyAttributesByEntity[entity].Contains(typeof(Replicate)))
@@ -74,7 +74,7 @@ namespace OSMP
             if (!DirtyAttributesByEntity.ContainsKey(targetentity))
             {
                 DirtyAttributesByEntity.Add(targetentity, new List<Type>() );
-                Console.WriteLine( "dirtyobjectqueuesingleclient " + connection + " marking object " + targetentity + " dirty" );
+                LogFile.WriteLine( "dirtyobjectqueuesingleclient " + connection + " marking object " + targetentity + " dirty" );
             }
             foreach( Type type in dirtytypes )
             {
@@ -91,7 +91,7 @@ namespace OSMP
         
         public void Tick()
         {
-            //Console.WriteLine("dirtyobjectqueuesingleclient.Tick()");
+            //LogFile.WriteLine("dirtyobjectqueuesingleclient.Tick()");
             Queue<IHasReference> queue = new Queue<IHasReference>();
             foreach (int reference in deleted.Keys)
             {

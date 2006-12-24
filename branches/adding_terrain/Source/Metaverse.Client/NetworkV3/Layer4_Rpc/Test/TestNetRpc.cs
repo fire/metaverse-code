@@ -41,14 +41,14 @@ namespace OSMP
 
             public void SayHello(IPEndPoint connection)
             {
-                Console.WriteLine("Hello!");
+                LogFile.WriteLine("Hello!");
                 Testing.TestInterface_ClientProxy testinterfaceclientproxy = new OSMP.Testing.TestInterface_ClientProxy( rpc, connection );
                 testinterfaceclientproxy.SayMessage("Hello sent via SayMessage!");
             }
 
             public void SayMessage(IPEndPoint connection, string message)
             {
-                Console.WriteLine("Message: " + message);
+                LogFile.WriteLine("Message: " + message);
                 Testing.TestInterface_ClientProxy testinterfaceclientproxy = new OSMP.Testing.TestInterface_ClientProxy(rpc, connection);
                 Testing.TestClass testobject = new OSMP.Testing.TestClass();
                 testobject.name = "blue river";
@@ -59,7 +59,7 @@ namespace OSMP
 
             public void SendObject(IPEndPoint connection, Testing.TestClass testobject)
             {
-                Console.WriteLine("testobject name: " + testobject.name);
+                LogFile.WriteLine("testobject name: " + testobject.name);
             }
         }
 
@@ -84,7 +84,7 @@ namespace OSMP
 
             void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
             {
-                Console.WriteLine("Testnetrpc , new connection " + connectioninfo);
+                LogFile.WriteLine("Testnetrpc , new connection " + connectioninfo);
                 RpcController rpc = new RpcController(network);
                 TestController.GetInstance().rpc = rpc;
                 Testing.TestInterface_ClientProxy testinterface_clientproxy = new OSMP.Testing.TestInterface_ClientProxy(rpc, null);
@@ -116,7 +116,7 @@ namespace OSMP
 
             void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
             {
-                Console.WriteLine("TestNetRpcServer, new connection: " + net2con.connectioninfo);
+                LogFile.WriteLine("TestNetRpcServer, new connection: " + net2con.connectioninfo);
             }
         }
 
@@ -141,7 +141,7 @@ namespace OSMP
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogFile.WriteLine(e);
             }
         }
     }

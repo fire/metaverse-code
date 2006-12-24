@@ -92,11 +92,11 @@ namespace OSMP
                 renderer.ScreenDistanceScreenCoords,
                 renderer.WindowWidth / 2 - mousex,
                 renderer.WindowHeight / 2 - mousey);
-            Console.WriteLine("MouseVectorObserverAxes: " + MouseVectorObserverAxes);
+            LogFile.WriteLine("MouseVectorObserverAxes: " + MouseVectorObserverAxes);
             MouseVectorObserverAxes.Normalize();
-            Console.WriteLine("MouseVectorObserverAxes (normalized): " + MouseVectorObserverAxes);
+            LogFile.WriteLine("MouseVectorObserverAxes (normalized): " + MouseVectorObserverAxes);
             Vector3 MouseVectorWorldAxes = MouseVectorObserverAxes * OurRot.Inverse();
-            Console.WriteLine("MouseVectorWorldAxes: " + MouseVectorWorldAxes.ToString());
+            LogFile.WriteLine("MouseVectorWorldAxes: " + MouseVectorWorldAxes.ToString());
             MouseVectorWorldAxes.Normalize();
             return MouseVectorWorldAxes;
         }
@@ -444,7 +444,7 @@ namespace OSMP
 
             if (HeightMap == null)
             {
-                Console.WriteLine("Error: no height map data available"); // Test.Debug
+                LogFile.WriteLine("Error: no height map data available"); // Test.Debug
                 return;
             }
 

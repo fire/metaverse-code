@@ -76,23 +76,23 @@ namespace OSMP
             int bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap(new Type[] { typeof(Replicate) });
             foreach (Type attributetype in new ReplicateAttributeHelper().BitmapToAttributeTypeArray(bitmap))
             {
-                Console.WriteLine( attributetype );
+                LogFile.WriteLine( attributetype );
             }
-            Console.WriteLine();
+            LogFile.BlankLine();
 
             bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap(new Type[] { typeof(Movement) });
             foreach (Type attributetype in new ReplicateAttributeHelper().BitmapToAttributeTypeArray(bitmap))
             {
-                Console.WriteLine( attributetype );
+                LogFile.WriteLine( attributetype );
             }
-            Console.WriteLine();
+            LogFile.BlankLine();
 
             bitmap = new ReplicateAttributeHelper().TypeArrayToBitmap(new Type[] { typeof(Replicate), typeof(Movement) });
             foreach (Type attributetype in new ReplicateAttributeHelper().BitmapToAttributeTypeArray(bitmap))
             {
-                Console.WriteLine( attributetype );
+                LogFile.WriteLine( attributetype );
             }
-            Console.WriteLine();
+            LogFile.BlankLine();
         }
     }
 }
