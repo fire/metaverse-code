@@ -78,14 +78,14 @@ namespace OSMP
 
         public bool ValidateIncomingReference( short packetref )
         {
-            //Console.WriteLine("Validating incoming ref " + packetref.ToString() );
+            //LogFile.WriteLine("Validating incoming ref " + packetref.ToString() );
             if( packetref == 0 ) // non-ackable packet
             {
                 return true;
             }
             if( !recentreceivedpackets.Contains( packetref ) )
             {
-                //Console.WriteLine("Adding " + packetref.ToString() + " to queue..." );
+                //LogFile.WriteLine("Adding " + packetref.ToString() + " to queue..." );
                 recentreceivedpackets.Add( packetref, DateTime.Now );
                 receivedpacketsnotacked.Enqueue( packetref );
                 return true;
@@ -109,13 +109,13 @@ namespace OSMP
         // handles incoming ack packets ('A' packets)
         public void APacketHandler( object source, PacketHandlerArgs e )
         {
-            //Console.WriteLine( "Processing 'A' packet: " );
+            //LogFile.WriteLine( "Processing 'A' packet: " );
             byte[] packet = e.Data;
             int nextposition = e.NextPosition; 
             while( nextposition < packet.Length )
             {
                 short ackedpacketreference = (short)binarypacker.ReadValueFromBuffer(packet, ref nextposition, typeof(short));
-              //  Console.WriteLine( "  ... Packet " + ackedpacketreference.ToString() + " acked" );
+              //  LogFile.WriteLine( "  ... Packet " + ackedpacketreference.ToString() + " acked" );
                 sentpacketsawaitingack.Remove( ackedpacketreference );
             }
             DumpSentPacketsAwaitingAck();
@@ -125,7 +125,7 @@ namespace OSMP
         {
             //foreach( DictionaryEntry dictionaryentry in sentpacketsawaitingack )
             //{
-                //Console.WriteLine( "sent packet awaiting ack: " + dictionaryentry.Key.ToString() );
+                //LogFile.WriteLine( "sent packet awaiting ack: " + dictionaryentry.Key.ToString() );
             //}
         }
         
@@ -139,7 +139,7 @@ namespace OSMP
         {            
             object[] sentpacketinfo = (object[])sentpacketsawaitingack[ packetreference ];
             byte[] data = (byte[])sentpacketinfo[1];
-            Console.WriteLine("resending packet ref " + packetreference.ToString() );
+            LogFile.WriteLine("resending packet ref " + packetreference.ToString() );
             parent.RawSend( data );
             sentpacketsawaitingack[ packetreference ] = new object[]{ DateTime.Now, data };
         }
@@ -169,7 +169,7 @@ namespace OSMP
         
         void SendAckPackets()
         {
-            // Console.WriteLine("Checking Last ack  " + ((int)DateTime.Now.Subtract( lastackpacketsent ).TotalMilliseconds).ToString() );
+            // LogFile.WriteLine("Checking Last ack  " + ((int)DateTime.Now.Subtract( lastackpacketsent ).TotalMilliseconds).ToString() );
             if( (int)DateTime.Now.Subtract( lastackpacketsent ).TotalMilliseconds > AckPacketIntervalSeconds * 1000 )
             {
                 lastackpacketsent = DateTime.Now;
@@ -180,7 +180,7 @@ namespace OSMP
                     {
                         return;
                     }
-                    //Console.WriteLine("Creating ack packet..." );
+                    //LogFile.WriteLine("Creating ack packet..." );
                     int numpacketstoack = receivedpacketsnotacked.Count;
                     ackpacketdata = new byte[ numpacketstoack * 2 ];
                     int nextposition = 0;
@@ -188,10 +188,10 @@ namespace OSMP
                     {
                         short packettoack = (short)receivedpacketsnotacked.Dequeue();
                         binarypacker.WriteValueToBuffer(ackpacketdata, ref nextposition, packettoack);
-                      //  Console.WriteLine("   ... acking " + packettoack.ToString() );
+                      //  LogFile.WriteLine("   ... acking " + packettoack.ToString() );
                     }
                 }
-                //Console.WriteLine("Sending ack packet " + Encoding.ASCII.GetString( ackpacketdata, 0, ackpacketdata.Length ) );
+                //LogFile.WriteLine("Sending ack packet " + Encoding.ASCII.GetString( ackpacketdata, 0, ackpacketdata.Length ) );
                 parent.SendNonAckable( 'A', ackpacketdata );
             }
         }        

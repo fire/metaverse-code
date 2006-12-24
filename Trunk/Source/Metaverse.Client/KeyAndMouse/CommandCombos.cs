@@ -47,7 +47,7 @@ namespace OSMP
                 {
                     if (!isdown)
                     {
-                        //Console.WriteLine("Registration down: " + command);
+                        //LogFile.WriteLine("Registration down: " + command);
                         handler(command, true);
                     }
                 }
@@ -55,7 +55,7 @@ namespace OSMP
                 {
                     if (isdown)
                     {
-                        //Console.WriteLine("Registration up: " + command);
+                        //LogFile.WriteLine("Registration up: " + command);
                         handler(command, false);
                     }
                 }
@@ -149,7 +149,7 @@ namespace OSMP
                 {
                     if (!newdowncommands.Contains(command))
                     {
-                        //Console.WriteLine("Commandcombo up: " + command);
+                        //LogFile.WriteLine("Commandcombo up: " + command);
                         handler(command, false);
                     }
                 }
@@ -157,7 +157,7 @@ namespace OSMP
                 {
                     if (!currentdowncommands.Contains(command))
                     {
-                        //Console.WriteLine("Commandcombo down: " + command);
+                        //LogFile.WriteLine("Commandcombo down: " + command);
                         handler(command, true);
                     }
                 }
@@ -192,7 +192,7 @@ namespace OSMP
         {
             foreach (Registration registration in registrations)
             {
-                //Console.WriteLine("checking registration " + registration);
+                //LogFile.WriteLine("checking registration " + registration);
                 registration.Check();
             }
         }

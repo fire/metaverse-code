@@ -159,7 +159,7 @@ namespace OSMP
                     try
                     {
                         Byte[] receiveddata = udpclient.Receive(ref endpoint);
-                     //   Console.WriteLine("received: " + Encoding.UTF8.GetString(receiveddata, 0, receiveddata.Length));
+                     //   LogFile.WriteLine("received: " + Encoding.UTF8.GetString(receiveddata, 0, receiveddata.Length));
                         lock (receivedpackets)
                         {
                             receivedpackets.Enqueue(new object[] { endpoint, receiveddata });
@@ -167,7 +167,7 @@ namespace OSMP
                     }
                     catch //(Exception e)
                     {
-                        //Console.WriteLine(e);
+                        //LogFile.WriteLine(e);
                     }
                 }
             }
@@ -185,7 +185,7 @@ namespace OSMP
             }
 
             receivedelegate = new ReceiveDelegate(udpclient.Receive);
-            //Console.WriteLine("our port: " + ((IPEndPoint)udpclient.Client.LocalEndPoint).Port);
+            //LogFile.WriteLine("our port: " + ((IPEndPoint)udpclient.Client.LocalEndPoint).Port);
             
             //Receive receive = new Receive( udpclient, ReceivedPackets );
             //receivethread = new Thread( new ThreadStart( receive.Go ) );
@@ -223,14 +223,14 @@ namespace OSMP
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine( e );
+                        LogFile.WriteLine( e );
                     }
                     asyncresult = receivedelegate.BeginInvoke( ref endpoint, null, null );
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine( e );
+                LogFile.WriteLine( e );
             }
         }
 
@@ -239,7 +239,7 @@ namespace OSMP
         {
             if (!connections.ContainsKey(endpoint))
             {
-                Console.WriteLine("connection: " + endpoint.ToString());
+                LogFile.WriteLine("connection: " + endpoint.ToString());
                 connections.Add(endpoint, new Level1ConnectionInfo(endpoint, new ConnectionInfo(endpoint, endpoint.Address, endpoint.Port)));
             }
             Level1ConnectionInfo level1connectioninfo = connections[endpoint] as Level1ConnectionInfo;
@@ -298,7 +298,7 @@ namespace OSMP
                     Level1ConnectionInfo connectioninfo = kvp.Value;
                     if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                     {
-                       // Console.WriteLine("sending keepalive to " + connection.ToString() );
+                       // LogFile.WriteLine("sending keepalive to " + connection.ToString() );
                         Send( connection, new byte[]{} );
                         connectioninfo.UpdateLastOutgoingPacketTime();
                     }
@@ -309,7 +309,7 @@ namespace OSMP
                 Level1ConnectionInfo connectioninfo = connectiontoserver;
                 if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                 {
-                   // Console.WriteLine("sending keepalive to server" );
+                   // LogFile.WriteLine("sending keepalive to server" );
                     Send( new byte[]{} );
                     connectioninfo.UpdateLastOutgoingPacketTime();
                 }
@@ -336,7 +336,7 @@ namespace OSMP
                 {
                     Disconnection( this, connectioninfo.connectioninfo );
                 }
-                Console.WriteLine( "disconnection: " + connectioninfo.EndPoint.ToString() );
+                LogFile.WriteLine( "disconnection: " + connectioninfo.EndPoint.ToString() );
                 connections.Remove( connection );
             }
         }

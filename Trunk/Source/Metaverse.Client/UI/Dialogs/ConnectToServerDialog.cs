@@ -90,7 +90,7 @@ namespace OSMP
             {
                 return;
             }
-            Console.WriteLine("ConnectToServerDialog, connecting to " + ipaddress + " " + port);
+            LogFile.WriteLine("ConnectToServerDialog, connecting to " + ipaddress + " " + port);
             MetaverseClient.GetInstance().ConnectToServer(ipaddress, port);
         }
     }

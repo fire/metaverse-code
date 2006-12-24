@@ -58,11 +58,11 @@ using Tao.Sdl;
         {
             Sdl.SDL_SysWMinfo_Windows info;
             Tao.Sdl.Sdl.SDL_GetWMInfo(out info);
-            Console.WriteLine(info.window);
+            LogFile.WriteLine(info.window);
             Rect rect = new Rect();
             GetClientRect(info.window, ref rect);
-            Console.WriteLine("error code: " + Marshal.GetLastWin32Error());
-            Console.WriteLine(rect.top + " " + rect.bottom + " " + rect.right + " " + rect.left );
+            LogFile.WriteLine("error code: " + Marshal.GetLastWin32Error());
+            LogFile.WriteLine(rect.top + " " + rect.bottom + " " + rect.right + " " + rect.left );
             windowwidth = rect.right - rect.left;
             windowheight = rect.bottom - rect.top;
         }

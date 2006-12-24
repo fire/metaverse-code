@@ -47,18 +47,18 @@ namespace OSMP
 
             void net_ReceivedPacket(NetworkLevel2Connection net2con, byte[] data, int offset, int length)
             {
-                Console.WriteLine("TestLevel2Server Received packet: " + Encoding.UTF8.GetString(data, offset, length));
+                LogFile.WriteLine("TestLevel2Server Received packet: " + Encoding.UTF8.GetString(data, offset, length));
                 net.Send(net2con.connectioninfo.Connection, 'Z', Encoding.UTF8.GetBytes("Hello from server"));
             }
 
             void net_Disconnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
             {
-                Console.WriteLine("TestLevel2Server: Client disconnected " + connectioninfo.IPAddress.ToString() + " " + connectioninfo.Port);
+                LogFile.WriteLine("TestLevel2Server: Client disconnected " + connectioninfo.IPAddress.ToString() + " " + connectioninfo.Port);
             }
 
             void net_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
             {
-                Console.WriteLine("TestLevel2Server: Client connected " + connectioninfo.IPAddress.ToString() + " " + connectioninfo.Port);
+                LogFile.WriteLine("TestLevel2Server: Client connected " + connectioninfo.IPAddress.ToString() + " " + connectioninfo.Port);
             }
 
             //void INetPacketHandler.ReceivedPacket(int refnum, object connection, byte[] packetdata, int nextposition)
@@ -90,24 +90,24 @@ namespace OSMP
 
             void net_ReceivedPacket(NetworkLevel2Connection net2con, byte[] data, int offset, int length)
             {
-                Console.WriteLine("TestLevel2Client Received packet: " + Encoding.UTF8.GetString(data, offset, length   ));
+                LogFile.WriteLine("TestLevel2Client Received packet: " + Encoding.UTF8.GetString(data, offset, length   ));
                 net.Send(net2con.connectioninfo.Connection, 'Z', Encoding.UTF8.GetBytes("Test reply from client"));
             }
 
             void net_Disconnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
             {
-                Console.WriteLine("TestLevel2Client: Disconnected from server " + connectioninfo.IPAddress.ToString() + " " + connectioninfo.Port);
+                LogFile.WriteLine("TestLevel2Client: Disconnected from server " + connectioninfo.IPAddress.ToString() + " " + connectioninfo.Port);
             }
 
             void net_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
             {
-                Console.WriteLine("TestLevel2Client: connected to server " + connectioninfo.IPAddress.ToString() + " " + connectioninfo.Port);
+                LogFile.WriteLine("TestLevel2Client: connected to server " + connectioninfo.IPAddress.ToString() + " " + connectioninfo.Port);
                 net.Send( net2con.connectioninfo.Connection, 'Z', Encoding.UTF8.GetBytes("Hello server!") );
             }
 
             //void INetPacketHandler.ReceivedPacket(int refnum, object connection, byte[] packetdata, int nextposition)
             //{
-              //  Console.WriteLine("TestLevel2Client Received packet: " + Encoding.UTF8.GetString(data));
+              //  LogFile.WriteLine("TestLevel2Client Received packet: " + Encoding.UTF8.GetString(data));
             //}
         }
 
@@ -131,7 +131,7 @@ namespace OSMP
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogFile.WriteLine(e);
             }
         }
     }

@@ -62,14 +62,14 @@ namespace OSMP
 
         void btnok_Activated( object sender, EventArgs e )
         {
-            Console.WriteLine( "ok pressed" );
+            LogFile.WriteLine( "ok pressed" );
             inputbox.Destroy();
             callback( usertext.Text );
         }
 
         void btncancel_Activated( object sender, EventArgs e )
         {
-            Console.WriteLine( "cancel pressed" );
+            LogFile.WriteLine( "cancel pressed" );
             inputbox.Destroy();
         }
     }

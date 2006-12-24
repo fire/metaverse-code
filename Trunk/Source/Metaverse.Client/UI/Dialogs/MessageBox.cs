@@ -85,7 +85,7 @@ namespace OSMP
 
         void btnok_Activated( object sender, EventArgs e )
         {
-            Console.WriteLine( "ok pressed" );
+            LogFile.WriteLine( "ok pressed" );
             messagebox.Destroy();
             if (callback != null)
             {

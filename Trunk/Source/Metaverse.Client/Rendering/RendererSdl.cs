@@ -103,7 +103,7 @@ namespace OSMP
 
             if (WriteNextFrameEvent != null)
             {
-                //Console.WriteLine("writenextframe");
+                //LogFile.WriteLine("writenextframe");
                 Vector3 camerapos = Camera.GetInstance().CameraPos;
                 WriteNextFrameEvent(camerapos);
             }
@@ -140,7 +140,7 @@ namespace OSMP
                 //try
                 //{
                     WriteNextFrame();
-                    // Console.WriteLine(".");
+                    // LogFile.WriteLine(".");
                     // Thread.Sleep(100);
                     while (Events.Poll())
                     {
@@ -152,7 +152,7 @@ namespace OSMP
                 //}
                 //catch (Exception e)
                // {
-                 //   Console.WriteLine(e.ToString());
+                 //   LogFile.WriteLine(e.ToString());
                // }
             }
         }
@@ -162,7 +162,7 @@ namespace OSMP
 
         public void Init()
         {
-            Console.WriteLine("init sdl");
+            LogFile.WriteLine("init sdl");
 
             // int bpp = pixelFormat.BitsPerPixel;
             /*
@@ -175,7 +175,7 @@ namespace OSMP
                     Sdl.SDL_WM_SetIcon(Sdl.SDL_LoadBMP("osmpico32.bmp"), null );
                     if( Sdl.SDL_SetVideoMode( iWindowWidth, iWindowHeight, bpp, Sdl.SDL_OPENGL | Sdl.SDL_HWSURFACE | Sdl.SDL_DOUBLEBUF ) == IntPtr.Zero )
                     {
-                        Console.WriteLine(  "Video mode set failed: " + Sdl.SDL_GetError().ToString() ); // Console.WriteLine
+                        LogFile.WriteLine(  "Video mode set failed: " + Sdl.SDL_GetError().ToString() ); // Console.WriteLine
                         return;
                     }
 
@@ -190,29 +190,29 @@ namespace OSMP
             iWindowWidth = Config.GetInstance().windowwidth;
             iWindowHeight = Config.GetInstance().windowheight;
 
-            LogFile.GetInstance().WriteLine("requested window width/height: " + iWindowWidth.ToString() + " " + OuterWindowHeight.ToString()); // Console.WriteLine
+            LogFile.WriteLine("requested window width/height: " + iWindowWidth.ToString() + " " + OuterWindowHeight.ToString()); // Console.WriteLine
 
             Video.SetVideoModeWindowOpenGL( iWindowWidth, iWindowHeight );
             //Video.SetVideoModeOpenGL(iWindowWidth, WindowHeight, FullScreenBitsPerPixel);
 
-            Console.WriteLine(Video.WindowHandle);
+            LogFile.WriteLine(Video.WindowHandle.ToString());
 
             IDisplayGeometry displaygeometry = DisplayGeometryFactory.GetDisplayGeometry();
             innerwidth = displaygeometry.WindowWidth;
             innerheight = displaygeometry.WindowHeight;
 
             string extensions = System.Runtime.InteropServices.Marshal.PtrToStringAnsi(Gl.glGetString(Gl.GL_EXTENSIONS));
-            LogFile.GetInstance().WriteLine(extensions);
+            LogFile.WriteLine(extensions);
 
             if (extensions.IndexOf("GL_ARB_multitexture") >= 0)
             {
                 GlExtensionLoader.LoadExtension("GL_ARB_multitexture");           // Is Multitexturing Supported?
                 Gl.glGetIntegerv(Gl.GL_MAX_TEXTURE_UNITS_ARB, out MaxTexelUnits);
-                LogFile.GetInstance().WriteLine("max texel units: " + MaxTexelUnits);
+                LogFile.WriteLine("max texel units: " + MaxTexelUnits);
                 Multitexturing = true;
             }
 
-            LogFile.GetInstance().WriteLine(Marshal.PtrToStringAnsi(Gl.glGetString(Gl.GL_VERSION))); 
+            LogFile.WriteLine(Marshal.PtrToStringAnsi(Gl.glGetString(Gl.GL_VERSION))); 
 
             Video.WindowCaption = WindowName;
 
@@ -339,7 +339,7 @@ namespace OSMP
             Glu.gluPerspective(60.0, (float)width / (float)height, _NearClip, _FarClip);
             _FieldOfView = 60.0;
             _ScreenDistanceScreenCoords = (int)( (double)height / 2 / Math.Tan( 60.0 / 2 * Math.PI / 180 ) );
-            LogFile.GetInstance().WriteLine( "_ScreenDistanceScreenCoords: " + _ScreenDistanceScreenCoords );
+            LogFile.WriteLine( "_ScreenDistanceScreenCoords: " + _ScreenDistanceScreenCoords );
             Gl.glMatrixMode(Gl.GL_MODELVIEW);
             Gl.glLoadIdentity();
             Glu.gluLookAt(0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);

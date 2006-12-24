@@ -56,7 +56,7 @@ namespace OSMP
 
         void SetupFrustrum()
         {
-            //Console.WriteLine("setup frustrum");
+            //LogFile.WriteLine("setup frustrum");
 
             camerapos = Camera.GetInstance().CameraPos;
             camerarot = Camera.GetInstance().CameraRot;
@@ -180,17 +180,17 @@ namespace OSMP
                 Gl.glEnd();
             }
 
-            //Console.WriteLine( CheckObject(camerapos - 3 * viewray, 2) );
+            //LogFile.WriteLine( CheckObject(camerapos - 3 * viewray, 2) );
             //System.Environment.Exit(0);
         }
 
         public bool IsInsideFrustum(Vector3 centrepos, double boundingradius)
         {
-            //Console.WriteLine("IsInsideFrustrum " + centrepos + " " + boundingradius);
+            //LogFile.WriteLine("IsInsideFrustrum " + centrepos + " " + boundingradius);
             foreach (Plane plane in planes)
             {
                 double distance = plane.GetDistance(centrepos);
-                //Console.WriteLine( "plane distance: " + distance );
+                //LogFile.WriteLine( "plane distance: " + distance );
                 if (distance > boundingradius)
                 {
                     //System.Environment.Exit(0);

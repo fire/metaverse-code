@@ -97,7 +97,7 @@ namespace OSMP
                     HttpWebResponse httpwebresponse = (HttpWebResponse)myReq.GetResponse();
                     Stream stream = httpwebresponse.GetResponseStream();
                     int length = (int)httpwebresponse.ContentLength;
-                    Console.WriteLine( length );
+                    LogFile.WriteLine( length );
                     bytes = StreamHelper.ReadFully( stream, length );
                     //bytes = new byte[ length ];
                     //stream.Read( bytes, 0, length );
@@ -117,7 +117,7 @@ namespace OSMP
 
             void LoadUri(Uri uri)
             {
-                Console.WriteLine("Loading image " + uri);
+                LogFile.WriteLine("Loading image " + uri);
                 loaduridelegate = new LoadUriDelegate( _LoadUri );
                 asyncresult = loaduridelegate.BeginInvoke( uri, null, null );
                 CheckHowLoadingIsGoing();
@@ -127,7 +127,7 @@ namespace OSMP
             {
                 if (asyncresult.IsCompleted)
                 {
-                    Console.WriteLine( "image " + uri + " loaded, adding to opengl..." );
+                    LogFile.WriteLine( "image " + uri + " loaded, adding to opengl..." );
                     byte[] bytes = loaduridelegate.EndInvoke( asyncresult );
                     LoadTexture( bytes );
                     isloaded = true;

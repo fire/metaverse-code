@@ -30,7 +30,7 @@ namespace OSMP
 
         public EntityCreationProperties(int screenx, int screeny)
         {
-            Console.WriteLine("create entity screen pos : " + screenx + " " + screeny);
+            LogFile.WriteLine("create entity screen pos : " + screenx + " " + screeny);
 
             IGraphicsHelper graphics = GraphicsHelperFactory.GetInstance();
 
@@ -38,7 +38,7 @@ namespace OSMP
             Vector3 mousevector = graphics.GetMouseVector(
                 camera.CameraPos, camera.CameraRot, screenx, screeny);
             pos = camera.CameraPos + 3.0 * mousevector.Normalize();
-            Console.WriteLine("mousevector: " + mousevector);
+            LogFile.WriteLine("mousevector: " + mousevector);
 
             rot = new Rot();
             scale = new Vector3(1, 1, 1);

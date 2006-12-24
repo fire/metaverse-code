@@ -151,12 +151,12 @@ namespace OSMP
 
         void network_Disconnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
-            Console.WriteLine("Server: client connected: " + net2con.connectioninfo);
+            LogFile.WriteLine("Server: client connected: " + net2con.connectioninfo);
         }
 
         void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
-            Console.WriteLine("Server: client disconnected: " + net2con.connectioninfo);
+            LogFile.WriteLine("Server: client disconnected: " + net2con.connectioninfo);
         }
     }
 }

@@ -36,10 +36,10 @@ namespace OSMP
 
         public void LoadClientPlugins( Arguments arguments )
         {
-            Console.WriteLine("unnamed args: ");
+            LogFile.WriteLine("unnamed args: ");
             foreach (string unnamed in arguments.Unnamed)
             {
-                Console.WriteLine("unnamed: " + unnamed);
+                LogFile.WriteLine("unnamed: " + unnamed);
             }
             LoadGlobalPlugins();
 

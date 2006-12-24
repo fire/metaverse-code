@@ -52,7 +52,7 @@ namespace OSMP
 
         public void Login(string username, string password)
         {
-            Console.WriteLine(this.GetType().ToString() + " trying to login as " + username + " ... ");
+            LogFile.WriteLine(this.GetType().ToString() + " trying to login as " + username + " ... ");
             ImImplementationFactory.GetInstance().Login( username, password);
             //logindialog.Destroy();
 
@@ -73,7 +73,7 @@ namespace OSMP
 
         void on_btnSend_clicked(object o, EventArgs e)
         {
-            Console.WriteLine("send clicked");
+            LogFile.WriteLine("send clicked");
             if (chatentry.Text != "")
             {
                 ImImplementationFactory.GetInstance().SendMessage(chatentry.Text);
@@ -85,7 +85,7 @@ namespace OSMP
         {
             if( down )
             {
-                Console.WriteLine("EnterChat");
+                LogFile.WriteLine("EnterChat");
                 //chatentry.Focus();
                 chatwindow.RootWindow.Hide();
                 chatwindow.RootWindow.Show();
@@ -95,7 +95,7 @@ namespace OSMP
         //int numlines = 0;
         void MessageReceived( object source, MessageReceivedArgs e )
         {
-            Console.WriteLine("message received: " + e.MessageText );
+            LogFile.WriteLine("message received: " + e.MessageText );
             chathistory.Text += Environment.NewLine + e.MessageText;
 
             //chathistory.SelectionStart = chathistory.Text.Length;
