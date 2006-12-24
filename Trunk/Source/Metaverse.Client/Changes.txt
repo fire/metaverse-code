@@ -2,6 +2,11 @@ Next release:
 - world format changed to be inter-compatible between mono and .net
 - osmp shortcut added to setup project for windows
 - setup detects automatically whether to create shortcuts for mono or .net
+- split Outputs directory into Outputs/mono-2.0 and outputs/net-2.0
+- spit Metaverse.Client/bin directory into Metaverse.Client/bin/mono-2.0 and Metaverse.Client/bin/net-2.0
+- added DumpLogFile to Help menu
+- added static methods LogFile.WriteLine( string ), LogFile.BlankLine() and LogFile.WriteLine( object )
+- replaced all Console.WriteLines with LogFile.WriteLines
 
 Release 0.4:
 - migrated context menu to GTK#

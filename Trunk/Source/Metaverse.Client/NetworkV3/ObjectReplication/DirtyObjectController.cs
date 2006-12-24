@@ -63,10 +63,10 @@ namespace OSMP
 
         void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
-            Console.WriteLine( "isserver: " + net2con.isserver );
-            Console.WriteLine( "net2con: " + net2con );
-            Console.WriteLine( "connectioninfo: " + net2con.connectioninfo );
-            Console.WriteLine( "connection: " + net2con.connectioninfo.Connection );
+            LogFile.WriteLine( "isserver: " + net2con.isserver );
+            LogFile.WriteLine( "net2con: " + net2con );
+            LogFile.WriteLine( "connectioninfo: " + net2con.connectioninfo );
+            LogFile.WriteLine( "connection: " + net2con.connectioninfo.Connection );
             remoteclientdirtyqueues.Add( net2con.connectioninfo.Connection, new DirtyObjectQueueSingleClient( this, net2con.connectioninfo.Connection ) );
         }
         public void MarkDirty(IHasReference targetobject, Type[] dirtytypes)
@@ -86,7 +86,7 @@ namespace OSMP
 
         public void Tick()
         {
-            //Console.WriteLine("dirtyobjectcontroller.tick");
+            //LogFile.WriteLine("dirtyobjectcontroller.tick");
             foreach (DirtyObjectQueueSingleClient remoteclient in remoteclientdirtyqueues.Values)
             {
                 //RemoteClient remoteclient = (RemoteClient)remoteclientobject;

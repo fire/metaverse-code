@@ -44,7 +44,7 @@ namespace OSMP
         {
             string errorlogpath = EnvironmentHelper.GetExeDirectory() + "/logfile.log";
             StreamWriter sw = new StreamWriter( errorlogpath, false );
-            sw.WriteLine( LogFile.GetInstance().logfilecontents.Replace( "\n", "\r\n" ) );
+            sw.WriteLine( LogFile.GetInstance().logfilecontents );
             sw.Close();
 
             if (System.Environment.OSVersion.Platform != PlatformID.Unix)

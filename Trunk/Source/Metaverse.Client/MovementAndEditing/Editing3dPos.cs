@@ -212,7 +212,7 @@ namespace OSMP
         
             //double averageobjectdimension = ( scaletouse.x + scaletouse.y + scaletouse.z ) / 3;
             Vector3 handlescale = new Vector3( 0.4, 0.4, 0.4 ) * ( distance / 10.0 );
-            //Console.WriteLine("editing3dpos drawedithandles " + entityscale + " " + distance + " " + handlescale );
+            //LogFile.WriteLine("editing3dpos drawedithandles " + entityscale + " " + distance + " " + handlescale );
         
             DrawSingleEditHandle( entityscale, handlescale, Axis.PosX );
             DrawSingleEditHandle( entityscale, handlescale, Axis.NegX );

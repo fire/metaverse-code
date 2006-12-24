@@ -195,7 +195,7 @@ namespace OSMP
             }
             catch( Exception e )
             {
-                Console.WriteLine( e.ToString() );
+                LogFile.WriteLine( e.ToString() );
                 return "";
             }
         }

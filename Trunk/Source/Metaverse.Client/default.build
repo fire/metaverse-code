@@ -4,9 +4,11 @@
 
 	<if test="${framework::get-target-framework()=='net-2.0'}">
 		<property name="outputdir" value="../../Outputs/net-2.0"/>
+		<property name="bindir" value="bin/net-2.0"/>
 	</if>
 	<if test="${framework::get-target-framework()=='mono-2.0'}">
 		<property name="outputdir" value="../../Outputs/mono-2.0"/>
+		<property name="bindir" value="bin/mono-2.0"/>
 	</if>
 
 	<target name="clean" description="remove all generated files">
@@ -14,7 +16,7 @@
 		<nant buildfile="../NetworkInterfaces/default.build" target="clean" />
 		<nant buildfile="../RpcProxyGenerator/default.build" target="clean" />
 		<delete failonerror="false">
-			<fileset basedir="bin">
+			<fileset basedir="${bindir}">
 				<include name="*" />
 			</fileset>
 		</delete>
@@ -26,20 +28,20 @@
 	</target>
 
 	<target name="build" description="compiles the source code">
-		<copy todir="bin">
+		<copy todir="${bindir}">
 			<fileset basedir="../../Libraries">
 				<include name="*.dll"/>
 			</fileset>
 		</copy>
 		<if test="${framework::get-target-framework()=='net-2.0'}">
-			<copy todir="bin" >
+			<copy todir="${bindir}" >
 				<fileset basedir="../../Libraries/Gtk.Net2.0">
 					<include name="*.dll"/>
 				</fileset>
 			</copy>
 		</if>
 		<nant buildfile="../FractalSpline/default.build" />
-		<copy todir="bin">
+		<copy todir="${bindir}">
 			<fileset basedir="../FractalSpline/bin/">
 				<include name="MathGL.dll"/>
 				<include name="Tao.OpenGl.dll"/>
@@ -49,7 +51,7 @@
 			</fileset>
 		</copy>
 		<nant buildfile="../NetworkInterfaces/default.build" />
-		<copy todir="bin">
+		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/NetworkInterfaces">
 				<include name="NetworkInterfaces.dll"/>
 			</fileset>
@@ -85,27 +87,27 @@
 			</fileset>
 		</copy>
 
-		<csc target="exe" output="bin/Metaverse.Client.exe" debug="${debug}">
+		<csc target="exe" output="${bindir}/Metaverse.Client.exe" debug="${debug}">
 			<references>
-				<include name="bin/NetworkInterfaces.dll" />
-				<include name="bin/FractalSpline.dll" />
-				<include name="bin/MathGL.dll" />
+				<include name="${bindir}/NetworkInterfaces.dll" />
+				<include name="${bindir}/FractalSpline.dll" />
+				<include name="${bindir}/MathGL.dll" />
 
-				<include name="bin/glade-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}" />
-				<include name="bin/atk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
-				<include name="bin/gtk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
-				<include name="bin/gdk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
-				<include name="bin/glib-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+				<include name="${bindir}/glade-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}" />
+				<include name="${bindir}/atk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+				<include name="${bindir}/gtk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+				<include name="${bindir}/gdk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
+				<include name="${bindir}/glib-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
 
-				<include name="bin/Meebey.SmartIrc4net.dll" />
+				<include name="${bindir}/Meebey.SmartIrc4net.dll" />
 
-				<include name="bin/Tao.DevIl.dll" />
-				<include name="bin/Tao.FreeGlut.dll" />
-				<include name="bin/Tao.OpenGl.dll" />
-				<include name="bin/Tao.OpenGl.Glu.dll" />
-				<include name="bin/Tao.OpenGl.ExtensionLoader.dll" />
-				<include name="bin/Tao.Sdl.dll" />
-				<include name="bin/SdlDotNet.dll" />
+				<include name="${bindir}/Tao.DevIl.dll" />
+				<include name="${bindir}/Tao.FreeGlut.dll" />
+				<include name="${bindir}/Tao.OpenGl.dll" />
+				<include name="${bindir}/Tao.OpenGl.Glu.dll" />
+				<include name="${bindir}/Tao.OpenGl.ExtensionLoader.dll" />
+				<include name="${bindir}/Tao.Sdl.dll" />
+				<include name="${bindir}/SdlDotNet.dll" />
 
 				<include name="System.Drawing.dll" />
 			</references>
@@ -255,7 +257,7 @@
 			</sources>
 		</csc>
 		<copy todir="${outputdir}/Metaverse.Client">
-			<fileset basedir="bin">
+			<fileset basedir="${bindir}">
 				<include name="*"/>
 			</fileset>
 		</copy>

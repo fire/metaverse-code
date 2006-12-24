@@ -66,7 +66,7 @@ namespace OSMP
         
         public AssignColorHandler()
         {
-            Console.WriteLine("instantiating AssignColorHandler" );
+            LogFile.WriteLine("instantiating AssignColorHandler" );
             ContextMenuController.GetInstance().ContextMenuPopup += new ContextMenuHandler( ContextMenuPopup );
         }
         
@@ -81,7 +81,7 @@ namespace OSMP
             entity = e.Entity;
             if( entity != null )
             {
-                Console.WriteLine("AssignColorHandler registering in contextmenu");
+                LogFile.WriteLine("AssignColorHandler registering in contextmenu");
                 ContextMenuController.GetInstance().RegisterContextMenu(new string[]{ "Assign &Color..." }, new ContextMenuHandler( AssignColorClick ) );
             }
         }
