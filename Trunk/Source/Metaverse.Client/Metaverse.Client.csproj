@@ -14,7 +14,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Outputs\Metaverse.Client\</OutputPath>
+    <OutputPath>..\..\Outputs\net-2.0\Metaverse.Client\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -105,6 +105,7 @@
     <Compile Include="HelperClasses\Test.cs" />
     <Compile Include="HelperClasses\TimeKeeper.cs" />
     <Compile Include="HelperClasses\XmlHelper.cs" />
+    <Compile Include="Help\DumpLogfile.cs" />
     <Compile Include="Help\HelpAbout.cs" />
     <Compile Include="KeyAndMouse\CommandCombos.cs" />
     <Compile Include="KeyAndMouse\KeyCombos.cs" />

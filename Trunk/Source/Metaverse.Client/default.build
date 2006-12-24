@@ -2,6 +2,13 @@
 	<description>Compiles, cleans and exports the Metaverse.ClientProject</description>
 	<property name="debug" value="true" overwrite="false" />
 
+	<if test="${framework::get-target-framework()=='net-2.0'}">
+		<property name="outputdir" value="../../Outputs/net-2.0"/>
+	</if>
+	<if test="${framework::get-target-framework()=='mono-2.0'}">
+		<property name="outputdir" value="../../Outputs/mono-2.0"/>
+	</if>
+
 	<target name="clean" description="remove all generated files">
 		<nant buildfile="../FractalSpline/default.build" target="clean" />
 		<nant buildfile="../NetworkInterfaces/default.build" target="clean" />
@@ -12,7 +19,7 @@
 			</fileset>
 		</delete>
 		<delete failonerror="false">
-			<fileset basedir="../../Outputs/Metaverse.Client">
+			<fileset basedir="${outputdir}/Metaverse.Client">
 				<include name="*" />
 			</fileset>
 		</delete>
@@ -43,31 +50,32 @@
 		</copy>
 		<nant buildfile="../NetworkInterfaces/default.build" />
 		<copy todir="bin">
-			<fileset basedir="../../Outputs/NetworkInterfaces">
+			<fileset basedir="${outputdir}/NetworkInterfaces">
 				<include name="NetworkInterfaces.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="../../Outputs/RpcProxyGenerator">
-			<fileset basedir="../../Outputs/NetworkInterfaces">
+		<mkdir dir="${outputdir}/RpcProxyGenerator" />
+		<copy todir="${outputdir}/RpcProxyGenerator">
+			<fileset basedir="${outputdir}/NetworkInterfaces">
 				<include name="NetworkInterfaces.dll"/>
 			</fileset>
 		</copy>
 		<nant buildfile="../RpcProxyGenerator/default.build" />
 		
 		<if test="${framework::get-runtime-engine(framework::get-target-framework()) == ''}" >
-		<exec program="../../Outputs/RpcProxyGenerator/RpcProxyGenerator.exe" 
-			output="../../Outputs/RpcProxyGenerator/generate.log"
-			workingdir="../../Outputs/RpcProxyGenerator" />			
+		<exec program="${outputdir}/RpcProxyGenerator/RpcProxyGenerator.exe" 
+			output="${outputdir}/RpcProxyGenerator/generate.log"
+			workingdir="${outputdir}/RpcProxyGenerator" />			
 		</if>
 		<if test="${framework::get-runtime-engine(framework::get-target-framework()) != ''}" >
 			<exec program="${framework::get-runtime-engine(framework::get-target-framework())}" 
 				commandline="RpcProxyGenerator.exe"
-				output="../../Outputs/RpcProxyGenerator/generate.log"
-				workingdir="../../Outputs/RpcProxyGenerator" />
+				output="${outputdir}/RpcProxyGenerator/generate.log"
+				workingdir="${outputdir}/RpcProxyGenerator" />
 		</if>
 
 		<copy todir="NetworkV3\Layer4_Rpc\GeneratedProxies">
-			<fileset basedir="../../Outputs/RpcProxyGenerator">
+			<fileset basedir="${outputdir}/RpcProxyGenerator">
 				<include name="LockRpcToClient_ClientProxy_Generated.cs"/>
 				<include name="LockRpcToServer_ClientProxy_Generated.cs"/>
 				<include name="ObjectReplicationClientToServer_ClientProxy_Generated.cs"/>
@@ -143,6 +151,8 @@
 				<include name="./KeyAndMouse/MouseMoveConfigMappings.cs" />
 
 				<include name="./Help/HelpAbout.cs" />
+				<include name="./Help/DumpLogfile.cs" />
+
 				<include name="./HelperClasses/mvMath.cs" />
 				<include name="./HelperClasses/ArrayHelper.cs" />
 				<include name="./HelperClasses/Test.cs" />
@@ -244,12 +254,12 @@
 				<include name="./UI/Dialogs/ConnectToServerDialog.cs" />
 			</sources>
 		</csc>
-		<copy todir="../../Outputs/Metaverse.Client">
+		<copy todir="${outputdir}/Metaverse.Client">
 			<fileset basedir="bin">
 				<include name="*"/>
 			</fileset>
 		</copy>
-		<copy todir="../../Outputs/Metaverse.Client">
+		<copy todir="${outputdir}/Metaverse.Client">
 			<fileset basedir=".">
 				<include name="metaverse.client.glade"/>
 				<include name="config.xml"/>

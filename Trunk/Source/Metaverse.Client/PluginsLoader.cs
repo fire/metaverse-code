@@ -43,6 +43,7 @@ namespace OSMP
             }
             LoadGlobalPlugins();
 
+
             UIEntityPropertiesDialog.GetInstance();
             Editing3d.GetInstance();
             SelectionController.GetInstance();
@@ -75,6 +76,7 @@ namespace OSMP
             ServerInfo.GetInstance();
             ConnectToServerDialog.GetInstance();
 
+            DumpLogfile.GetInstance();
             HelpAbout.GetInstance();
             KeyHandlerQuit.GetInstance();
         }
