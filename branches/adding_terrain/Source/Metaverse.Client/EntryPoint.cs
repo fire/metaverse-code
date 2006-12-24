@@ -48,12 +48,12 @@ namespace OSMP
 
                 if( arguments.Unnamed.Contains("clientonly") )
                 {
-                    Console.WriteLine("User requested client only");
+                    LogFile.WriteLine("User requested client only");
                     MetaverseClient.GetInstance().Go(args);
                 }
                 else if (arguments.Unnamed.Contains("serveronly"))
                 {
-                    Console.WriteLine("User requested server only");
+                    LogFile.WriteLine("User requested server only");
                     MetaverseServer.GetInstance().Init(args);
                     while (true)
                     {

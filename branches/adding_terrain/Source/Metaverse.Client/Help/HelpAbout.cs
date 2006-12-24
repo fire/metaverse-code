@@ -34,7 +34,7 @@ namespace OSMP
         
         public HelpAbout()
         {
-            Console.WriteLine("instantiating HelpAbout" );
+            LogFile.WriteLine("instantiating HelpAbout" );
             //MenuController.GetInstance().RegisterMainMenu(new string[]{ "&Help","&About..." }, new MainMenuCallback( About ) );
             ContextMenuController.GetInstance().RegisterPersistentContextMenu(new string[] { "&Help", "&About..." }, new ContextMenuHandler(About));
         }

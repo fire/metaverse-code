@@ -94,7 +94,7 @@ namespace OSMP
 
             Uri projecturi = new Uri( new Uri( url ), "." );
 
-            LogFile.GetInstance().WriteLine( "loading [" + url + "] ..." );
+            LogFile.WriteLine( "loading [" + url + "] ..." );
 
             HttpWebRequest myReq = (HttpWebRequest)WebRequest.Create( url );
             HttpWebResponse httpwebresponse = (HttpWebResponse)myReq.GetResponse();
@@ -113,7 +113,7 @@ namespace OSMP
         /// <param name="filename"></param>
         public void Load( string filename )
         {
-            Console.WriteLine( filename );
+            LogFile.WriteLine( filename );
             if (filename.StartsWith( "http:" ))
             {
                 LoadFromUrl( filename );
@@ -137,12 +137,12 @@ namespace OSMP
 
         void CallbackTest()
         {
-            Console.WriteLine( "messagebox closed" );
+            LogFile.WriteLine( "messagebox closed" );
         }
 
         public void Store( string filename )
         {
-            Console.WriteLine( "store " + filename );
+            LogFile.WriteLine( "store " + filename );
             WorldModel worldmodel = MetaverseClient.GetInstance().worldstorage;
             
             ArrayList types = new ArrayList();
@@ -206,7 +206,7 @@ namespace OSMP
             {
                 if (entity.GetType() != typeof(Avatar))
                 {
-                    Console.WriteLine("WorldPersistToXml, restoring: " + entity);
+                    LogFile.WriteLine("WorldPersistToXml, restoring: " + entity);
                     worldmodel.AddEntity(entity);
                 }
             }

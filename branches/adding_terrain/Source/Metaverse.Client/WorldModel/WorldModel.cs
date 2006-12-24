@@ -165,7 +165,7 @@ namespace OSMP
             {
                if (entity.iReference == globalreference && entity != entitytoassign )
                {
-                   Console.WriteLine("removed duplicate " + globalreference);
+                   LogFile.WriteLine("removed duplicate " + globalreference);
                    entities.Remove(entity);
                    entitybyreference.Remove(globalreference);
                    break;
@@ -197,7 +197,7 @@ namespace OSMP
         // incoming event from NetReplicationController:
         void IReplicatedObjectController.ReplicatedObjectCreated(object notifier, ObjectCreatedArgs e)
         {
-            Console.WriteLine("WorldModel ReplicatedObjectCreated " + e.TargetObject);
+            LogFile.WriteLine("WorldModel ReplicatedObjectCreated " + e.TargetObject);
             Entity newentity = e.TargetObject as Entity;
             entities.Add( newentity );
             entitybyreference.Add(newentity.iReference, newentity);
@@ -214,13 +214,13 @@ namespace OSMP
         // incoming event from NetReplicationController:
         void IReplicatedObjectController.ReplicatedObjectModified(object notifier, ObjectModifiedArgs e)
         {
-            Console.WriteLine("WorldModel ReplicatedObjectModified " + e.TargetObject);
+            LogFile.WriteLine("WorldModel ReplicatedObjectModified " + e.TargetObject);
         }
         
         // incoming event from NetReplicationController:
         void IReplicatedObjectController.ReplicatedObjectDeleted(object notifier, ObjectDeletedArgs e)
         {
-            Console.WriteLine("WorldModel ReplicatedObjectDeleted " + e.Reference + " "  + e.typename);
+            LogFile.WriteLine("WorldModel ReplicatedObjectDeleted " + e.Reference + " "  + e.typename);
             Entity entity = GetEntityByReference(e.Reference);
             if (entity != null)
             {
@@ -310,7 +310,7 @@ namespace OSMP
 
             if (ObjectCreated != null)
             {
-                //Console.WriteLine(entity);
+                //LogFile.WriteLine(entity);
                 ObjectCreated( this, new ObjectCreatedArgs( DateTime.Now, entity ) );
             }
 

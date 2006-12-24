@@ -2,6 +2,9 @@ Next release:
 - world format changed to be inter-compatible between mono and .net
 - osmp shortcut added to setup project for windows
 - setup detects automatically whether to create shortcuts for mono or .net
+- added static methods LogFile.WriteLine( string ), LogFile.BlankLine() and LogFile.WriteLine( object )
+- replaced all Console.WriteLines with LogFile.WriteLines
+- layer1 keepalive packets now contain a byte of data -> fixed layer1 server disconnections
 - changed world boundaries in config file from worldboundingbox to world node
 - changed near and far clip planes( near: 0.5 -> 10, far: 100 -> 2000)
 - world got a lot bigger

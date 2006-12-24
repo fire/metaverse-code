@@ -81,7 +81,7 @@ namespace OSMP
             {
                 skeyname = "alt";
             }
-            //Console.WriteLine(skeyname);
+            //LogFile.WriteLine(skeyname);
             return skeyname;
         }
 

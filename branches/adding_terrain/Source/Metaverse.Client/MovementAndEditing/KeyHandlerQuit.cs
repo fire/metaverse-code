@@ -18,6 +18,8 @@
 //
 
 using System;
+using Gtk;
+using Glade;
 
 namespace OSMP
 {
@@ -33,7 +35,7 @@ namespace OSMP
         
         public KeyHandlerQuit()
         {
-            Console.WriteLine("instantiating keyhandlerquit" );
+            LogFile.WriteLine("instantiating keyhandlerquit" );
             CommandCombos.GetInstance().RegisterCommand("quit", new KeyCommandHandler(QuitKeyDown));
             //KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
             //keyfiltercombokeys.RegisterCombo( new string[]{"quit"},null, new KeyComboHandler( QuitKeyDown ) );
@@ -44,7 +46,13 @@ namespace OSMP
         }
         public void Quit()
         {
-            Console.WriteLine("Shutdown from " + this.GetType().ToString() );
+            LogFile.WriteLine("Shutdown from " + this.GetType().ToString() );
+            //System.Environment.FailFast( "quit" );
+            //while (Gtk.Application.EventsPending())
+            //{
+              //  Gtk.Application.RunIteration( false );
+            //}
+            //Gtk.Application.Quit();
             System.Environment.Exit(0); // quit
         }
         public void ContextMenuQuit( object source, ContextMenuArgs e )

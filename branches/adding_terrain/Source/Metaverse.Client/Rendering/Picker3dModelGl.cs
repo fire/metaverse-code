@@ -153,19 +153,20 @@ namespace OSMP
             
             if( iNumHits == 0 )
             {
-                //Console.WriteLine("no hits");
+                //LogFile.WriteLine("no hits");
                 return null;
             }
             int hitname = GetNearestBufferName( iNumHits );
-            Console.WriteLine( "hitname: " + hitname.ToString() );
+            LogFile.WriteLine( "hitname: " + hitname.ToString() );
             if( hitname == -1 || hitname == 0 )
             {
-                Console.WriteLine("not in buffer");
+                LogFile.WriteLine("not in buffer");
                 return null;
             }
 
             FreeSelectBuffer();
 
+            //LogFile.WriteLine(hittargets[hitname - 1]);
             return (HitTarget)hittargets[ hitname - 1 ];
         }        
     }

@@ -96,11 +96,11 @@ namespace OSMP
         {
             get
             {
-                Console.WriteLine( "get texturerelativepaths" );
+                LogFile.WriteLine( "get texturerelativepaths" );
                 string[] relativepaths = new string[texturefullpaths.GetLength( 0 )];
                 for (int i = 0; i < relativepaths.GetLength( 0 ); i++)
                 {
-                    Console.WriteLine( "i: " + i );
+                    LogFile.WriteLine( "i: " + i );
                     if (texturefullpaths[i] != null)
                     {
                         relativepaths[i] = ProjectFileController.GetInstance().GetRelativePath( texturefullpaths[i] );
@@ -109,7 +109,7 @@ namespace OSMP
                     {
                         relativepaths[i] = "";
                     }
-                    Console.WriteLine( relativepaths[i] );
+                    LogFile.WriteLine( relativepaths[i] );
                 }
                 return relativepaths;
             }
@@ -371,7 +371,7 @@ namespace OSMP
         }
         public override void SetColor( int face, Color newcolor )
         {
-            Console.WriteLine( "setting color to " + newcolor.ToString() );
+            LogFile.WriteLine( "setting color to " + newcolor.ToString() );
             if( face == FractalSpline.Primitive.AllFaces )
             {
                 for( int i = 0; i < facecolors.GetUpperBound(0) + 1; i++ )

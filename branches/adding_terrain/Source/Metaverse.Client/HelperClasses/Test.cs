@@ -135,7 +135,7 @@ namespace OSMP
                 {
                     for( int k = 0; k < inputarray.GetUpperBound(0) + 1; k++ )
                     {
-                        Console.WriteLine( "i = " + k.ToString() );
+                        LogFile.WriteLine( "i = " + k.ToString() );
                         for( int i = 0; i < inputarray.GetUpperBound(1) + 1; i++ )
                         {
                             string sLine = "";
@@ -183,27 +183,27 @@ namespace OSMP
    //     {
       //      if( iDebugLevel >= 3 )
          //   {
-            //    Console.WriteLine( "Debug: " + message );
+            //    LogFile.WriteLine( "Debug: " + message );
            // }
        // }
         public static void Debug( object message )
         {
             if( iDebugLevel >= 3 )
             {
-                Console.WriteLine( "Debug: " + message.ToString() );
+                LogFile.WriteLine( "Debug: " + message.ToString() );
             }
         }
         public static void Info( string message )
         {
-            Console.WriteLine( "Info: " + message );
+            LogFile.WriteLine( "Info: " + message );
         }
         public static void Warning( string message )
         {
-            Console.WriteLine( "Warning: " + message );
+            LogFile.WriteLine( "Warning: " + message );
         }
         public static void Error( string message )
         {
-            Console.WriteLine( "ERROR: " + message );
+            LogFile.WriteLine( "ERROR: " + message );
         }
     }
 }

@@ -84,7 +84,7 @@ namespace OSMP
 
         public void SliderValueChanged(object source, MoveSliderArgs e)
         {
-            Console.WriteLine("FormValueChanged " + source.ToString());
+            LogFile.WriteLine("FormValueChanged " + source.ToString());
             string name = "";
             foreach (string thisname in ControlsIndex.Keys)
             {
@@ -106,7 +106,7 @@ namespace OSMP
 
         public void FormValueChanged(object source, EventArgs e)
         {
-            Console.WriteLine("FormValueChanged " + source.ToString());
+            LogFile.WriteLine("FormValueChanged " + source.ToString());
             string name = "";
             foreach (string thisname in ControlsIndex.Keys)
             {
@@ -162,7 +162,7 @@ namespace OSMP
             thisentity = e.Entity;
             if (thisentity != null)
             {
-                Console.WriteLine("EntityPropertiesDialog registering in contextmenu");
+                LogFile.WriteLine("EntityPropertiesDialog registering in contextmenu");
                 ContextMenuController.GetInstance().RegisterContextMenu(new string[] { "&Edit" }, new ContextMenuHandler(ContextMenuProperties));
             }
             // }
@@ -170,7 +170,7 @@ namespace OSMP
 
         void on_btnclose_clicked(object source, EventArgs e)
         {
-            Console.WriteLine("close button clicked");
+            LogFile.WriteLine("close button clicked");
             WriteProperties();
             entitypropertiesdialog.Destroy();
         }
@@ -179,7 +179,7 @@ namespace OSMP
         {
             foreach (object propertyinfoobject in PropertyInfos)
             {
-                Console.WriteLine(propertyinfoobject.ToString());
+                LogFile.WriteLine(propertyinfoobject.ToString());
                 if (propertyinfoobject is IntPropertyInfo)
                 {
                     IntPropertyInfo intpropertyinfo = propertyinfoobject as IntPropertyInfo;
@@ -195,7 +195,7 @@ namespace OSMP
 
         void WritePropertyInfo(PropertyInfo propertyinfo)
         {
-            Console.WriteLine("WritePropertyInfo " + propertyinfo.ToString());
+            LogFile.WriteLine("WritePropertyInfo " + propertyinfo.ToString());
             if (propertyinfo is IntPropertyInfo)
             {
                 ((IntPropertyInfo)propertyinfo).Handler(ReadIntPropertyFromForm(propertyinfo.Name));
@@ -216,13 +216,13 @@ namespace OSMP
 
         public void RegisterIntProperty(string name, int currentvalue, int Min, int Max, SetIntPropertyHandler handler)
         {
-            Console.WriteLine("RegisterIntProperty " + name);
+            LogFile.WriteLine("RegisterIntProperty " + name);
             PropertyInfos.Add(new IntPropertyInfo(name, currentvalue, Min, Max, handler));
         }
 
         public void RegisterStringProperty(string name, string currentvalue, int Length, SetStringPropertyHandler handler)
         {
-            Console.WriteLine("RegisterStringProperty " + name);
+            LogFile.WriteLine("RegisterStringProperty " + name);
             PropertyInfos.Add(new StringPropertyInfo(name, currentvalue, Length, handler));
         }
 
