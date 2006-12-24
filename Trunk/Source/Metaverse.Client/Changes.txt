@@ -7,6 +7,7 @@ Next release:
 - added DumpLogFile to Help menu
 - added static methods LogFile.WriteLine( string ), LogFile.BlankLine() and LogFile.WriteLine( object )
 - replaced all Console.WriteLines with LogFile.WriteLines
+- layer1 keepalive packets now contain a byte of data -> fixed layer1 server disconnections
 
 Release 0.4:
 - migrated context menu to GTK#

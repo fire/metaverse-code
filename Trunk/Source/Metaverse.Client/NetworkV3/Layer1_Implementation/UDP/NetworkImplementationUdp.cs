@@ -219,6 +219,8 @@ namespace OSMP
                     Byte[] receiveddata = receivedelegate.EndInvoke( ref endpoint, asyncresult );
                     try
                     {
+                        //LogFile.WriteLine( Name + " received:" + Encoding.UTF8.GetString( receiveddata, 0, receiveddata.Length ) );
+                        LogFile.WriteLine( Name + " received package length " + receiveddata.Length );
                         ProcessReceivedPacket( endpoint, receiveddata );
                     }
                     catch (Exception e)
@@ -234,18 +236,27 @@ namespace OSMP
             }
         }
 
+        string Name
+        {
+            get
+            {
+                if (isserver) { return "server"; } else { return "client"; }
+            }
+        }
+
         // sends received packets up stack
         void ProcessReceivedPacket(IPEndPoint endpoint, byte[] packetdata)
         {
             if (!connections.ContainsKey(endpoint))
             {
-                LogFile.WriteLine("connection: " + endpoint.ToString());
+                LogFile.WriteLine( Name + ": level 1 newconnection: " + endpoint.ToString());
                 connections.Add(endpoint, new Level1ConnectionInfo(endpoint, new ConnectionInfo(endpoint, endpoint.Address, endpoint.Port)));
             }
             Level1ConnectionInfo level1connectioninfo = connections[endpoint] as Level1ConnectionInfo;
             level1connectioninfo.LastTimestamp = DateTime.Now;
+            LogFile.WriteLine( Name + " updating timestamp for connection " + level1connectioninfo );
 
-            if (ReceivedPacket != null && packetdata.Length > 0)
+            if (ReceivedPacket != null && packetdata.Length > 1)
             {
                 ReceivedPacket(this, level1connectioninfo.connectioninfo, packetdata, 0, packetdata.GetLength(0));
             }
@@ -279,6 +290,7 @@ namespace OSMP
         // for client
         public void Send( byte[] data, int length )
         {
+            LogFile.WriteLine( "send( data, " + length + " )" );
             connectiontoserver.UpdateLastOutgoingPacketTime();
             udpclient.Send( data , length );
         }
@@ -298,8 +310,8 @@ namespace OSMP
                     Level1ConnectionInfo connectioninfo = kvp.Value;
                     if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                     {
-                       // LogFile.WriteLine("sending keepalive to " + connection.ToString() );
-                        Send( connection, new byte[]{} );
+                        LogFile.WriteLine("sending keepalive to " + connection.ToString() );
+                        Send( connection, new byte[]{0} );
                         connectioninfo.UpdateLastOutgoingPacketTime();
                     }
                 }
@@ -309,34 +321,44 @@ namespace OSMP
                 Level1ConnectionInfo connectioninfo = connectiontoserver;
                 if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                 {
-                   // LogFile.WriteLine("sending keepalive to server" );
-                    Send( new byte[]{} );
+                    LogFile.WriteLine("sending keepalive to server" );
+                    Send( new byte[]{0} );
                     connectioninfo.UpdateLastOutgoingPacketTime();
                 }
             }
         }
-        
+
+        DateTime lastdisconnectioncheck;
         void CheckDisconnections()
         {
+            if (DateTime.Now.Subtract( lastdisconnectioncheck ).TotalMilliseconds < 1000)
+            {
+                return;
+            }
+            lastdisconnectioncheck = DateTime.Now;
+
             List<IPEndPoint> disconnected = new List<IPEndPoint>();
+            LogFile.WriteLine( Name + " Checking disconnections:" );
             foreach( KeyValuePair<IPEndPoint,Level1ConnectionInfo> entry in connections )
             {
                 IPEndPoint connection = entry.Key;
                 Level1ConnectionInfo connectioninfo = (Level1ConnectionInfo)entry.Value;
-                if( (int)DateTime.Now.Subtract( connectioninfo.LastTimestamp ).TotalMilliseconds > ( ConnectionTimeOutSeconds * 1000 ) )
+                int timesincelastpacket = (int)( DateTime.Now.Subtract( connectioninfo.LastTimestamp ).TotalMilliseconds );
+                LogFile.WriteLine( Name + " level1connection " + connectioninfo + " time since last packet: " + timesincelastpacket );
+                if (timesincelastpacket > (ConnectionTimeOutSeconds * 1000))
                 {
                     disconnected.Add( connection );
                 }
             }
-            for( int i = 0; i < disconnected.Count; i++ )
+            for (int i = 0; i < disconnected.Count; i++)
             {
                 IPEndPoint connection = disconnected[i];
-                Level1ConnectionInfo connectioninfo = (Level1ConnectionInfo)connections[ connection ];
-                if( Disconnection != null )
+                Level1ConnectionInfo connectioninfo = (Level1ConnectionInfo)connections[connection];
+                if (Disconnection != null)
                 {
                     Disconnection( this, connectioninfo.connectioninfo );
                 }
-                LogFile.WriteLine( "disconnection: " + connectioninfo.EndPoint.ToString() );
+                LogFile.WriteLine( Name + ": level 1 disconnection: " + connectioninfo.EndPoint.ToString() );
                 connections.Remove( connection );
             }
         }
