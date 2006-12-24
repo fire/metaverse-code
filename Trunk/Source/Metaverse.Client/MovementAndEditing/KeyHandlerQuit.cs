@@ -18,6 +18,8 @@
 //
 
 using System;
+using Gtk;
+using Glade;
 
 namespace OSMP
 {
@@ -45,6 +47,12 @@ namespace OSMP
         public void Quit()
         {
             LogFile.WriteLine("Shutdown from " + this.GetType().ToString() );
+            //System.Environment.FailFast( "quit" );
+            //while (Gtk.Application.EventsPending())
+            //{
+              //  Gtk.Application.RunIteration( false );
+            //}
+            //Gtk.Application.Quit();
             System.Environment.Exit(0); // quit
         }
         public void ContextMenuQuit( object source, ContextMenuArgs e )
