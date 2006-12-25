@@ -48,12 +48,23 @@ namespace OSMP
         {
             LogFile.WriteLine("Shutdown from " + this.GetType().ToString() );
             //System.Environment.FailFast( "quit" );
+            //SdlDotNet.Video.Close();
+            //Tao.Sdl.Sdl.SDL_Quit();
+            //Tao.DevIl.Il.ilShutDown();
+            //MetaverseClient.GetInstance().chatcontroller.logindialog.Destroy();
             //while (Gtk.Application.EventsPending())
             //{
-              //  Gtk.Application.RunIteration( false );
+              //Gtk.Application.RunIteration( false );
             //}
-            //Gtk.Application.Quit();
-            System.Environment.Exit(0); // quit
+            //try
+            //{
+              //  Gtk.Application.Quit();
+            //}
+            //catch
+            //{
+            //}
+            //MetaverseClient.GetInstance().Shutdown();
+            System.Environment.Exit( 0 );
         }
         public void ContextMenuQuit( object source, ContextMenuArgs e )
         {

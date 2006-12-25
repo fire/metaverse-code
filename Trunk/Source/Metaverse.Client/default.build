@@ -40,6 +40,7 @@
 				</fileset>
 			</copy>
 		</if>
+        
 		<nant buildfile="../FractalSpline/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="../FractalSpline/bin/">
@@ -50,6 +51,14 @@
 				<include name="FractalSpline.dll"/>
 			</fileset>
 		</copy>
+        
+		<nant buildfile="../stun4cs/default.build" />
+		<copy todir="${bindir}">
+			<fileset basedir="${outputdir}/stun4cs">
+				<include name="stun4cs.dll"/>
+			</fileset>
+		</copy>
+        
 		<nant buildfile="../NetworkInterfaces/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/NetworkInterfaces">
@@ -92,6 +101,7 @@
 				<include name="${bindir}/NetworkInterfaces.dll" />
 				<include name="${bindir}/FractalSpline.dll" />
 				<include name="${bindir}/MathGL.dll" />
+				<include name="${bindir}/stun4cs.dll" />
 
 				<include name="${bindir}/glade-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}" />
 				<include name="${bindir}/atk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
@@ -192,6 +202,7 @@
 				<include name="./NetworkV3/Layer2_Connection/NetworkLevel2Controller.cs" />
 				<include name="./NetworkV3/Layer2_Connection/Test/TestLevel2.cs" />
 				<include name="./NetworkV3/UI/ServerInfo.cs" />
+				<include name="./NetworkV3/STUN/STUN.cs" />
 
 				<include name="./IM/IrcController.cs" />
 				<include name="./IM/ImImplementationFactory.cs" />
