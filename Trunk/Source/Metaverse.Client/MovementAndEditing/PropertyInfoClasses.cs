@@ -29,13 +29,13 @@ namespace OSMP
         void RegisterStringProperty( string name, string currentvalue, int Length, SetStringPropertyHandler handler );        
     }
     
-    public abstract class PropertyInfo
+    public abstract class EntityPropertyInfo
     {
         public string Name;
         public override string ToString(){ return this.GetType().ToString() + " " + Name; }
     }
     
-    public class IntPropertyInfo : PropertyInfo
+    public class IntPropertyInfo : EntityPropertyInfo
     {
         public int Min;
         public int Max;
@@ -47,7 +47,7 @@ namespace OSMP
         }
     }
     
-    public class StringPropertyInfo : PropertyInfo
+    public class StringPropertyInfo : EntityPropertyInfo
     {
         public int Length;
         public string InitialValue;
