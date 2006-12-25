@@ -25,6 +25,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Reflection;
 //using System.Threading;
 
 namespace OSMP
@@ -87,6 +88,37 @@ namespace OSMP
         public int GetPortForConnection(IPEndPoint connection)
         {
             return connection.Port;
+        }
+
+        Socket GetUdpClientUnderlyingSocket( UdpClient udpclient )
+        {
+            foreach ( PropertyInfo propertyinfo in typeof( UdpClient ).GetProperties( 
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance ))
+            {
+                if (propertyinfo.Name == "Client")
+                {
+                    return propertyinfo.GetValue( udpclient, null ) as Socket;
+                }
+            }
+            throw new Exception( "reflection issue" );
+        }
+
+        public IPAddress LocalIPAddress
+        {
+            get
+            {
+                Socket udpclientsocket = GetUdpClientUnderlyingSocket( udpclient );
+                return ( udpclientsocket.LocalEndPoint as IPEndPoint ).Address;
+            }
+        }
+
+        public int LocalPort
+        {
+            get
+            {
+                Socket udpclientsocket = GetUdpClientUnderlyingSocket( udpclient );
+                return (udpclientsocket.LocalEndPoint as IPEndPoint).Port;
+            }
         }
         
         bool isserver;

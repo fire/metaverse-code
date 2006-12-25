@@ -59,6 +59,9 @@ namespace OSMP
         IPAddress GetIPAddressForConnection(IPEndPoint connection);
         int GetPortForConnection(IPEndPoint connection);
 
+        IPAddress LocalIPAddress{ get; }
+        int LocalPort { get; }
+
         bool IsServer{get;}
         int ServerPort{get;}
         string ServerAddress{get;}

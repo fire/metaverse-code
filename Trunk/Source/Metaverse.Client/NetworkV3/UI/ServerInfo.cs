@@ -36,10 +36,13 @@ namespace OSMP
         public static ServerInfo GetInstance() { return instance; }
 
         [Widget]
-        Entry publicportentry = null;
+        Entry localipaddressentry = null;
 
         [Widget]
         Entry localportentry = null;
+
+        [Widget]
+        Entry publicportentry = null;
 
         [Widget]
         Entry publicipaddressentry = null;
@@ -111,6 +114,7 @@ namespace OSMP
             //btnholdopen.Released += new EventHandler( btnholdopen_Released );
             btnclose.Clicked += new EventHandler( btnclose_Clicked );
 
+            localipaddressentry.Text = MetaverseServer.GetInstance().network.networkimplementation.LocalIPAddress.ToString();
             localportentry.Text = MetaverseServer.GetInstance().ServerPort.ToString();
             STUN stun = new STUN( MetaverseServer.GetInstance().network.networkimplementation, new STUN.GotExternalAddress( STUNResponse ) );
         }
