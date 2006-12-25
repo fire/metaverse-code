@@ -126,6 +126,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Rendering\RendererSdl.cs" />
+    <Compile Include="Server\ServerRegistration.cs" />
     <Compile Include="UI\Dialogs\ChatController.cs" />
     <Compile Include="IM\IImImplementation.cs" />
     <Compile Include="IM\ImImplementationFactory.cs" />

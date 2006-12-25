@@ -71,9 +71,11 @@ namespace OSMP
         {
             try
             {
+                //LogFile.WriteLine("STUN network receivedpacket");
                 if (length > 2 && data[0] == 1 && data[0] == 1) // bindingresponse
                 {
-                    Message responsemessage = Message.Decode( data, 0, data.Length );
+                    LogFile.WriteLine( this.GetType() + "could be binding reponse");
+                    Message responsemessage = Message.Decode(data, 0, data.Length);
                     MappedAddressAttribute mappedaddress = (MappedAddressAttribute)responsemessage.GetAttribute( net.voxx.stun4cs.Attribute.MAPPED_ADDRESS );
                     IPAddress ipaddress = new IPAddress( mappedaddress.GetAddressBytes() );
                     int port = mappedaddress.GetAddress().GetPort();
@@ -83,10 +85,12 @@ namespace OSMP
                 }
                 else if (length > 2 && data[0] == 1 && data[0] == 0x11) // bindingerror response
                 {
+                    LogFile.WriteLine( this.GetType() + " could be binding error");
                 }
             }
-            catch
+            catch( Exception e )
             {
+                //LogFile.WriteLine( "STUN networkreceivedpacket " + e);
             }
         }
     }

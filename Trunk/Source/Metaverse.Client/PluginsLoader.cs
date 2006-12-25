@@ -68,8 +68,6 @@ namespace OSMP
 
             WorldView.GetInstance();
 
-            UIController.GetInstance();
-
             //plugins.Add(new DrawAxes());
             FrustrumCulling.GetInstance();
 
@@ -84,10 +82,12 @@ namespace OSMP
         public void LoadServerPlugins()
         {
             LoadGlobalPlugins();
+            ServerRegistration.GetInstance();
         }
 
         void LoadGlobalPlugins()
         {
+            UIController.GetInstance();
         }
 
         //public void LoadPlugins()

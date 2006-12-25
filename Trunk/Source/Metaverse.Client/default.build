@@ -131,6 +131,7 @@
 				<include name="./PluginsLoader.cs" />
 
 				<include name="./Server/MetaverseServer.cs" />
+				<include name="./Server/ServerRegistration.cs" />
 
 				<include name="./MovementAndEditing/PropertyInfoClasses.cs" />
 				<include name="./MovementAndEditing/SelectionView.cs" />

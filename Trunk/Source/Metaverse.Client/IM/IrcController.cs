@@ -26,7 +26,8 @@ namespace OSMP
 {
     public class IrcController : IImImplementation
     {
-        public string[] serverlist = new string[] {"irc.freenode.org"};
+        //public string[] serverlist = new string[] {"irc.freenode.org"};
+        public string[] serverlist = new string[] { "irc.gamernet.org" };
         public int port = 6667;
         public string channel = "#osmp";
         

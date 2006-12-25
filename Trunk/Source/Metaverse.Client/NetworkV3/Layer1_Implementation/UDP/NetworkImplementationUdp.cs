@@ -211,7 +211,7 @@ namespace OSMP
                     try
                     {
                         //LogFile.WriteLine( Name + " received:" + Encoding.UTF8.GetString( receiveddata, 0, receiveddata.Length ) );
-                        LogFile.WriteLine( Name + " received package length " + receiveddata.Length );
+                     //   LogFile.WriteLine( Name + " received package length " + receiveddata.Length );
                         ProcessReceivedPacket( endpoint, receiveddata );
                     }
                     catch (Exception e)
@@ -246,7 +246,7 @@ namespace OSMP
             }
             Level1ConnectionInfo level1connectioninfo = connections[endpoint] as Level1ConnectionInfo;
             level1connectioninfo.LastTimestamp = DateTime.Now;
-            LogFile.WriteLine( Name + " updating timestamp for connection " + level1connectioninfo );
+          //  LogFile.WriteLine( Name + " updating timestamp for connection " + level1connectioninfo );
 
             if (ReceivedPacket != null && packetdata.Length > 1)
             {
@@ -292,7 +292,7 @@ namespace OSMP
         // for client
         public void Send( byte[] data, int length )
         {
-            LogFile.WriteLine( "send( data, " + length + " )" );
+           // LogFile.WriteLine( "send( data, " + length + " )" );
             connectiontoserver.UpdateLastOutgoingPacketTime();
             udpclient.Send( data , length );
         }
@@ -312,7 +312,7 @@ namespace OSMP
                     Level1ConnectionInfo connectioninfo = kvp.Value;
                     if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                     {
-                        LogFile.WriteLine("sending keepalive to " + connection.ToString() );
+                      //  LogFile.WriteLine("sending keepalive to " + connection.ToString() );
                         Send( connection, new byte[]{0} );
                         connectioninfo.UpdateLastOutgoingPacketTime();
                     }
@@ -323,7 +323,7 @@ namespace OSMP
                 Level1ConnectionInfo connectioninfo = connectiontoserver;
                 if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                 {
-                    LogFile.WriteLine("sending keepalive to server" );
+                    //LogFile.WriteLine("sending keepalive to server" );
                     Send( new byte[]{0} );
                     connectioninfo.UpdateLastOutgoingPacketTime();
                 }
@@ -340,13 +340,13 @@ namespace OSMP
             lastdisconnectioncheck = DateTime.Now;
 
             List<IPEndPoint> disconnected = new List<IPEndPoint>();
-            LogFile.WriteLine( Name + " Checking disconnections:" );
+            //LogFile.WriteLine( Name + " Checking disconnections:" );
             foreach( KeyValuePair<IPEndPoint,Level1ConnectionInfo> entry in connections )
             {
                 IPEndPoint connection = entry.Key;
                 Level1ConnectionInfo connectioninfo = (Level1ConnectionInfo)entry.Value;
                 int timesincelastpacket = (int)( DateTime.Now.Subtract( connectioninfo.LastTimestamp ).TotalMilliseconds );
-                LogFile.WriteLine( Name + " level1connection " + connectioninfo + " time since last packet: " + timesincelastpacket );
+              //  LogFile.WriteLine( Name + " level1connection " + connectioninfo + " time since last packet: " + timesincelastpacket );
                 if (timesincelastpacket > (ConnectionTimeOutSeconds * 1000))
                 {
                     disconnected.Add( connection );

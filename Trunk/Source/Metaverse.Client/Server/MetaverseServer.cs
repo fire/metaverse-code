@@ -32,6 +32,9 @@ namespace OSMP
 {
     public class MetaverseServer
     {
+        public delegate void TickHandler();
+        public event TickHandler Tick;
+
         static MetaverseServer instance = new MetaverseServer();
         public static MetaverseServer GetInstance() { return instance; }
 
@@ -81,10 +84,14 @@ namespace OSMP
         {
         }
 
-        public void Tick()
+        public void OnTick()
         {
             network.Tick();
             netreplicationcontroller.Tick();
+            if (Tick != null)
+            {
+                Tick();
+            }
         }
 
         //! metaverseserver entry point.  Processes commandline arguments; starts dbinterface and serverfileagent components; handles initialization
