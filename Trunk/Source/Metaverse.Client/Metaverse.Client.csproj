@@ -115,6 +115,7 @@
     <Compile Include="KeyAndMouse\MouseCache.cs" />
     <Compile Include="KeyAndMouse\MouseMoveConfigMappings.cs" />
     <Compile Include="MovementAndEditing\ViewerState.cs" />
+    <Compile Include="NetworkV3\STUN\STUN.cs" />
     <Compile Include="Rendering\DisplayGeometryFactory.cs" />
     <Compile Include="Rendering\DisplayGeometryWindows.cs" />
     <Compile Include="Rendering\DisplayGeometryX11.cs" />
@@ -238,6 +239,10 @@
     <ProjectReference Include="..\NetworkInterfaces\NetworkInterfaces.csproj">
       <Project>{44F0885A-0270-4ACA-8A18-68A786B1E89D}</Project>
       <Name>NetworkInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\stun4cs\stun4cs.csproj">
+      <Project>{5F1439D3-88D8-47FF-996C-8D2062AB4016}</Project>
+      <Name>stun4cs</Name>
     </ProjectReference>
     <Content Include="Changes.txt" />
     <Content Include="config.xml" />

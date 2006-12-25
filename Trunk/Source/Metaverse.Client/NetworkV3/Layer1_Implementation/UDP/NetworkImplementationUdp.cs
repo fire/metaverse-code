@@ -94,9 +94,6 @@ namespace OSMP
         string serveraddress = "127.0.0.1";
         
         UdpClient udpclient;
-        //Thread receivethread;
-        
-        //Queue ReceivedPackets = new Queue();  // be sure to lock this whilst accessing, because items are enqueued from a separate thread (class Receive)
         
         public NetworkImplementationUdp()
         {
@@ -140,39 +137,6 @@ namespace OSMP
             get{ return isserver;}
         }
         
-        /*
-        class Receive
-        {
-            UdpClient udpclient;
-            Queue receivedpackets;
-            
-            public Receive( UdpClient udpclient, Queue receivedpackets )
-            {
-                this.udpclient = udpclient;
-                this.receivedpackets = receivedpackets;
-            }
-            public void Go()
-            {
-                while (true)
-                {
-                    IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, 0);
-                    try
-                    {
-                        Byte[] receiveddata = udpclient.Receive(ref endpoint);
-                     //   LogFile.WriteLine("received: " + Encoding.UTF8.GetString(receiveddata, 0, receiveddata.Length));
-                        lock (receivedpackets)
-                        {
-                            receivedpackets.Enqueue(new object[] { endpoint, receiveddata });
-                        }
-                    }
-                    catch //(Exception e)
-                    {
-                        //LogFile.WriteLine(e);
-                    }
-                }
-            }
-        }
-        */
         void Init()
         {
             if( isserver )
@@ -185,12 +149,7 @@ namespace OSMP
             }
 
             receivedelegate = new ReceiveDelegate(udpclient.Receive);
-            //LogFile.WriteLine("our port: " + ((IPEndPoint)udpclient.Client.LocalEndPoint).Port);
-            
-            //Receive receive = new Receive( udpclient, ReceivedPackets );
-            //receivethread = new Thread( new ThreadStart( receive.Go ) );
-            //receivethread.IsBackground = true;
-            //receivethread.Start();
+            asyncresult = null;
         }
 
         // process any received packets        
@@ -233,6 +192,7 @@ namespace OSMP
             catch (Exception e)
             {
                 LogFile.WriteLine( e );
+                asyncresult = receivedelegate.BeginInvoke( ref endpoint, null, null );
             }
         }
 
@@ -272,9 +232,19 @@ namespace OSMP
         {
             if (isserver)
             {
-                IPEndPoint connectionendpoint = (IPEndPoint)connection;
-                connections[connectionendpoint].UpdateLastOutgoingPacketTime();
-                udpclient.Send(data, data.Length, connectionendpoint );
+                if (connections.ContainsKey( connection ))
+                {
+                    connections[connection].UpdateLastOutgoingPacketTime();
+                }
+                try
+                {
+                    udpclient.Send( data, data.Length, connection );
+                }
+                catch( Exception e )
+                {
+                    LogFile.WriteLine( e );
+                    Init();
+                }
             }
             else
             {

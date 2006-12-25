@@ -25,6 +25,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using System.Net;
+using System.Net.Sockets;
 
 namespace OSMP
 {
@@ -37,8 +39,7 @@ namespace OSMP
         {
         }
 
-        // Access these via server singleton:
-
+        // Other classes can access these via server singleton MetaverseServer.GetInstance():
         public NetworkLevel2Controller network;
         public RpcController rpc;
         public NetReplicationController netreplicationcontroller;
@@ -53,40 +54,11 @@ namespace OSMP
         //public const int iTicksPerFrame = 17;         //!< we assume the server is running at around 75fps, and if the server hasnothing better to do, it'll sleep this number of milliseconds
         //public int LastTickCount = 0;   //!< tickcount of last frame
 
-        //public double SayDistance = 10.0;            //!< How far Says travel
-
         //public List<object> ClientConnections = new List<object>();
 
         //TimeKeeper timekeeper = new TimeKeeper();
 
         public Config config;
-
-        //ArrayList DirtyCache = new ArrayList();            //!< set of all objects which have been changed but not yet written to db (mostly for objectmove stuff)
-        //int iDirtyCacheWriteDelaySeconds = 10;   //!< Interval between writing objects that have moved to db
-        //int iLastDirtyCacheWriteTickCount = 0;   //!< Last dirty cache write tickcount (careful, tickcount is in milliseconds)
-
-        //! Returns true or false according to whether rConnection is a local client or not. Used for privilege assignment to local scripting engines
-        /*
-        bool IsLocalClient( Connection connection )
-        {
-        }
-        */
-
-        //! Sends out updates to clients for all objects that have changed in the world
-        //void ManageDirtyCache()   // could maybe use a separate thread for this???
-        //{
-          //  int iArrayNum;
-            //int iReference;
-            //if ( timekeeper.GetTickCount() - iLastDirtyCacheWriteTickCount > 1000 * iDirtyCacheWriteDelaySeconds)
-            //{
-              //  for (int i = 0; i < DirtyCache.Count; i++)
-//                {
-  //                  Entity dirtyentity = DirtyCache[i];
-    //            }
-      //          DirtyCache.Clear();
-        //        iLastDirtyCacheWriteTickCount = TimeKeeper.GetTickCount();
-          //  }
-        //}
 
         //! Sends Message to all connected metaverse clients
         void BroadcastToAllClients(string message)
@@ -113,7 +85,6 @@ namespace OSMP
         {
             network.Tick();
             netreplicationcontroller.Tick();
-            //ManageDirtyCache();    // objects that have moved and not been written to db        
         }
 
         //! metaverseserver entry point.  Processes commandline arguments; starts dbinterface and serverfileagent components; handles initialization
@@ -157,6 +128,17 @@ namespace OSMP
         void network_NewConnection(NetworkLevel2Connection net2con, ConnectionInfo connectioninfo)
         {
             LogFile.WriteLine("Server: client disconnected: " + net2con.connectioninfo);
+        }
+
+        // used by SErverInfo dialog to hold NAT'd connections open for incoming client
+        public void PingClient( string ipaddress, int port )
+        {
+            System.Net.IPAddress[] ipaddresses = System.Net.Dns.GetHostAddresses( ipaddress );
+            if( ipaddresses.GetLength(0) > 0 )
+            {
+                LogFile.WriteLine( "Sending ping to " + ipaddresses[0] + " " + port );
+                network.networkimplementation.Send( new IPEndPoint( ipaddresses[0], port ), new byte[] { 0 } );
+            }
         }
     }
 }

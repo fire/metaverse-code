@@ -40,6 +40,11 @@ namespace OSMP
         [Widget]
         Window loginwindow = null;
 
+        public void Destroy()
+        {
+            loginwindow.Destroy();
+        }
+
         public string Login
         {
             get

@@ -44,10 +44,12 @@ namespace OSMP
         //public static ChatController GetInstance(){ return instance; }
 
         //ChatWindow chatwindow;
-        
+
+        public LoginDialog logindialog;
+
         public ChatController()
         {
-            LoginDialog logindialog = new LoginDialog( this );
+            logindialog = new LoginDialog( this );
         }
 
         public void Login(string username, string password)

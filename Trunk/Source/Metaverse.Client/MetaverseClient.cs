@@ -85,6 +85,11 @@ namespace OSMP
             }
             network.Tick();
         }
+
+        public void Shutdown()
+        {
+            renderer.Shutdown();
+        }
     
         //! Gets world state from server
         void InitializePlayermovement()
