@@ -74,5 +74,8 @@
       <Name>MathGL</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="default.build" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

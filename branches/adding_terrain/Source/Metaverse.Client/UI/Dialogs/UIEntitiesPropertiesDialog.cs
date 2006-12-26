@@ -43,7 +43,7 @@ namespace OSMP
 
         object ourmenuregistration = null;
 
-        List<PropertyInfo> PropertyInfos = new List<PropertyInfo>();
+        List<EntityPropertyInfo> PropertyInfos = new List<EntityPropertyInfo>();
         Dictionary<string,Widget> ControlsIndex = new Dictionary<string,Widget>();
 
         static UIEntityPropertiesDialog instance = new UIEntityPropertiesDialog();
@@ -95,7 +95,7 @@ namespace OSMP
             }
             foreach (object propertyinfoobject in PropertyInfos)
             {
-                PropertyInfo propertyinfo = propertyinfoobject as PropertyInfo;
+                EntityPropertyInfo propertyinfo = propertyinfoobject as EntityPropertyInfo;
                 if (propertyinfo.Name == name)
                 {
                     WritePropertyInfo(propertyinfo);
@@ -117,7 +117,7 @@ namespace OSMP
             }
             foreach (object propertyinfoobject in PropertyInfos)
             {
-                PropertyInfo propertyinfo = propertyinfoobject as PropertyInfo;
+                EntityPropertyInfo propertyinfo = propertyinfoobject as EntityPropertyInfo;
                 if (propertyinfo.Name == name)
                 {
                     WritePropertyInfo(propertyinfo);
@@ -193,7 +193,7 @@ namespace OSMP
             }
         }
 
-        void WritePropertyInfo(PropertyInfo propertyinfo)
+        void WritePropertyInfo(EntityPropertyInfo propertyinfo)
         {
             LogFile.WriteLine("WritePropertyInfo " + propertyinfo.ToString());
             if (propertyinfo is IntPropertyInfo)
@@ -210,7 +210,7 @@ namespace OSMP
         {
             foreach (object propertyinfoobject in PropertyInfos)
             {
-                WritePropertyInfo(propertyinfoobject as PropertyInfo);
+                WritePropertyInfo(propertyinfoobject as EntityPropertyInfo);
             }
         }
 
@@ -240,7 +240,7 @@ namespace OSMP
             Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/metaverse.client.glade", "entitypropertiesdialog", "" );
             app.Autoconnect(this);            
             
-            PropertyInfos = new List<PropertyInfo>();
+            PropertyInfos = new List<EntityPropertyInfo>();
             ControlsIndex = new Dictionary<string,Widget>();
             nextpropertyindex = 0;
 

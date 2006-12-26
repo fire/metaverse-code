@@ -25,6 +25,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Reflection;
 //using System.Threading;
 
 namespace OSMP
@@ -88,15 +89,43 @@ namespace OSMP
         {
             return connection.Port;
         }
+
+        Socket GetUdpClientUnderlyingSocket( UdpClient udpclient )
+        {
+            foreach ( PropertyInfo propertyinfo in typeof( UdpClient ).GetProperties( 
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance ))
+            {
+                if (propertyinfo.Name == "Client")
+                {
+                    return propertyinfo.GetValue( udpclient, null ) as Socket;
+                }
+            }
+            throw new Exception( "reflection issue" );
+        }
+
+        public IPAddress LocalIPAddress
+        {
+            get
+            {
+                Socket udpclientsocket = GetUdpClientUnderlyingSocket( udpclient );
+                return ( udpclientsocket.LocalEndPoint as IPEndPoint ).Address;
+            }
+        }
+
+        public int LocalPort
+        {
+            get
+            {
+                Socket udpclientsocket = GetUdpClientUnderlyingSocket( udpclient );
+                return (udpclientsocket.LocalEndPoint as IPEndPoint).Port;
+            }
+        }
         
         bool isserver;
         int serverport = 3456;
         string serveraddress = "127.0.0.1";
         
         UdpClient udpclient;
-        //Thread receivethread;
-        
-        //Queue ReceivedPackets = new Queue();  // be sure to lock this whilst accessing, because items are enqueued from a separate thread (class Receive)
         
         public NetworkImplementationUdp()
         {
@@ -139,40 +168,9 @@ namespace OSMP
         {
             get{ return isserver;}
         }
-        
-        /*
-        class Receive
-        {
-            UdpClient udpclient;
-            Queue receivedpackets;
-            
-            public Receive( UdpClient udpclient, Queue receivedpackets )
-            {
-                this.udpclient = udpclient;
-                this.receivedpackets = receivedpackets;
-            }
-            public void Go()
-            {
-                while (true)
-                {
-                    IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, 0);
-                    try
-                    {
-                        Byte[] receiveddata = udpclient.Receive(ref endpoint);
-                     //   LogFile.WriteLine("received: " + Encoding.UTF8.GetString(receiveddata, 0, receiveddata.Length));
-                        lock (receivedpackets)
-                        {
-                            receivedpackets.Enqueue(new object[] { endpoint, receiveddata });
-                        }
-                    }
-                    catch //(Exception e)
-                    {
-                        //LogFile.WriteLine(e);
-                    }
-                }
-            }
-        }
-        */
+
+        IPEndPoint remoteserverendpoint = null;
+
         void Init()
         {
             if( isserver )
@@ -181,16 +179,14 @@ namespace OSMP
             }
             else
             {
-                udpclient = new UdpClient( serveraddress, ServerPort );
+                //udpclient = new UdpClient( serveraddress, ServerPort );
+                IPAddress[] ipaddresses = Dns.GetHostAddresses( serveraddress );
+                remoteserverendpoint = new IPEndPoint( ipaddresses[0], serverport );
+                udpclient = new UdpClient();
             }
 
             receivedelegate = new ReceiveDelegate(udpclient.Receive);
-            //LogFile.WriteLine("our port: " + ((IPEndPoint)udpclient.Client.LocalEndPoint).Port);
-            
-            //Receive receive = new Receive( udpclient, ReceivedPackets );
-            //receivethread = new Thread( new ThreadStart( receive.Go ) );
-            //receivethread.IsBackground = true;
-            //receivethread.Start();
+            asyncresult = null;
         }
 
         // process any received packets        
@@ -220,7 +216,7 @@ namespace OSMP
                     try
                     {
                         //LogFile.WriteLine( Name + " received:" + Encoding.UTF8.GetString( receiveddata, 0, receiveddata.Length ) );
-                        LogFile.WriteLine( Name + " received package length " + receiveddata.Length );
+                     //   LogFile.WriteLine( Name + " received package length " + receiveddata.Length );
                         ProcessReceivedPacket( endpoint, receiveddata );
                     }
                     catch (Exception e)
@@ -233,6 +229,7 @@ namespace OSMP
             catch (Exception e)
             {
                 LogFile.WriteLine( e );
+                asyncresult = receivedelegate.BeginInvoke( ref endpoint, null, null );
             }
         }
 
@@ -254,7 +251,7 @@ namespace OSMP
             }
             Level1ConnectionInfo level1connectioninfo = connections[endpoint] as Level1ConnectionInfo;
             level1connectioninfo.LastTimestamp = DateTime.Now;
-            LogFile.WriteLine( Name + " updating timestamp for connection " + level1connectioninfo );
+          //  LogFile.WriteLine( Name + " updating timestamp for connection " + level1connectioninfo );
 
             if (ReceivedPacket != null && packetdata.Length > 1)
             {
@@ -267,18 +264,38 @@ namespace OSMP
             Send( new byte[]{} );
         }
         
-        // for server
         public void Send(IPEndPoint connection, byte[] data, int length)
         {
-            if (isserver)
+            if (connection != null)
+            //if (isserver)
             {
-                IPEndPoint connectionendpoint = (IPEndPoint)connection;
-                connections[connectionendpoint].UpdateLastOutgoingPacketTime();
-                udpclient.Send(data, data.Length, connectionendpoint );
+                if (isserver)
+                {
+                    LogFile.WriteLine( "server layer1net.send( " + connection + " " + length );
+                }
+                else
+                {
+                    LogFile.WriteLine( "client layer1net.send( " + connection + " " + length );
+                }
+                if (connections.ContainsKey( connection ))
+                {
+                    connections[connection].UpdateLastOutgoingPacketTime();
+                }
+                try
+                {
+                    udpclient.Send( data, data.Length, connection );
+                }
+                catch( Exception e )
+                {
+                    LogFile.WriteLine( e );
+                    Init();
+                }
             }
             else
             {
-                Send(data, length);
+                LogFile.WriteLine( "client layer1net.send( " + remoteserverendpoint + " " + length );
+                connectiontoserver.UpdateLastOutgoingPacketTime();
+                Send( remoteserverendpoint, data, length );
             }
         }
 
@@ -290,9 +307,10 @@ namespace OSMP
         // for client
         public void Send( byte[] data, int length )
         {
-            LogFile.WriteLine( "send( data, " + length + " )" );
-            connectiontoserver.UpdateLastOutgoingPacketTime();
-            udpclient.Send( data , length );
+            Send( null, data, length );
+           // LogFile.WriteLine( "send( data, " + length + " )" );
+            //connectiontoserver.UpdateLastOutgoingPacketTime();
+            //udpclient.Send( remote data , length );
         }
 
         public void Send(byte[] data)
@@ -310,7 +328,7 @@ namespace OSMP
                     Level1ConnectionInfo connectioninfo = kvp.Value;
                     if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                     {
-                        LogFile.WriteLine("sending keepalive to " + connection.ToString() );
+                      //  LogFile.WriteLine("sending keepalive to " + connection.ToString() );
                         Send( connection, new byte[]{0} );
                         connectioninfo.UpdateLastOutgoingPacketTime();
                     }
@@ -321,7 +339,7 @@ namespace OSMP
                 Level1ConnectionInfo connectioninfo = connectiontoserver;
                 if( (int)DateTime.Now.Subtract( connectioninfo.LastOutgoingPacketTime ).TotalMilliseconds > ( KeepaliveIntervalSeconds * 1000 ) )
                 {
-                    LogFile.WriteLine("sending keepalive to server" );
+                    //LogFile.WriteLine("sending keepalive to server" );
                     Send( new byte[]{0} );
                     connectioninfo.UpdateLastOutgoingPacketTime();
                 }
@@ -338,13 +356,13 @@ namespace OSMP
             lastdisconnectioncheck = DateTime.Now;
 
             List<IPEndPoint> disconnected = new List<IPEndPoint>();
-            LogFile.WriteLine( Name + " Checking disconnections:" );
+            //LogFile.WriteLine( Name + " Checking disconnections:" );
             foreach( KeyValuePair<IPEndPoint,Level1ConnectionInfo> entry in connections )
             {
                 IPEndPoint connection = entry.Key;
                 Level1ConnectionInfo connectioninfo = (Level1ConnectionInfo)entry.Value;
                 int timesincelastpacket = (int)( DateTime.Now.Subtract( connectioninfo.LastTimestamp ).TotalMilliseconds );
-                LogFile.WriteLine( Name + " level1connection " + connectioninfo + " time since last packet: " + timesincelastpacket );
+              //  LogFile.WriteLine( Name + " level1connection " + connectioninfo + " time since last packet: " + timesincelastpacket );
                 if (timesincelastpacket > (ConnectionTimeOutSeconds * 1000))
                 {
                     disconnected.Add( connection );
