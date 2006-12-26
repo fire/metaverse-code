@@ -37,7 +37,8 @@ namespace OSMP
         {
             xmlserializer = new XmlSerializer( typeof( Command ),
                 new Type[] { 
-                    typeof( ServerInfo )
+                    typeof( ServerInfo ),
+                    typeof( PingMe )
                 } );
         }
 
@@ -83,6 +84,23 @@ namespace OSMP
             public override string ToString()
             {
                 return "ServerInfo: " + new IPAddress( IPAddress ).ToString() + " " + port;
+            }
+        }
+
+        public class PingMe : Command
+        {
+            public byte[] MyIPAddress;
+            public int Myport;
+
+            public PingMe(){}
+            public PingMe( IPAddress MyIPAddress, int Myport )
+            {
+                this.MyIPAddress = MyIPAddress.GetAddressBytes();
+                this.Myport = Myport;
+            }
+            public override string ToString()
+            {
+                return "ClientInfo: " + new IPAddress( MyIPAddress ).ToString() + " " + Myport;
             }
         }
     }

@@ -168,7 +168,9 @@ namespace OSMP
         {
             get{ return isserver;}
         }
-        
+
+        IPEndPoint remoteserverendpoint = null;
+
         void Init()
         {
             if( isserver )
@@ -177,7 +179,10 @@ namespace OSMP
             }
             else
             {
-                udpclient = new UdpClient( serveraddress, ServerPort );
+                //udpclient = new UdpClient( serveraddress, ServerPort );
+                IPAddress[] ipaddresses = Dns.GetHostAddresses( serveraddress );
+                remoteserverendpoint = new IPEndPoint( ipaddresses[0], serverport );
+                udpclient = new UdpClient();
             }
 
             receivedelegate = new ReceiveDelegate(udpclient.Receive);
@@ -259,11 +264,19 @@ namespace OSMP
             Send( new byte[]{} );
         }
         
-        // for server
         public void Send(IPEndPoint connection, byte[] data, int length)
         {
-            if (isserver)
+            if (connection != null)
+            //if (isserver)
             {
+                if (isserver)
+                {
+                    LogFile.WriteLine( "server layer1net.send( " + connection + " " + length );
+                }
+                else
+                {
+                    LogFile.WriteLine( "client layer1net.send( " + connection + " " + length );
+                }
                 if (connections.ContainsKey( connection ))
                 {
                     connections[connection].UpdateLastOutgoingPacketTime();
@@ -280,7 +293,9 @@ namespace OSMP
             }
             else
             {
-                Send(data, length);
+                LogFile.WriteLine( "client layer1net.send( " + remoteserverendpoint + " " + length );
+                connectiontoserver.UpdateLastOutgoingPacketTime();
+                Send( remoteserverendpoint, data, length );
             }
         }
 
@@ -292,9 +307,10 @@ namespace OSMP
         // for client
         public void Send( byte[] data, int length )
         {
+            Send( null, data, length );
            // LogFile.WriteLine( "send( data, " + length + " )" );
-            connectiontoserver.UpdateLastOutgoingPacketTime();
-            udpclient.Send( data , length );
+            //connectiontoserver.UpdateLastOutgoingPacketTime();
+            //udpclient.Send( remote data , length );
         }
 
         public void Send(byte[] data)
