@@ -12,6 +12,7 @@
 	</if>
 
 	<target name="clean" description="remove all generated files">
+		<echo message="MetaverseClient.build running clean" />
 		<nant buildfile="../FractalSpline/default.build" target="clean" />
 		<nant buildfile="../NetworkInterfaces/default.build" target="clean" />
 		<nant buildfile="../RpcProxyGenerator/default.build" target="clean" />
@@ -28,6 +29,7 @@
 	</target>
 
 	<target name="build" description="compiles the source code">
+		<echo message="MetaverseClient.build running build" />
 		<copy todir="${bindir}">
 			<fileset basedir="../../Libraries">
 				<include name="*.dll"/>
@@ -40,6 +42,7 @@
 				</fileset>
 			</copy>
 		</if>
+        
 		<nant buildfile="../FractalSpline/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="../FractalSpline/bin/">
@@ -50,6 +53,14 @@
 				<include name="FractalSpline.dll"/>
 			</fileset>
 		</copy>
+        
+		<nant buildfile="../stun4cs/default.build" />
+		<copy todir="${bindir}">
+			<fileset basedir="${outputdir}/stun4cs">
+				<include name="stun4cs.dll"/>
+			</fileset>
+		</copy>
+        
 		<nant buildfile="../NetworkInterfaces/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/NetworkInterfaces">
@@ -92,6 +103,7 @@
 				<include name="${bindir}/NetworkInterfaces.dll" />
 				<include name="${bindir}/FractalSpline.dll" />
 				<include name="${bindir}/MathGL.dll" />
+				<include name="${bindir}/stun4cs.dll" />
 
 				<include name="${bindir}/glade-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}" />
 				<include name="${bindir}/atk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
@@ -121,6 +133,7 @@
 				<include name="./PluginsLoader.cs" />
 
 				<include name="./Server/MetaverseServer.cs" />
+				<include name="./Server/ServerRegistration.cs" />
 
 				<include name="./MovementAndEditing/PropertyInfoClasses.cs" />
 				<include name="./MovementAndEditing/SelectionView.cs" />
@@ -166,6 +179,8 @@
 				<include name="./HelperClasses/TimeKeeper.cs" />
 				<include name="./HelperClasses/StreamHelper.cs" />
 				<include name="./HelperClasses/EnvironmentHelper.cs" />
+				<include name="./HelperClasses/ImageWrapper.cs" />
+				<include name="./HelperClasses/TdfParser.cs" />
 
 				<include name="./NetworkV3/ObjectReplication/NetObjectReferenceController.cs" />
 				<include name="./NetworkV3/ObjectReplication/ReplicationAttributes.cs" />
@@ -192,10 +207,13 @@
 				<include name="./NetworkV3/Layer2_Connection/NetworkLevel2Controller.cs" />
 				<include name="./NetworkV3/Layer2_Connection/Test/TestLevel2.cs" />
 				<include name="./NetworkV3/UI/ServerInfo.cs" />
+				<include name="./NetworkV3/STUN/STUN.cs" />
 
-				<include name="./IM/IrcController.cs" />
-				<include name="./IM/ImImplementationFactory.cs" />
-				<include name="./IM/IImImplementation.cs" />
+				<include name="./IM/IrcChat.cs" />
+				<include name="./IM/ChatImplementationFactory.cs" />
+				<include name="./IM/IChat.cs" />
+				<include name="./IM/QueryServer.cs" />
+				<include name="./IM/XmlCommands.cs" />
 
 				<include name="./BasicTypes/Color.cs" />
 				<include name="./BasicTypes/Plane.cs" />
@@ -223,6 +241,14 @@
 				<include name="./WorldModel/FractalSplineRing.cs" />
 				<include name="./WorldModel/WorldModel.cs" />
 
+				<include name="./WorldModel/Terrain/MapTextureStage.cs" />
+				<include name="./WorldModel/Terrain/RenderableHeightMap.cs" />
+				<include name="./WorldModel/Terrain/RenderableMinimap.cs" />
+				<include name="./WorldModel/Terrain/RenderableWater.cs" />
+				<include name="./WorldModel/Terrain/RendererPass.cs" />
+				<include name="./WorldModel/Terrain/RendererTextureStage.cs" />
+				<include name="./WorldModel/Terrain/Terrain.cs" />
+
 				<include name="./Rendering/DisplayGeometryX11.cs" />
 				<include name="./Rendering/DrawAxes.cs" />
 				<include name="./Rendering/IRenderer.cs" />
@@ -236,6 +262,9 @@
 				<include name="./Rendering/IGraphicsHelperFactory.cs" />
 				<include name="./Rendering/MenuHelper.cs" />
 				<include name="./Rendering/FrustrumCulling.cs" />
+				<include name="./Rendering/ITexture.cs" />
+				<include name="./Rendering/GlTexture.cs" />
+				<include name="./Rendering/GlTextureCombine.cs" />
 				<include name="./Rendering/Picker3dModelGl.cs" />
 				<include name="./Rendering/Picker3dController.cs" />
 				<include name="./Rendering/IGraphicsHelper.cs" />
@@ -247,13 +276,17 @@
 				<include name="./UI/EmergencyDialog.cs" />
 				<include name="./UI/UIController.cs" />
 				<include name="./UI/DialogHelpers.cs" />
+				
 				<include name="./UI/Dialogs/UIEntitiesPropertiesDialog.cs" />
-				<include name="./UI/Dialogs/ChatController.cs" />
+				<include name="./UI/Dialogs/UserChatDialog.cs" />
 				<include name="./UI/Dialogs/UIContextMenu.cs" />
 				<include name="./UI/Dialogs/LoginDialog.cs" />
 				<include name="./UI/Dialogs/InputBox.cs" />
 				<include name="./UI/Dialogs/MessageBox.cs" />
 				<include name="./UI/Dialogs/ConnectToServerDialog.cs" />
+				<include name="./UI/Dialogs/ShowUsersDialog.cs" />
+				<include name="./UI/Dialogs/ShowServersDialog.cs" />
+				<include name="./UI/Dialogs/RemoteServerInfoDialog.cs" />
 			</sources>
 		</csc>
 		<copy todir="${outputdir}/Metaverse.Client">

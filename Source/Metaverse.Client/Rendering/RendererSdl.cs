@@ -139,9 +139,15 @@ namespace OSMP
             }
         }
 
+        bool IsRunning = true;
+        public void Shutdown()
+        {
+            IsRunning = false;
+        }
+
         void MainLoop()
         {
-            while (true)
+            while (IsRunning)
             {
                 //try
                 //{
@@ -289,10 +295,10 @@ namespace OSMP
             MainLoop();
         }
 
-        public void Shutdown()
-        {
-            System.Environment.Exit(0);
-        }
+        //public void Shutdown()
+        //{
+          //  System.Environment.Exit(0);
+        //}
 
         void Quit(object source, QuitEventArgs e)
         {

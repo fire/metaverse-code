@@ -50,7 +50,7 @@ namespace OSMP
             {
                 CurrentEditBrush.GetInstance().BrushEffect = brusheffect;
             }
-            MainUI.GetInstance().uiwindow.AddBrushEffect( brusheffect.Name, brusheffect.Description, brusheffect );
+            MainTerrainWindow.GetInstance().AddBrushEffect( brusheffect.Name, brusheffect.Description, brusheffect );
         }
     }
 }

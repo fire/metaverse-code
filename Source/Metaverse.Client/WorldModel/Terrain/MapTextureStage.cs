@@ -117,7 +117,7 @@ namespace OSMP
 
         void CreateBlankTexture()
         {
-            LogFile.GetInstance().WriteLine("CreateBlankTexture()");
+            LogFile.WriteLine("CreateBlankTexture()");
             //Bitmap bitmap = new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             //Graphics g = Graphics.FromImage(bitmap);
             //Pen pen = new Pen(System.Drawing.Color.FromArgb(255,255, 255, 255));
@@ -145,7 +145,7 @@ namespace OSMP
 
         public MapTextureStage(OperationType operation)
         {
-            LogFile.GetInstance().WriteLine("MapTextureStage(), operation");
+            LogFile.WriteLine("MapTextureStage(), operation");
             this.Operation = operation;
             this.Tilesize = 50;
             CreateBlankTexture();
@@ -154,7 +154,7 @@ namespace OSMP
         
         public MapTextureStage(OperationType operation, int Tilesize, ITexture texture)
         {
-            LogFile.GetInstance().WriteLine("MapTextureStage(), single stages");
+            LogFile.WriteLine("MapTextureStage(), single stages");
             this.Operation = operation;
             this.texture = texture;
             this.Tilesize = Tilesize;
@@ -164,7 +164,7 @@ namespace OSMP
         // blend needs two textures
         public MapTextureStage(OperationType operation, int Tilesize, ITexture texture, ITexture blendtexture)
         {
-            LogFile.GetInstance().WriteLine("MapTextureStage(), two stages");
+            LogFile.WriteLine("MapTextureStage(), two stages");
             this.Operation = operation;
             this.texture = texture;
             this.blendtexture = blendtexture;

@@ -57,7 +57,7 @@ namespace OSMP
                     MetaverseServer.GetInstance().Init(args);
                     while (true)
                     {
-                        MetaverseServer.GetInstance().Tick();
+                        MetaverseServer.GetInstance().OnTick();
                         Thread.Sleep(50);
                     }
                 }
@@ -90,7 +90,7 @@ namespace OSMP
 
         static void EntryPoint_Tick()
         {
-            MetaverseServer.GetInstance().Tick();
+            MetaverseServer.GetInstance().OnTick();
         }
     }
 

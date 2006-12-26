@@ -97,7 +97,7 @@ namespace OSMP
             //FeatureMap = new Unit[MapEastWestSize, MapNorthSouthSize];
 
             InitMap( MinHeight );
-            LogFile.GetInstance().WriteLine("HeightMap() " + HeightMapWidth + " " + HeightMapHeight);
+            LogFile.WriteLine("HeightMap() " + HeightMapWidth + " " + HeightMapHeight);
 
             texturestages = new List<MapTextureStage>();
             texturestages.Add( new MapTextureStage() );
@@ -187,7 +187,7 @@ namespace OSMP
             MaxHeight = Config.GetInstance().maxgroundheight;
             Map = new double[HeightMapWidth, HeightMapHeight];
             InitMap(MinHeight);
-            LogFile.GetInstance().WriteLine("HeightMap() " + HeightMapWidth + " " + HeightMapHeight);
+            LogFile.WriteLine("HeightMap() " + HeightMapWidth + " " + HeightMapHeight);
 
             texturestages.Clear();
             texturestages.Add( new MapTextureStage() );
