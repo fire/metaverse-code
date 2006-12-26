@@ -23,11 +23,24 @@ using System;
 
 namespace OSMP
 {
+    public enum ChatMessageType
+    {
+        Error,
+        ChannelMessage,
+        PrivateMessage,
+        Action,
+        Notice
+    }
+
     public class IMReceivedArgs : EventArgs
     {
+        public ChatMessageType chatmessagetype;
+        public string Sender;
         public string MessageText;
-        public IMReceivedArgs( string text )
+        public IMReceivedArgs( ChatMessageType chatmessagetype, string sender, string text )
         {
+            this.chatmessagetype = chatmessagetype;
+            this.Sender = sender;
             MessageText = text;
         }
     }
@@ -38,7 +51,8 @@ namespace OSMP
     public interface IChat
     {
         event IMReceivedHandler IMReceived;
-        void SendMessage( string message );
+        void SendChannelMessage( string message );
+        void SendPrivateMessage( string targetuser, string message );
         bool Login( string username, string password );
         void GetUserList( WhoCallback callback );
     }

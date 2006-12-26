@@ -27,6 +27,8 @@ namespace OSMP
 {
     public class ShowServersDialog
     {
+        string servernameprefix = "srv_";
+
         static ShowServersDialog instance = new ShowServersDialog();
         public static ShowServersDialog GetInstance() { return instance; }
 
@@ -37,6 +39,9 @@ namespace OSMP
         TreeView serverstreeview = null;
 
         [Widget]
+        Button btngetinfo = null;
+
+        [Widget]
         Button btnconnect = null;
 
         [Widget]
@@ -45,17 +50,34 @@ namespace OSMP
         [Widget]
         Gtk.Window availableserversdialog = null;
 
+        QueryServer queryserver = new QueryServer();
+
         ShowServersDialog()
         {
         }
 
-        public void Show( string[] serverlist )
+        public void Show()
         {
-            Console.WriteLine( "showserversdialog.Show()" );
+            MetaverseClient.GetInstance().imimplementation.GetUserList( new WhoCallback( ShowServersCallback ) );
+            //ShowServersCallback( new string[] { "srv_antartic", "srv_iceland" } );
+        }
 
+        ListStore liststore;
+
+        void ShowServersCallback( string[] whoresults )
+        {
             if (availableserversdialog != null)
             {
                 availableserversdialog.Destroy();
+            }
+
+            List<string> serverlist = new List<string>();
+            foreach (string name in whoresults)
+            {
+                if (name.StartsWith( servernameprefix ))
+                {
+                    serverlist.Add( name.Substring( servernameprefix.Length ) );
+                }
             }
 
             Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/metaverse.client.glade", "availableserversdialog", "" );
@@ -63,23 +85,48 @@ namespace OSMP
 
             btnclose.Clicked += new EventHandler( btnclose_Clicked );
             btnconnect.Clicked += new EventHandler( btnconnect_Clicked );
+            btngetinfo.Clicked += new EventHandler( btngetinfo_Clicked );
             btnconnect.Hide(); // placeholder
 
-            ListStore liststore = new ListStore( typeof( string ) );
+            liststore = new ListStore( typeof( string ) );
             serverstreeview.Model = liststore;
 
             serverstreeview.AppendColumn( "Server:", new CellRendererText(), "text", 0 );
 
             serverstreeview.ShowAll();
 
-            foreach (string server in serverlist)
+            foreach (string name in whoresults)
             {
-                liststore.AppendValues( server );
+                if (name.StartsWith( servernameprefix ))
+                {
+                    string worldname = name.Substring( servernameprefix.Length );
+                    liststore.AppendValues( worldname );
+                }
+            }
+        }
+
+        void btngetinfo_Clicked( object sender, EventArgs e )
+        {
+            TreePath[] selectedtreepaths = serverstreeview.Selection.GetSelectedRows();
+            if (selectedtreepaths.Length > 0)
+            {
+                TreeIter treeiter;
+                liststore.GetIter( out treeiter, selectedtreepaths[0] );
+                string servername = servernameprefix + (string)liststore.GetValue( treeiter, 0 );
+                Console.WriteLine( "server selected: " + servername );
+
+                queryserver.Go( servername, new QueryServer.GotServerResponse( GotServerInfo ) );
             }
         }
 
         void btnconnect_Clicked( object sender, EventArgs e )
         {
+        }
+
+        void GotServerInfo( string servername, XmlCommands.ServerInfo serverinfo )
+        {
+            LogFile.WriteLine( "showserversdialog, got serverinfo: " + serverinfo );
+            new RemoteServerInfoDialog( servername, serverinfo );
         }
 
         void btnclose_Clicked( object sender, EventArgs e )

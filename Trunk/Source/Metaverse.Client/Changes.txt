@@ -16,6 +16,8 @@ Next release:
 - chathistory automatically scrolls to end on receipt of new message
 - added "Show users..." button to chat window
 - added "Show servers..." button to chat window
+- added remote server info dialog, with link from show servers dialog
+- changed default irc server to uk.quakenet.org b/c freenet doesnt allow anonymous private messages
 
 Release 0.4:
 - migrated context menu to GTK#

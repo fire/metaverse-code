@@ -69,7 +69,7 @@ namespace OSMP
 
         void ircclient_OnWho( object sender, WhoEventArgs e )
         {
-            if (e.Server != "hidden")
+            if (e.Server != "hidden" && e.Channel == channel )
             {
                 Console.WriteLine( "onwho " + e.IsIrcOp + " " + e.IsOp + " " + e.Server + " " + e.Channel + " " + e.Nick );
                 wholist.Add( e.Nick );
@@ -79,6 +79,7 @@ namespace OSMP
         void onEndOfWho()
         {
             string[] namestosendarray = wholist.ToArray();
+            Console.WriteLine( "end of who " + String.Join( ", ", namestosendarray ) );
             foreach (WhoCallback whocallback in whocallbacks)
             {
                 whocallback( namestosendarray );
@@ -88,7 +89,6 @@ namespace OSMP
 
         void IrcController_Tick()
         {
-            // LogFile.WriteLine("listen once...");
             ircclient.ListenOnce( false );
         }
 
@@ -112,6 +112,7 @@ namespace OSMP
                 int port = coordinationconfig.ircport;
                 channel = coordinationconfig.ircchannel;
 
+                LogFile.WriteLine( "ircchat connecting to " + coordinationconfig.ircserver );
                 ircclient.Connect(serverlist, port);
                 ircclient.Login(username, username);
                 ircclient.RfcJoin(channel);                
@@ -123,7 +124,7 @@ namespace OSMP
             }
             catch (ConnectionException e)
             {
-                InformClient("IRC Error: "+e.Message + ". Irc chat will not be available in this session" );
+                OnMessage( ChatMessageType.Error, "", "IRC Error: "+e.Message + ". Irc chat will not be available in this session" );
             }
             return IsConnected;
         }
@@ -131,50 +132,38 @@ namespace OSMP
         List<string> wholist = new List<string>();
         public void SendWho()
         {
+            Console.WriteLine( "SendWho()..." );
             if (ircclient != null)
             {
                 wholist.Clear();
                 ircclient.WriteLine( "WHO *" );
             }
         }
-        
-        public void SendMessage( string message )
+
+        public void SendPrivateMessage( string targetuser, string message )
+        {
+            if (IsConnected && message != "")
+            {
+                LogFile.WriteLine( "ircchat.sendprivatemessage " + targetuser + " " + message );
+                ircclient.SendMessage( SendType.Message, targetuser, message );
+            }
+        }
+
+        public void SendChannelMessage( string message )
         {
             if( IsConnected && message != "" )
             {
-                string[] splitmessage = message.Split( new char[]{' '} );
-                if( splitmessage[0].ToLower() == "/msg" )
-                {
-                    if( splitmessage.GetUpperBound(0) >= 2 )
-                    {
-                        string target = splitmessage[1];
-                        string messagetosend = message.Substring( ( splitmessage[0] + " " + splitmessage[1] + " " ).Length );
-                        ircclient.SendMessage(SendType.Message, target, messagetosend );
-                        InformClient( "-> " + target + " " + messagetosend );
-                    }
-                }
-                else if( splitmessage[0].ToLower() == "/who" )
-                {
-                    SendWho();
-                }
-                else if( splitmessage[0].Substring( 0, 1 ) == "/" )
-                {
-                    InformClient( "Unknown command: " + splitmessage[0] );
-                }
-                else
-                {
-                    ircclient.SendMessage(SendType.Message, channel, message );
-                    InformClient( "<" + mylogin + ">" + message );
-                }
+                LogFile.WriteLine( "ircchat.sendchannelmessage " + message );
+                ircclient.SendMessage( SendType.Message, channel, message );
             }
         }
         
-        void InformClient( string message )
+        void OnMessage( ChatMessageType chatmessagetype, string sender, string message )
         {
             //LogFile.WriteLine( "informclient: " + message );
             if( IMReceived != null )
             {
-                IMReceived( this, new IMReceivedArgs( message ) );
+                IMReceived( this, new IMReceivedArgs( chatmessagetype, sender, message ) );
             }
         }
 
@@ -190,33 +179,32 @@ namespace OSMP
         
         public void OnQueryMessage(object sender, IrcEventArgs e)
         {
-            InformClient( "*" + e.Data.Nick + "* " + e.Data.Message );
+            OnMessage(ChatMessageType.PrivateMessage, e.Data.Nick, e.Data.Message );
         }
         public void OnQueryNotice(object sender, IrcEventArgs e)
         {
-            InformClient( "-" + e.Data.Nick + "- " + e.Data.Message );
+            OnMessage( ChatMessageType.Notice, e.Data.Nick, e.Data.Message );
         }
         public void OnQueryAction(object sender, ActionEventArgs e)
         {
-            InformClient( "*" + e.Data.Nick + " " + e.Data.Message );
-        }
-        
+            OnMessage( ChatMessageType.Action, e.Data.Nick, e.Data.Message );
+        }        
         public void OnChannelMessage(object sender, IrcEventArgs e)
         {
-            InformClient( "<" + e.Data.Nick + "> " + e.Data.Message );
+            OnMessage( ChatMessageType.ChannelMessage, e.Data.Nick, e.Data.Message );
         }
         public void OnChannelNotice(object sender, IrcEventArgs e)
         {
-            InformClient( "-" + e.Data.Nick + "- " + e.Data.Message );
+            OnMessage( ChatMessageType.Notice, e.Data.Nick, e.Data.Message );
         }
         public void OnChannelAction(object sender, ActionEventArgs e)
         {
-            InformClient( "*" + e.Data.Nick + " " + e.Data.Message );
+            OnMessage( ChatMessageType.Action, e.Data.Nick, e.Data.Message );
         }
         public void OnError(object sender, ErrorEventArgs e)
         {
             LogFile.WriteLine( "Error: "+e.ErrorMessage);
-            InformClient("Error: "+e.ErrorMessage);
+            OnMessage( ChatMessageType.Error, e.Data.Nick, e.Data.Message );
             IsConnected = false;
         }
     }
