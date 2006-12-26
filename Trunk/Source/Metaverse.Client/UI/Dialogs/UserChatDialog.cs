@@ -37,10 +37,13 @@ namespace OSMP
         Entry chatentry = null;
 
         [Widget]
-        Viewport chathistoryviewport = null;
+        Window chatwindow = null;
 
         [Widget]
-        Window chatwindow = null;
+        ScrolledWindow chathistoryscrolledwindow = null;
+
+        [Widget]
+        Viewport chathistoryviewport = null;
 
         [Widget]
         Button btnshowusers = null;
@@ -57,6 +60,8 @@ namespace OSMP
 
         IChat imimplementation;
 
+        string mylogin;
+
         public UserChatDialog()
         {
             imimplementation = MetaverseClient.GetInstance().imimplementation;
@@ -67,6 +72,7 @@ namespace OSMP
         public void Login(string username, string password)
         {
             LogFile.WriteLine(this.GetType().ToString() + " trying to login as " + username + " ... ");
+            this.mylogin = username;
             imimplementation.Login( username, password);
             //logindialog.Destroy();
 
@@ -85,20 +91,7 @@ namespace OSMP
         void btnshowservers_Clicked( object sender, EventArgs e )
         {
             Console.WriteLine( "showservers clicked" );
-            imimplementation.GetUserList( new WhoCallback( ShowServersCallback ) );
-        }
-
-        void ShowServersCallback( string[] whoresults )
-        {
-            List<string> serverlist = new List<string>();
-            foreach (string name in whoresults)
-            {
-                if (name.StartsWith( "srv_" ))
-                {
-                    serverlist.Add( name.Substring("srv_".Length ) );
-                }
-            }
-            ShowServersDialog.GetInstance().Show( serverlist.ToArray() );
+            ShowServersDialog.GetInstance().Show();
         }
 
         void ShowUsersCallback( string[] usernames )
@@ -126,8 +119,54 @@ namespace OSMP
             LogFile.WriteLine("send clicked");
             if (chatentry.Text != "")
             {
-                imimplementation.SendMessage( chatentry.Text );
+                SendMessage( chatentry.Text );
+                //imimplementation.SendChannelMessage( chatentry.Text );
                 chatentry.Text = "";
+            }
+        }
+
+        void SendMessage( string message )
+        {
+            if ( message != "")
+            {
+                string[] splitmessage = message.Split( new char[] { ' ' } );
+                if (splitmessage[0].Substring( 0, 1 ) == "/")
+                {
+                    string command = splitmessage[0].ToLower();
+
+                    if (command == "/msg")
+                    {
+                        if (splitmessage.GetUpperBound( 0 ) >= 2)
+                        {
+                            string target = splitmessage[1];
+                            string messagetosend = message.Substring( (splitmessage[0] + " " + splitmessage[1] + " ").Length );
+                            imimplementation.SendPrivateMessage( target, messagetosend );
+                            AppendMessage( "-> " + target + " " + messagetosend );
+                        }
+                    }
+                    else if (command == "/who")
+                    {
+                        imimplementation.GetUserList( new WhoCallback( GotWhoResponse ) );
+                    }
+                    else
+                    {
+                        AppendMessage( "Unknown command: " + splitmessage[0] );
+                    }
+                }
+                else
+                {
+                    imimplementation.SendChannelMessage( message );
+                    AppendMessage( "<" + mylogin + ">" + message );
+                }
+            }
+        }
+
+        void GotWhoResponse( string[] namelist )
+        {
+            AppendMessage( "Logged on users:" );
+            foreach (string name in namelist)
+            {
+                AppendMessage( "   " + name );
             }
         }
 
@@ -141,12 +180,41 @@ namespace OSMP
                 chatwindow.RootWindow.Show();
             }
         }
+
+        void AppendMessage( string messageline )
+        {
+            chathistory.Text += Environment.NewLine + messageline;
+            chathistoryviewport.Vadjustment.Value = chathistoryviewport.Vadjustment.Upper;
+        }
         
+        //int numlines = 0;
         void MessageReceived( object source, IMReceivedArgs e )
         {
-            LogFile.WriteLine("message received: " + e.MessageText );
-            chathistory.Text += Environment.NewLine + e.MessageText;
-            chathistoryviewport.Vadjustment.Value = chathistoryviewport.Vadjustment.Upper;
+            string messagetodisplay = MessageToDisplayLine( e );
+            LogFile.WriteLine("message received: " + messagetodisplay );
+            AppendMessage( messagetodisplay );
+        }
+
+        string MessageToDisplayLine( IMReceivedArgs e )
+        {
+            switch( e.chatmessagetype )
+            {
+                case ChatMessageType.Action:
+                    return "*" + e.Sender + "* " + e.MessageText;
+
+                case ChatMessageType.ChannelMessage:
+                    return "<" + e.Sender + "> " + e.MessageText;
+
+                case ChatMessageType.Error:
+                    return e.MessageText;
+
+                case ChatMessageType.Notice:
+                    return "-" + e.Sender + "-" + e.MessageText;
+
+                case ChatMessageType.PrivateMessage:
+                    return "*" + e.Sender + "*" + e.MessageText;
+            }
+            return "";
         }
     }
 }

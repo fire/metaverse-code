@@ -42,27 +42,11 @@ namespace OSMP
         IrcClient ircclient = null;
         public string ircname;
 
-        XmlSerializer xmlserializer;
-
-        public class Command
-        {
-        }
-
-        public class ServerInfo : Command
-        {
-            public byte[] IPAddress;
-            public int port;
-            public ServerInfo(){}
-            public ServerInfo( IPAddress ipaddress, int port )
-            {
-                this.IPAddress = ipaddress.GetAddressBytes();
-                this.port = port;
-            }
-        }
+        Config.Coordination coordinationconfig;
 
         ServerRegistration() // protected to enforce singleton
         {
-            xmlserializer = new XmlSerializer( typeof( Command ), new Type[]{ typeof( ServerInfo ) } );
+            coordinationconfig = Config.GetInstance().coordination;
 
             MetaverseServer.GetInstance().Tick += new MetaverseServer.TickHandler(ServerRegistration_Tick);
 
@@ -71,14 +55,12 @@ namespace OSMP
             ircclient.SendDelay = 200;
             ircclient.ActiveChannelSyncing = true; // we use channel sync, means we can use ircclient.GetChannel() and so on
 
-            ircclient.OnQueryMessage += new IrcEventHandler( OnQueryMessage );
-
-            //ircclient.OnRawMessage += new IrcEventHandler( OnRawMessage );
-            //ircclient.OnNames += new NamesEventHandler( OnNames );
+            ircclient.OnQueryMessage += new IrcEventHandler(OnQueryMessage);
 
             ircclient.OnError += new Meebey.SmartIrc4net.ErrorEventHandler( OnError );
 
-            new InputBox( "Please enter a worldname to publish your server to gamenet irc #osmp", new InputBox.Callback( ServernameCallback ) );
+            new InputBox( "Please enter a worldname to publish your server to " + coordinationconfig.ircserver + 
+                 " irc " + coordinationconfig.ircchannel, new InputBox.Callback( ServernameCallback ) );
         }
 
         void ServerRegistration_Tick()
@@ -115,12 +97,11 @@ namespace OSMP
 
         void Connect()
         {
-            Config.Coordination coordinationconfig = Config.GetInstance().coordination;
             string[] serverlist = new string[] { coordinationconfig.ircserver };
             int port = coordinationconfig.ircport;
             string channel = coordinationconfig.ircchannel;
 
-            LogFile.WriteLine( "serverregistration connecting..." );
+            LogFile.WriteLine( "serverregistration connecting to " + coordinationconfig.ircserver + " ..." );
             ircclient.Connect( serverlist, port );
             LogFile.WriteLine( "serverregistration login as " + ircname );
             ircclient.Login( ircname, ircname );
@@ -137,20 +118,19 @@ namespace OSMP
 
         public void OnQueryMessage( object sender, IrcEventArgs e )
         {
-            LogFile.WriteLine( "serverregistration received from " + e.Data.Nick + ": " + e.Data.Message );
+            LogFile.WriteLine( "serverregistration. received from " + e.Data.Nick + ": " + e.Data.Message );
             if (e.Data.Message.StartsWith( "QUERY" ) )
             {
-                SendCommand( e.Data.Nick, new ServerInfo( 
+                SendCommand( e.Data.Nick, new XmlCommands.ServerInfo( 
                     externaladdress, externalport ) );
             }
         }
-
-        void SendCommand( string targetnick, Command command )
+        
+        void SendCommand( string targetnick, XmlCommands.Command command )
         {
-            StringWriter stringwriter = new StringWriter();
-            xmlserializer.Serialize( stringwriter, command );
-            ircclient.SendMessage(SendType.Message, targetnick, stringwriter.ToString().Replace("\n", "").Replace("\r", "") );
-            stringwriter.Close();
+            string message = XmlCommands.GetInstance().Encode( command );
+            LogFile.WriteLine( message );
+            ircclient.SendMessage( SendType.Message, targetnick, message );
         }
 
         public void OnError( object sender, Meebey.SmartIrc4net.ErrorEventArgs e )

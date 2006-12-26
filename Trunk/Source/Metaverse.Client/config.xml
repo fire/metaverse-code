@@ -53,7 +53,8 @@ spacebar, shift, alt, ctrl, delete, enter
 </client>
 <config debuglevel="3">
 </config>
-<coordination ircserver="irc.gamernet.org" ircport="6667" ircchannel="#osmp" stunserver="stun.fwdnet.net" />
-<server port="2501" ipaddress="127.0.0.1" >
+	<rem_coordination ircserver="irc.gamernet.org" ircport="6667" ircchannel="#osmp" stunserver="stun.fwdnet.net" />
+	<coordination ircserver="uk.quakenet.org" ircport="6667" ircchannel="#osmp" stunserver="stun.fwdnet.net" />
+	<server port="2501" ipaddress="127.0.0.1" >
 </server>
 </root>

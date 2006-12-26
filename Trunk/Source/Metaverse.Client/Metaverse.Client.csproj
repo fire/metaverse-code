@@ -9,6 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OSMP</RootNamespace>
     <AssemblyName>Metaverse.Client</AssemblyName>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,26 +29,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="atk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\atk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\gdk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="glade-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\glade-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="glib-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\glib-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="gtk-sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\gtk-sharp.dll</HintPath>
-    </Reference>
+    <Reference Include="atk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gdk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glade-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glib-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="Meebey.SmartIrc4net, Version=0.3.5.1833, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Meebey.SmartIrc4net.dll</HintPath>
@@ -110,6 +96,8 @@
     <Compile Include="IM\ChatImplementationFactory.cs" />
     <Compile Include="IM\IChat.cs" />
     <Compile Include="IM\IrcChat.cs" />
+    <Compile Include="IM\QueryServer.cs" />
+    <Compile Include="IM\XmlCommands.cs" />
     <Compile Include="KeyAndMouse\CommandCombos.cs" />
     <Compile Include="KeyAndMouse\KeyCombos.cs" />
     <Compile Include="KeyAndMouse\KeyNameCache.cs" />
@@ -203,6 +191,7 @@
     <Compile Include="UI\Dialogs\MessageBox.cs" />
     <Compile Include="UI\Dialogs\InputBox.cs" />
     <Compile Include="UI\Dialogs\LoginDialog.cs" />
+    <Compile Include="UI\Dialogs\RemoteServerInfoDialog.cs" />
     <Compile Include="UI\Dialogs\ShowServersDialog.cs" />
     <Compile Include="UI\Dialogs\ShowUsersDialog.cs" />
     <Compile Include="UI\Dialogs\UIContextMenu.cs" />

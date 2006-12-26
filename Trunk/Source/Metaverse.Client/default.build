@@ -210,6 +210,8 @@
 				<include name="./IM/IrcChat.cs" />
 				<include name="./IM/ChatImplementationFactory.cs" />
 				<include name="./IM/IChat.cs" />
+				<include name="./IM/QueryServer.cs" />
+				<include name="./IM/XmlCommands.cs" />
 
 				<include name="./BasicTypes/Color.cs" />
 				<include name="./BasicTypes/Plane.cs" />
@@ -261,6 +263,7 @@
 				<include name="./UI/EmergencyDialog.cs" />
 				<include name="./UI/UIController.cs" />
 				<include name="./UI/DialogHelpers.cs" />
+				
 				<include name="./UI/Dialogs/UIEntitiesPropertiesDialog.cs" />
 				<include name="./UI/Dialogs/UserChatDialog.cs" />
 				<include name="./UI/Dialogs/UIContextMenu.cs" />
@@ -270,6 +273,7 @@
 				<include name="./UI/Dialogs/ConnectToServerDialog.cs" />
 				<include name="./UI/Dialogs/ShowUsersDialog.cs" />
 				<include name="./UI/Dialogs/ShowServersDialog.cs" />
+				<include name="./UI/Dialogs/RemoteServerInfoDialog.cs" />
 			</sources>
 		</csc>
 		<copy todir="${outputdir}/Metaverse.Client">

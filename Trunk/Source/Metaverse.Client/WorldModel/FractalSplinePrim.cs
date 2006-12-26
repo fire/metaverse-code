@@ -288,6 +288,8 @@ namespace OSMP
         
         public override void RegisterProperties( IPropertyController propertycontroller )
         {
+            base.RegisterProperties( propertycontroller );
+
             propertycontroller.RegisterIntProperty( "Hollow", primitive.Hollow, 0, 200, new SetIntPropertyHandler( SetHollow ) );
             propertycontroller.RegisterIntProperty( "Twist", primitive.Twist, -360, 360, new SetIntPropertyHandler( SetTwist ) );
             propertycontroller.RegisterIntProperty( "Shear", (int)( primitive.Shear * 100 ), -100, 100, new SetIntPropertyHandler( SetShear ) );
@@ -303,20 +305,10 @@ namespace OSMP
             propertycontroller.RegisterIntProperty( "Texture Scale X", (int)( TextureScaleX * 20 ), 0, 200, new SetIntPropertyHandler( SetTextureScaleX ) );
             propertycontroller.RegisterIntProperty( "Texture Scale Y", (int)( TextureScaleY * 20 ), 0, 200, new SetIntPropertyHandler( SetTextureScaleY ) );
             propertycontroller.RegisterIntProperty( "Texture Rotate", (int)( TextureRotate / 2 ), 0, 180, new SetIntPropertyHandler( SetTextureRotate ) );
-            base.RegisterProperties( propertycontroller );
         }
 
         protected void LoadDefaults()
         {
-           // primitive.SetTexture( 0, TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( "DefaultWorld\\1.tga" ) ) );
-            //primitive.SetTexture( 1, TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( "DefaultWorld\\2.tga" ) ) );
-            //primitive.SetTexture( 2, TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( "DefaultWorld\\3.tga" ) ) );
-            //rimitive.SetTexture( 3, TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( "DefaultWorld\\4.tga" ) ) );
-            //primitive.SetTexture( 4, TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( "DefaultWorld\\5.tga" ) ) );
-            //primitive.SetTexture( 5, TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( "DefaultWorld\\6.tga" ) ) );
-            //primitive.SetTexture( 6, TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( "DefaultWorld\\7.tga" ) ) );
-            //primitive.SetTexture( 7, TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( "DefaultWorld\\8.tga" ) ) );
-            //primitive.SetTexture( 8, TextureHelper.LoadBitmapToOpenGl( DevIL.DevIL.LoadBitmap( "DefaultWorld\\9.tga" ) ) );
             for( int i = 0; i < iMaxFaces; i++ )
             {
                 facecolors[i] = new Color( 0.8,0.8,1.0 );
