@@ -45,12 +45,57 @@ namespace OSMP
 
         public STUN( INetworkImplementation network, GotExternalAddress callback )
         {
+            LogFile.WriteLine( "STUN " + network.LocalIPAddress + " " + network.LocalPort + " " + callback.Target + " " + callback.Method );
+
             this.network = network;
             this.callback = callback;
 
             packethandler = new Level1ReceivedPacketHandler( network_ReceivedPacket );
             network.ReceivedPacket += packethandler;
 
+            byte[] bytes = CreateSTUNBindingRequestPacket();
+
+            network.Send( GetStunServerEndpoint(), bytes );
+        }
+
+        IPEndPoint GetStunServerEndpoint()
+        {
+            IPAddress[] stunserveripaddresses = Dns.GetHostAddresses( StunServerHostname );
+            IPEndPoint stunserveripendpoint = new IPEndPoint( stunserveripaddresses[0], StunServerPort );
+            return stunserveripendpoint;
+        }
+
+        string StunServerHostname
+        {
+            get
+            {
+                return Config.GetInstance().coordination.stunserver;
+            }
+        }
+
+        int StunServerPort
+        {
+            get
+            {
+                return 3478;
+            }
+        }
+
+        /*
+        public STUN( int ourport, GotExternalAddress callback )
+        {
+            LogFile.WriteLine( "STUN( ourport: " + ourport + " callback: " + callback.Target + "." + callback.Method.Name );
+
+            INetworkImplementation level1net = NetworkImplementationFactory.CreateNewInstance();
+            level1net.ConnectAsClient( new IPAddress( stunser ), serverinfo.port 
+
+            UdpClient udpclient = new UdpClient( StunServerHostname, StunServerPort );
+            byte[] bytes = CreateSTUNBindingRequestPacket();
+            udpclient.Send( bytes, bytes.Length );
+        }
+        */
+        byte[] CreateSTUNBindingRequestPacket()
+        {
             Request request = MessageFactory.CreateBindingRequest();
             ChangeRequestAttribute changeRequest = (ChangeRequestAttribute)request.GetAttribute( net.voxx.stun4cs.Attribute.CHANGE_REQUEST );
             changeRequest.SetChangeIpFlag( false );
@@ -60,12 +105,7 @@ namespace OSMP
             request.SetTransactionID( transactionID.GetTransactionID() );
 
             byte[] bytes = request.Encode();
-
-            string stunserver = Config.GetInstance().coordination.stunserver;
-            IPAddress[] stunserveripaddresses = Dns.GetHostAddresses( stunserver );
-            IPEndPoint stunserveripendpoint = new IPEndPoint( stunserveripaddresses[0], 3478 );
-            network.Send( stunserveripendpoint, bytes );
-
+            return bytes;
         }
 
         void network_ReceivedPacket( INetworkImplementation source, ConnectionInfo connectioninfo, byte[] data, int offset, int length )

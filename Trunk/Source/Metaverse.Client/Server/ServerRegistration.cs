@@ -119,10 +119,30 @@ namespace OSMP
         public void OnQueryMessage( object sender, IrcEventArgs e )
         {
             LogFile.WriteLine( "serverregistration. received from " + e.Data.Nick + ": " + e.Data.Message );
-            if (e.Data.Message.StartsWith( "QUERY" ) )
+            if (e.Data.Message.StartsWith( "QUERY" ))
             {
-                SendCommand( e.Data.Nick, new XmlCommands.ServerInfo( 
+                SendCommand( e.Data.Nick, new XmlCommands.ServerInfo(
                     externaladdress, externalport ) );
+            }
+            else
+            {
+                try
+                {
+                    XmlCommands.Command command = XmlCommands.GetInstance().Decode( e.Data.Message );
+                    if( command.GetType() == typeof( XmlCommands.PingMe ) )
+                    {
+                        XmlCommands.PingMe pingmecommand = command as XmlCommands.PingMe;
+                        LogFile.WriteLine( "serverregistration received pingme command: " + new IPAddress( pingmecommand.MyIPAddress ) +
+                            " " + pingmecommand.Myport );
+                        IPEndPoint endpoint = new IPEndPoint( new IPAddress( pingmecommand.MyIPAddress ), pingmecommand.Myport );
+                        MetaverseServer.GetInstance().network.networkimplementation
+                            .Send( endpoint, new byte[] { 0 } );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogFile.WriteLine( ex );
+                }
             }
         }
         

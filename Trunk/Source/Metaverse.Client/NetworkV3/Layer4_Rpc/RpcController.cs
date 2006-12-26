@@ -103,7 +103,14 @@ namespace OSMP
                             Type interfacetype = Type.GetType(typename);
 
                             Type serverwrapperttype = Type.GetType(serverwrapperclassname);
-                            LogFile.WriteLine("RpcController, instantiating [" + serverwrapperttype + "]");
+                            if (isserver)
+                            {
+                                LogFile.WriteLine( "server RpcController, instantiating [" + serverwrapperttype + "]" );
+                            }
+                            else
+                            {
+                                LogFile.WriteLine( "client RpcController, instantiating [" + serverwrapperttype + "]" );
+                            }
                             object serverwrapperobject = Activator.CreateInstance(serverwrapperttype, new object[] { connection.connectioninfo.Connection });
                             MethodInfo methodinfo = serverwrapperttype.GetMethod(methodname);
 

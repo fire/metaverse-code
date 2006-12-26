@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Net;
 using Glade;
 using Gtk;
 
@@ -86,7 +87,6 @@ namespace OSMP
             btnclose.Clicked += new EventHandler( btnclose_Clicked );
             btnconnect.Clicked += new EventHandler( btnconnect_Clicked );
             btngetinfo.Clicked += new EventHandler( btngetinfo_Clicked );
-            btnconnect.Hide(); // placeholder
 
             liststore = new ListStore( typeof( string ) );
             serverstreeview.Model = liststore;
@@ -105,7 +105,7 @@ namespace OSMP
             }
         }
 
-        void btngetinfo_Clicked( object sender, EventArgs e )
+        string GetSelectedServer()
         {
             TreePath[] selectedtreepaths = serverstreeview.Selection.GetSelectedRows();
             if (selectedtreepaths.Length > 0)
@@ -114,13 +114,51 @@ namespace OSMP
                 liststore.GetIter( out treeiter, selectedtreepaths[0] );
                 string servername = servernameprefix + (string)liststore.GetValue( treeiter, 0 );
                 Console.WriteLine( "server selected: " + servername );
+                return servername;
+            }
+            return "";
+        }
 
+        void btngetinfo_Clicked( object sender, EventArgs e )
+        {
+            string servername = GetSelectedServer();
+            if( servername != "" )
+            {
                 queryserver.Go( servername, new QueryServer.GotServerResponse( GotServerInfo ) );
             }
         }
 
         void btnconnect_Clicked( object sender, EventArgs e )
         {
+            string servername = GetSelectedServer();
+            if (servername != "")
+            {
+                queryserver.Go( servername, new QueryServer.GotServerResponse( GotServerInfo_nowconnect ) );
+            }
+        }
+
+        string servername;
+
+        void GotServerInfo_nowconnect( string servername, XmlCommands.ServerInfo serverinfo )
+        {
+            LogFile.WriteLine( "showserversdialog.GotServerInfo_nowconnect, got serverinfo: " + serverinfo );
+            MetaverseClient.GetInstance().network.NewConnection += new Level2NewConnectionHandler( network_NewConnection );
+            this.servername = servername;
+            MetaverseClient.GetInstance().ConnectToServer(
+                new IPAddress( serverinfo.IPAddress ).ToString(), serverinfo.port );
+        }
+
+        void network_NewConnection( NetworkLevel2Connection net2con, ConnectionInfo connectioninfo )
+        {
+            LogFile.WriteLine( "showserverdialog.network_newconnection()" );
+            new STUN( net2con.networkimplementation, new STUN.GotExternalAddress( STUNResponseForOwnInterface ) );
+        }
+
+        void STUNResponseForOwnInterface( IPAddress ipaddress, int port )
+        {
+            LogFile.WriteLine( "showserverdialog.STUNResponseForOwnInterface( " + ipaddress + " " + port + " )" );
+            MetaverseClient.GetInstance().imimplementation.SendPrivateMessage( servername,
+                XmlCommands.GetInstance().Encode( new XmlCommands.PingMe( ipaddress, port ) ) );
         }
 
         void GotServerInfo( string servername, XmlCommands.ServerInfo serverinfo )

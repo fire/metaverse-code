@@ -18,6 +18,9 @@ Next release:
 - added "Show servers..." button to chat window
 - added remote server info dialog, with link from show servers dialog
 - changed default irc server to uk.quakenet.org b/c freenet doesnt allow anonymous private messages
+- "Connect" button added to "Show servers..." dialog box
+- "pingme" command added to xmlcommands
+- possible that this will work with port restricted NAT now, as well as full cone and restricted cone
 
 Release 0.4:
 - migrated context menu to GTK#
