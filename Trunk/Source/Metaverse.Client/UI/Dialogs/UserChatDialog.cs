@@ -19,15 +19,14 @@
 //
 
 using System;
-using System.Collections;
-//using System.Windows.Forms;
-using System.Drawing;
+using System.Collections.Generic;
+//using System.Drawing;
 using Gtk;
 using Glade;
 
 namespace OSMP
 {
-    public class ChatController
+    public class UserChatDialog
     {
         //Panel IMPanel;
 
@@ -38,7 +37,16 @@ namespace OSMP
         Entry chatentry = null;
 
         [Widget]
+        Viewport chathistoryviewport = null;
+
+        [Widget]
         Window chatwindow = null;
+
+        [Widget]
+        Button btnshowusers = null;
+
+        [Widget]
+        Button btnshowservers = null;
         
         //static ChatController instance = new ChatController();
         //public static ChatController GetInstance(){ return instance; }
@@ -47,30 +55,70 @@ namespace OSMP
 
         public LoginDialog logindialog;
 
-        public ChatController()
+        IChat imimplementation;
+
+        public UserChatDialog()
         {
+            imimplementation = MetaverseClient.GetInstance().imimplementation;
             logindialog = new LoginDialog( this );
+            //Login( "hugh", "" );
         }
 
         public void Login(string username, string password)
         {
             LogFile.WriteLine(this.GetType().ToString() + " trying to login as " + username + " ... ");
-            ImImplementationFactory.GetInstance().Login( username, password);
+            imimplementation.Login( username, password);
             //logindialog.Destroy();
 
             Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/metaverse.client.glade", "chatwindow", "");
             app.Autoconnect(this);
 
-            ImImplementationFactory.GetInstance().MessageReceived += new MessageReceivedHandler(MessageReceived);
-            MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler(ChatController_Tick);
+            imimplementation.IMReceived += new IMReceivedHandler( MessageReceived );
 
             CommandCombos.GetInstance().RegisterCommand(
                 "activatechat", new KeyCommandHandler(EnterChat));
+
+            btnshowusers.Clicked += new EventHandler( btnshowusers_Clicked );
+            btnshowservers.Clicked += new EventHandler( btnshowservers_Clicked );
         }
 
-        void ChatController_Tick()
+        void btnshowservers_Clicked( object sender, EventArgs e )
         {
-            ImImplementationFactory.GetInstance().CheckMessages();
+            Console.WriteLine( "showservers clicked" );
+            imimplementation.GetUserList( new WhoCallback( ShowServersCallback ) );
+        }
+
+        void ShowServersCallback( string[] whoresults )
+        {
+            List<string> serverlist = new List<string>();
+            foreach (string name in whoresults)
+            {
+                if (name.StartsWith( "srv_" ))
+                {
+                    serverlist.Add( name.Substring("srv_".Length ) );
+                }
+            }
+            ShowServersDialog.GetInstance().Show( serverlist.ToArray() );
+        }
+
+        void ShowUsersCallback( string[] usernames )
+        {
+            Console.WriteLine( "showuserscallback" );
+            List<string> userlist = new List<string>();
+            foreach (string name in usernames)
+            {
+                if (!name.StartsWith( "srv_" ))
+                {
+                    userlist.Add( name );
+                }
+            }
+            ShowUsersDialog.GetInstance().Show( userlist.ToArray() );
+        }
+
+        void btnshowusers_Clicked( object sender, EventArgs e )
+        {
+            Console.WriteLine( "showusers clicked" );
+            imimplementation.GetUserList( new WhoCallback( ShowUsersCallback ) );
         }
 
         void on_btnSend_clicked(object o, EventArgs e)
@@ -78,7 +126,7 @@ namespace OSMP
             LogFile.WriteLine("send clicked");
             if (chatentry.Text != "")
             {
-                ImImplementationFactory.GetInstance().SendMessage(chatentry.Text);
+                imimplementation.SendMessage( chatentry.Text );
                 chatentry.Text = "";
             }
         }
@@ -94,14 +142,11 @@ namespace OSMP
             }
         }
         
-        //int numlines = 0;
-        void MessageReceived( object source, MessageReceivedArgs e )
+        void MessageReceived( object source, IMReceivedArgs e )
         {
             LogFile.WriteLine("message received: " + e.MessageText );
             chathistory.Text += Environment.NewLine + e.MessageText;
-
-            //chathistory.SelectionStart = chathistory.Text.Length;
-            //chathistory.ScrollToCaret();
+            chathistoryviewport.Vadjustment.Value = chathistoryviewport.Vadjustment.Upper;
         }
     }
 }

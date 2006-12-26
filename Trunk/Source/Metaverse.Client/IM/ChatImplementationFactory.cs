@@ -19,26 +19,12 @@
 //
 
 using System;
-//using System.Windows.Forms;
 
 namespace OSMP
 {
-    public class MessageReceivedArgs : EventArgs
+    public class ChatImplementationFactory
     {
-        public string MessageText;
-        public MessageReceivedArgs( string text )
-        {
-            MessageText = text;
-        }
-    }
-    
-    public delegate void MessageReceivedHandler( object source, MessageReceivedArgs e );
-        
-    public interface IImImplementation
-    {
-        event MessageReceivedHandler MessageReceived;
-        void SendMessage( string message );
-        bool Login( string username, string password );
-        void CheckMessages();
+        //static IImImplementation instance = new IrcController();
+        public static IChat CreateInstance() { return new IrcChat(); }
     }
 }

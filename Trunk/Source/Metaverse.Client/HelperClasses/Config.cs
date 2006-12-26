@@ -79,6 +79,8 @@ namespace OSMP
         
         public int iDebugLevel;
 
+        public Coordination coordination;
+
         public string ServerIPAddress = "";
         public int ServerPort = 2501;
             
@@ -106,7 +108,7 @@ namespace OSMP
             RefreshConfig();
         }
 
-        double GetDouble(XmlElement xmlelement, string attributename)
+        public static double GetDouble(XmlElement xmlelement, string attributename)
         {
             try
             {
@@ -120,7 +122,7 @@ namespace OSMP
             }
         }
 
-        int GetInt(XmlElement xmlelement, string attributename)
+        public static int GetInt( XmlElement xmlelement, string attributename )
         {
             try
             {
@@ -134,6 +136,23 @@ namespace OSMP
             }
         }
 
+        // <coordination ircserver="irc.gamernet.org" ircport="6667" ircchannel="#osmp" stunserver="stun.fwdnet.net" />
+        public class Coordination
+        {
+            public string ircserver;
+            public int ircport;
+            public string ircchannel;
+            public string stunserver;
+            public Coordination() { }
+            public Coordination( XmlElement coordinationelement )
+            {
+                ircserver = coordinationelement.GetAttribute( "ircserver" );
+                ircport = GetInt( coordinationelement, "ircport" );
+                ircchannel = coordinationelement.GetAttribute( "ircchannel" );
+                stunserver = coordinationelement.GetAttribute( "stunserver" );
+            }
+        }
+
         public void RefreshConfig()
         {
             Test.Debug( "reading config.xml ..." );
@@ -144,6 +163,8 @@ namespace OSMP
             Test.Debug("DebugLevel " + iDebugLevel.ToString() );
         
             clientconfig = (XmlElement)configdoc.DocumentElement.SelectSingleNode( "client");
+
+            coordination = new Coordination( (XmlElement)configdoc.DocumentElement.SelectSingleNode( "coordination") );
 
             XmlElement displaynode = clientconfig.SelectSingleNode("display") as XmlElement;
             windowwidth = GetInt(displaynode, "width");
