@@ -29,6 +29,9 @@ namespace OSMP
     public class LoginDialog
     {
         [Widget]
+        Label welcomelabel = null;
+
+        [Widget]
         Entry entryusername = null;
 
         [Widget]
@@ -39,6 +42,11 @@ namespace OSMP
 
         [Widget]
         Window loginwindow = null;
+
+        public void Destroy()
+        {
+            loginwindow.Destroy();
+        }
 
         public string Login
         {
@@ -62,9 +70,9 @@ namespace OSMP
             parent.Login(Login, Password);
         }
 
-        ChatController parent;
+        UserChatDialog parent;
 
-        public LoginDialog( ChatController parent )
+        public LoginDialog( UserChatDialog parent )
         {
             this.parent = parent;
 

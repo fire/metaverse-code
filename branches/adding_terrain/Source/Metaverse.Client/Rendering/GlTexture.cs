@@ -186,7 +186,7 @@ namespace OSMP
         {
             width = image.Width;
             height = image.Height;
-            LogFile.GetInstance().WriteLine( "loading texture " + filename + " width: " + width + " height: " + height );
+            LogFile.WriteLine( "loading texture " + filename + " width: " + width + " height: " + height );
 
             alphadata = new byte[width, height];
 
@@ -228,7 +228,7 @@ namespace OSMP
         {
             width = image.Width;
             height = image.Height;
-            LogFile.GetInstance().WriteLine( "loading texture " + filename + " width: " + width + " height: " + height );
+            LogFile.WriteLine( "loading texture " + filename + " width: " + width + " height: " + height );
 
             alphadata = new byte[width, height];
             byte[] dataforgl = new byte[width * height];

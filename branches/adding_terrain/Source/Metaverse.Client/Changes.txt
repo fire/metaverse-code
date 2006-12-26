@@ -5,6 +5,19 @@ Next release:
 - added static methods LogFile.WriteLine( string ), LogFile.BlankLine() and LogFile.WriteLine( object )
 - replaced all Console.WriteLines with LogFile.WriteLines
 - layer1 keepalive packets now contain a byte of data -> fixed layer1 server disconnections
+- added STUN punch-through info to ServerInfo... dialog box
+- added new coordination key to config.xml with irc and stunserver configuration
+- added server registration
+- accelerated nant build
+- added scroll bars to chathistory pane in chatwindow
+- chathistory automatically scrolls to end on receipt of new message
+- added "Show users..." button to chat window
+- added "Show servers..." button to chat window
+- added remote server info dialog, with link from show servers dialog
+- changed default irc server to uk.quakenet.org b/c freenet doesnt allow anonymous private messages
+- "Connect" button added to "Show servers..." dialog box
+- "pingme" command added to xmlcommands
+- possible that this will work with port restricted NAT now, as well as full cone and restricted cone
 - changed world boundaries in config file from worldboundingbox to world node
 - changed near and far clip planes( near: 0.5 -> 10, far: 100 -> 2000)
 - world got a lot bigger

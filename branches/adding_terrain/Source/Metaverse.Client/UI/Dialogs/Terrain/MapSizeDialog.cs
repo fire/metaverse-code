@@ -25,7 +25,7 @@ using System.Threading;
 using Gtk;
 using Glade;
 
-namespace MapDesigner
+namespace OSMP
 {
     class MapSizeDialog
     {

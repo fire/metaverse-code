@@ -27,7 +27,7 @@ using Gtk;
 using Glade;
 //using Gdk;
 
-namespace MapDesigner
+namespace OSMP
 {
     public class FeaturesDialog
     {

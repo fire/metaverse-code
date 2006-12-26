@@ -59,7 +59,6 @@
         </target>
 
 		<target name="build" description="Build everything">
-            <call target="clean" />
 			<call target="build_library" />
 		</target>
     </project>

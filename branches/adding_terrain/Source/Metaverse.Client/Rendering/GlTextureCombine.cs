@@ -322,7 +322,7 @@ namespace OSMP
         };
         public void glTexEnvi( int one, int two, int three )
         {
-            LogFile.GetInstance().WriteLine( (glcodes)one + " " + (glcodes)two + " " + (glcodes)three );
+            LogFile.WriteLine( (glcodes)one + " " + (glcodes)two + " " + (glcodes)three );
         }
     }
 }
