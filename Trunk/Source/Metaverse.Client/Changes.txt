@@ -9,6 +9,13 @@ Next release:
 - replaced all Console.WriteLines with LogFile.WriteLines
 - layer1 keepalive packets now contain a byte of data -> fixed layer1 server disconnections
 - added STUN punch-through info to ServerInfo... dialog box
+- added new coordination key to config.xml with irc and stunserver configuration
+- added server registration
+- accelerated nant build
+- added scroll bars to chathistory pane in chatwindow
+- chathistory automatically scrolls to end on receipt of new message
+- added "Show users..." button to chat window
+- added "Show servers..." button to chat window
 
 Release 0.4:
 - migrated context menu to GTK#

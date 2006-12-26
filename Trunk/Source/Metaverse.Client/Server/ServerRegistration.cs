@@ -32,9 +32,9 @@ namespace OSMP
 {
     public class ServerRegistration
     {
-        public string[] serverlist = new string[] { "irc.gamernet.org" };
-        public int port = 6667;
-        public string channel = "#osmp";
+        //public string[] serverlist = new string[] { "irc.gamernet.org" };
+        //public int port = 6667;
+        //public string channel = "#osmp";
 
         static ServerRegistration instance = new ServerRegistration();
         public static ServerRegistration GetInstance(){ return instance; }
@@ -73,7 +73,7 @@ namespace OSMP
 
             ircclient.OnQueryMessage += new IrcEventHandler( OnQueryMessage );
 
-            ircclient.OnRawMessage += new IrcEventHandler( OnRawMessage );
+            //ircclient.OnRawMessage += new IrcEventHandler( OnRawMessage );
             //ircclient.OnNames += new NamesEventHandler( OnNames );
 
             ircclient.OnError += new Meebey.SmartIrc4net.ErrorEventHandler( OnError );
@@ -115,6 +115,11 @@ namespace OSMP
 
         void Connect()
         {
+            Config.Coordination coordinationconfig = Config.GetInstance().coordination;
+            string[] serverlist = new string[] { coordinationconfig.ircserver };
+            int port = coordinationconfig.ircport;
+            string channel = coordinationconfig.ircchannel;
+
             LogFile.WriteLine( "serverregistration connecting..." );
             ircclient.Connect( serverlist, port );
             LogFile.WriteLine( "serverregistration login as " + ircname );
@@ -124,11 +129,11 @@ namespace OSMP
             LogFile.WriteLine( "serverregistration connected" );
 
         }
-        public void OnRawMessage( object sender, IrcEventArgs e )
-        {
-            LogFile.WriteLine( "OnRawMessage Replycode " + e.Data.ReplyCode.ToString() + " Received: " + e.Data.RawMessage );
+        //public void OnRawMessage( object sender, IrcEventArgs e )
+        //{
+          //  LogFile.WriteLine( "OnRawMessage Replycode " + e.Data.ReplyCode.ToString() + " Received: " + e.Data.RawMessage );
             //InformClient( "*" + e.Data.Nick + "* " + e.Data.Message );
-        }
+        //}
 
         public void OnQueryMessage( object sender, IrcEventArgs e )
         {

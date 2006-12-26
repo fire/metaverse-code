@@ -99,10 +99,12 @@ namespace OSMP
             playermovement.avataryrot = 0;
         }
 
-        public ChatController chatcontroller = null;
+        public IChat imimplementation;
+        public UserChatDialog userchatdialog = null;
         void LoadChat()
         {
-            chatcontroller = new ChatController();
+            imimplementation = ChatImplementationFactory.CreateInstance();
+            userchatdialog = new UserChatDialog();
         }
 
         string targettoload = ""; // incoming url from osmp:// or possibly commandline

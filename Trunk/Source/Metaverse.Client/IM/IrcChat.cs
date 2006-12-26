@@ -20,29 +20,34 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Meebey.SmartIrc4net;
 
 namespace OSMP
 {
-    public class IrcController : IImImplementation
+    public class IrcChat : IChat
     {
         //public string[] serverlist = new string[] {"irc.freenode.org"};
-        public string[] serverlist = new string[] { "irc.gamernet.org" };
-        public int port = 6667;
-        public string channel = "#osmp";
+        //public string[] serverlist = new string[] { "irc.gamernet.org" };
+        //public int port = 6667;
+        public string channel = "";
         
-        public event MessageReceivedHandler MessageReceived;
+        public event IMReceivedHandler IMReceived;
             
         IrcClient ircclient;
         bool IsConnected;
-        
+
+        List<WhoCallback> whocallbacks = new List<WhoCallback>();
+
         //static IrcController instance = new IrcController();
         //public static IrcController GetInstance(){ return instance; }
         
-        public IrcController()
+        public IrcChat()
         {
             LogFile.WriteLine( this.GetType().ToString() + " IrcController()" );
             ircclient = new IrcClient();
+
+            MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler( IrcController_Tick );
 
             ircclient.SendDelay = 200;
             ircclient.ActiveChannelSyncing = true; // we use channel sync, means we can use ircclient.GetChannel() and so on
@@ -54,22 +59,59 @@ namespace OSMP
             ircclient.OnChannelMessage += new IrcEventHandler(OnChannelMessage);
             ircclient.OnChannelNotice += new IrcEventHandler(OnChannelNotice);
             ircclient.OnChannelAction += new ActionEventHandler(OnChannelAction);
+
+            ircclient.OnWho += new WhoEventHandler( ircclient_OnWho );
             
             ircclient.OnRawMessage += new IrcEventHandler(OnRawMessage);
-            //ircclient.OnNames += new NamesEventHandler( OnNames );
-    
+
             ircclient.OnError += new ErrorEventHandler(OnError);
         }
-        
+
+        void ircclient_OnWho( object sender, WhoEventArgs e )
+        {
+            if (e.Server != "hidden")
+            {
+                Console.WriteLine( "onwho " + e.IsIrcOp + " " + e.IsOp + " " + e.Server + " " + e.Channel + " " + e.Nick );
+                wholist.Add( e.Nick );
+            }
+        }
+
+        void onEndOfWho()
+        {
+            string[] namestosendarray = wholist.ToArray();
+            foreach (WhoCallback whocallback in whocallbacks)
+            {
+                whocallback( namestosendarray );
+            }
+            whocallbacks.Clear();
+        }
+
+        void IrcController_Tick()
+        {
+            // LogFile.WriteLine("listen once...");
+            ircclient.ListenOnce( false );
+        }
+
+        public void GetUserList( WhoCallback callback )
+        {
+            whocallbacks.Add( callback );
+            SendWho();
+        }
+
         string mylogin;
         
         public bool Login( string username, string password )
         {
             mylogin = username;
             LogFile.WriteLine( this.GetType().ToString() + " Login()" );
-            InformClient( "test inform" );
+            //InformClient( "test inform" );
             try
             {
+                Config.Coordination coordinationconfig = Config.GetInstance().coordination;
+                string[] serverlist = new string[] { coordinationconfig.ircserver };
+                int port = coordinationconfig.ircport;
+                channel = coordinationconfig.ircchannel;
+
                 ircclient.Connect(serverlist, port);
                 ircclient.Login(username, username);
                 ircclient.RfcJoin(channel);                
@@ -85,11 +127,15 @@ namespace OSMP
             }
             return IsConnected;
         }
-        
-        public void CheckMessages()
+
+        List<string> wholist = new List<string>();
+        public void SendWho()
         {
-            // LogFile.WriteLine("listen once...");
-            ircclient.ListenOnce( false );
+            if (ircclient != null)
+            {
+                wholist.Clear();
+                ircclient.WriteLine( "WHO *" );
+            }
         }
         
         public void SendMessage( string message )
@@ -109,7 +155,7 @@ namespace OSMP
                 }
                 else if( splitmessage[0].ToLower() == "/who" )
                 {
-                    ircclient.WriteLine( "WHO *" );
+                    SendWho();
                 }
                 else if( splitmessage[0].Substring( 0, 1 ) == "/" )
                 {
@@ -125,16 +171,20 @@ namespace OSMP
         
         void InformClient( string message )
         {
-            LogFile.WriteLine( "informclient: " + message );
-            if( MessageReceived != null )
+            //LogFile.WriteLine( "informclient: " + message );
+            if( IMReceived != null )
             {
-                MessageReceived( this, new MessageReceivedArgs( message ) );
+                IMReceived( this, new IMReceivedArgs( message ) );
             }
         }
 
         public void OnRawMessage(object sender, IrcEventArgs e)
         {
-            LogFile.WriteLine("OnRawMessage Replycode " + e.Data.ReplyCode.ToString() + " Received: "+e.Data.RawMessage);
+            //LogFile.WriteLine("OnRawMessage Replycode " + e.Data.ReplyCode.ToString() + " Received: "+e.Data.RawMessage);
+            if (e.Data.ReplyCode == ReplyCode.EndOfWho)
+            {
+                onEndOfWho();
+            }
             //InformClient( "*" + e.Data.Nick + "* " + e.Data.Message );
         }
         

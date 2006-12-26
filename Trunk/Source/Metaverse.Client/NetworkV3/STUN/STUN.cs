@@ -61,9 +61,10 @@ namespace OSMP
 
             byte[] bytes = request.Encode();
 
-            IPAddress[] stunserveripaddresses = Dns.GetHostAddresses( "stun.fwdnet.net" );
-            IPEndPoint stunserver = new IPEndPoint( stunserveripaddresses[0], 3478 );
-            network.Send( stunserver, bytes );
+            string stunserver = Config.GetInstance().coordination.stunserver;
+            IPAddress[] stunserveripaddresses = Dns.GetHostAddresses( stunserver );
+            IPEndPoint stunserveripendpoint = new IPEndPoint( stunserveripaddresses[0], 3478 );
+            network.Send( stunserveripendpoint, bytes );
 
         }
 
