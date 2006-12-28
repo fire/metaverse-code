@@ -26,7 +26,6 @@ using System.Net.Sockets;
 
 using Glade;
 using Gtk;
-using net.voxx.stun4cs;
 using Metaverse.Utility;
 
 namespace OSMP

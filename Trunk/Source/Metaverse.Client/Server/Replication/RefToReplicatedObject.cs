@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using OSMP.NetworkInterfaces;
 
 namespace OSMP
 {
@@ -40,7 +41,7 @@ namespace OSMP
         Hashtable objectbyreference = new Hashtable();
         Hashtable referencebyobject = new Hashtable();
         
-        bool ismaster
+        bool ismaster;
         
         public bool IsMaster{
             get{ return ismaster; }

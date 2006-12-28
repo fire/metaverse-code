@@ -56,15 +56,22 @@
 
 		<nant buildfile="../Metaverse.Utility/default.build" />
 		<copy todir="${bindir}">
-			<fileset basedir="../Metaverse.Utility/bin/">
+			<fileset basedir="${outputdir}/Metaverse.Utility">
 				<include name="Metaverse.Utility.dll"/>
 			</fileset>
 		</copy>
 
 		<nant buildfile="../Metaverse.Communication/default.build" />
 		<copy todir="${bindir}">
-			<fileset basedir="../Metaverse.Communication/bin/">
+			<fileset basedir="${outputdir}/Metaverse.Communication">
 				<include name="Metaverse.Communication.dll"/>
+			</fileset>
+		</copy>
+
+		<nant buildfile="../Metaverse.Networking/default.build" />
+		<copy todir="${bindir}">
+			<fileset basedir="${outputdir}/Metaverse.Networking">
+				<include name="Metaverse.Networking.dll"/>
 			</fileset>
 		</copy>
         
@@ -101,7 +108,7 @@
 				workingdir="${outputdir}/RpcProxyGenerator" />
 		</if>
 
-		<copy todir="NetworkV3\Layer4_Rpc\GeneratedProxies">
+		<copy todir="GeneratedProxies">
 			<fileset basedir="${outputdir}/RpcProxyGenerator">
 				<include name="LockRpcToClient_ClientProxy_Generated.cs"/>
 				<include name="LockRpcToServer_ClientProxy_Generated.cs"/>
@@ -117,7 +124,6 @@
 				<include name="${bindir}/NetworkInterfaces.dll" />
 				<include name="${bindir}/FractalSpline.dll" />
 				<include name="${bindir}/MathGL.dll" />
-				<include name="${bindir}/stun4cs.dll" />
 
 				<include name="${bindir}/glade-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}" />
 				<include name="${bindir}/atk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
@@ -138,6 +144,7 @@
 				<include name="System.Drawing.dll" />
 				<include name="${bindir}/Metaverse.Utility.dll" />
 				<include name="${bindir}/Metaverse.Communication.dll" />
+				<include name="${bindir}/Metaverse.Networking.dll" />
 			</references>
 			<pkg-references>
 				<package name="gtk-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
@@ -148,10 +155,20 @@
 				<include name="./MetaverseClient.cs" />
 				<include name="./PluginsLoader.cs" />
 
+				<include name="./Replication/ObjectReplicationServerToClient.cs" />
+
 				<include name="./Server/MetaverseServer.cs" />
 				<include name="./Server/ServerRegistration.cs" />
 				<include name="./Server/QueryServer.cs" />
 				<include name="./Server/XmlCommands.cs" />
+				<include name="./Server/ObjectReplicationClientToServer.cs" />
+				<include name="./Server/Replication/NetObjectReferenceController.cs" />
+				<include name="./Server/Replication/ReplicationAttributes.cs" />
+				<include name="./Server/Replication/WorldReplication.cs" />
+				<include name="./Server/Replication/NetReplicationController.cs" />
+				<include name="./Server/Replication/DirtyObjectController.cs" />
+				<include name="./Server/Replication/DirtyObjectQueueSingleClient.cs" />
+				<include name="./Server/Replication/IDirtyObjectQueue.cs" />
 
 				<include name="./MovementAndEditing/PropertyInfoClasses.cs" />
 				<include name="./MovementAndEditing/SelectionView.cs" />
@@ -186,41 +203,15 @@
 				<include name="./Help/HelpAbout.cs" />
 				<include name="./Help/DumpLogfile.cs" />
 
-				<include name="./HelperClasses/mvMath.cs" />
-				<include name="./HelperClasses/ArrayHelper.cs" />
-				<include name="./HelperClasses/Test.cs" />
-				<include name="./HelperClasses/XmlHelper.cs" />
-				<include name="./HelperClasses/LogFile.cs" />
-				<include name="./HelperClasses/Arguments.cs" />
-				<include name="./HelperClasses/Config.cs" />
-				<include name="./HelperClasses/MyRand.cs" />
-				<include name="./HelperClasses/TimeKeeper.cs" />
-				<include name="./HelperClasses/StreamHelper.cs" />
-				<include name="./HelperClasses/EnvironmentHelper.cs" />
+			
 
-				<include name="./NetworkV3/ObjectReplication/NetObjectReferenceController.cs" />
-				<include name="./NetworkV3/ObjectReplication/ReplicationAttributes.cs" />
-				<include name="./NetworkV3/ObjectReplication/WorldReplication.cs" />
-				<include name="./NetworkV3/ObjectReplication/NetReplicationController.cs" />
-				<include name="./NetworkV3/ObjectReplication/DirtyObjectController.cs" />
-				<include name="./NetworkV3/ObjectReplication/DirtyObjectQueueSingleClient.cs" />
-				<include name="./NetworkV3/Layer1_Implementation/NetworkImplementationFactory.cs" />
-				<include name="./NetworkV3/Layer1_Implementation/INetworkImplementation.cs" />
-				<include name="./NetworkV3/Layer1_Implementation/Test/TestNetworkUdp.cs" />
-				<include name="./NetworkV3/Layer1_Implementation/UDP/NetworkImplementationUdp.cs" />
-				<include name="./NetworkV3/Layer4_Rpc/RpcController.cs" />
-				<include name="./NetworkV3/Layer4_Rpc/Test/TestNetRpc.cs" />
-				<include name="./NetworkV3/Layer4_Rpc/Test/TestInterface.cs" />
-				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/TestInterface_ClientProxy_Generated.cs" />
-				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/WorldControl_ClientProxy_Generated.cs" />
-				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
-				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
-				<include name="./NetworkV3/Layer2_Connection/NetPacketReferenceController.cs" />
-				<include name="./NetworkV3/Layer2_Connection/NetworkLevel2Connection.cs" />
-				<include name="./NetworkV3/Layer2_Connection/NetSharedSecretExchange.cs" />
-				<include name="./NetworkV3/Layer2_Connection/NetworkLevel2Controller.cs" />
-				<include name="./NetworkV3/Layer2_Connection/Test/TestLevel2.cs" />
-				<include name="./NetworkV3/STUN/STUN.cs" />
+			
+
+				<include name="./GeneratedProxies/TestInterface_ClientProxy_Generated.cs" />
+				<include name="./GeneratedProxies/WorldControl_ClientProxy_Generated.cs" />
+				<include name=".//GeneratedProxies/ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
+				<include name="./GeneratedProxies/ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
+
 
 				
 

@@ -8,8 +8,9 @@
  */
 
 using System;
+using System.Net;
 
-namespace OSMP.Replication
+namespace OSMP
 {
 	public class ObjectReplicationServerToClient : NetworkInterfaces.IObjectReplicationServerToClient
     {

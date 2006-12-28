@@ -27,7 +27,7 @@ using Metaverse.Utility;
 namespace OSMP
 {
     // runs on server
-    public class DirtyObjectQueueSingleClient
+    public class DirtyObjectQueueSingleClient : IDirtyObjectQueue
     {
         DirtyObjectController parent;
         public IPEndPoint connection;
