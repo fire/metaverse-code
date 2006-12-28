@@ -21,7 +21,7 @@ using System;
 
 namespace OSMP
 {
-    class TimeKeeper
+    public class TimeKeeper
     {
         System.DateTime starttime;
         System.DateTime lastresettime;

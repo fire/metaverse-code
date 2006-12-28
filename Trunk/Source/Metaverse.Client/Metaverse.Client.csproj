@@ -74,23 +74,11 @@
   <ItemGroup>
     <Compile Include="BasicTypes\Axis.cs" />
     <Compile Include="BasicTypes\Color.cs" />
-    <Compile Include="BasicTypes\CustomCollections.cs" />
     <Compile Include="BasicTypes\Plane.cs" />
     <Compile Include="BasicTypes\Rot.cs" />
     <Compile Include="BasicTypes\Vector2.cs" />
     <Compile Include="BasicTypes\Vector3.cs" />
     <Compile Include="EntryPoint.cs" />
-    <Compile Include="HelperClasses\Arguments.cs" />
-    <Compile Include="HelperClasses\ArrayHelper.cs" />
-    <Compile Include="HelperClasses\Config.cs" />
-    <Compile Include="HelperClasses\EnvironmentHelper.cs" />
-    <Compile Include="HelperClasses\LogFile.cs" />
-    <Compile Include="HelperClasses\mvMath.cs" />
-    <Compile Include="HelperClasses\MyRand.cs" />
-    <Compile Include="HelperClasses\StreamHelper.cs" />
-    <Compile Include="HelperClasses\Test.cs" />
-    <Compile Include="HelperClasses\TimeKeeper.cs" />
-    <Compile Include="HelperClasses\XmlHelper.cs" />
     <Compile Include="Help\DumpLogfile.cs" />
     <Compile Include="Help\HelpAbout.cs" />
     <Compile Include="IM\ChatImplementationFactory.cs" />
@@ -218,6 +206,7 @@
     <Compile Include="WorldModel\WorldView.cs" />
     <None Include="default.build" />
     <None Include="metaverse.client.glade" />
+    <Compile Include="BasicTypes\mvMath.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
@@ -241,6 +230,10 @@
     <Content Include="Metaverse.ico" />
     <Content Include="NetworkV3\Layer3_PacketAssembly\readme.txt" />
     <Content Include="osmpico32.bmp" />
+    <ProjectReference Include="..\Metaverse.Utility\Metaverse.Utility.csproj">
+      <Project>{3F3F41CF-D45F-457E-B810-078180AB68C1}</Project>
+      <Name>Metaverse.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

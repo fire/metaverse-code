@@ -53,6 +53,13 @@
 				<include name="FractalSpline.dll"/>
 			</fileset>
 		</copy>
+
+		<nant buildfile="../Metaverse.Utility/default.build" />
+		<copy todir="${bindir}">
+			<fileset basedir="../Metaverse.Utility/bin/">
+				<include name="Metaverse.Utility.dll"/>
+			</fileset>
+		</copy>
         
 		<nant buildfile="../stun4cs/default.build" />
 		<copy todir="${bindir}">
@@ -122,6 +129,7 @@
 				<include name="${bindir}/SdlDotNet.dll" />
 
 				<include name="System.Drawing.dll" />
+				<include name="${bindir}/Metaverse.Utility.dll" />
 			</references>
 			<pkg-references>
 				<package name="gtk-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
@@ -220,6 +228,7 @@
 				<include name="./BasicTypes/Vector2.cs" />
 				<include name="./BasicTypes/Vector3.cs" />
 				<include name="./BasicTypes/CustomCollections.cs" />
+				<include name="./BasicTypes/mvMath.cs" />
 
 				<include name="./WorldModel/Entity.cs" />
 				<include name="./WorldModel/EntityCreationProperties.cs" />
