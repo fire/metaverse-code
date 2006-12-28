@@ -150,6 +150,8 @@
 
 				<include name="./Server/MetaverseServer.cs" />
 				<include name="./Server/ServerRegistration.cs" />
+				<include name="./Server/QueryServer.cs" />
+				<include name="./Server/XmlCommands.cs" />
 
 				<include name="./MovementAndEditing/PropertyInfoClasses.cs" />
 				<include name="./MovementAndEditing/SelectionView.cs" />
@@ -213,21 +215,14 @@
 				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/WorldControl_ClientProxy_Generated.cs" />
 				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
 				<include name="./NetworkV3/Layer4_Rpc/GeneratedProxies/ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
-				<include name="./NetworkV3/HelperClasses/BinaryPacker.cs" />
-				<include name="./NetworkV3/HelperClasses/TestBinaryPacker.cs" />
 				<include name="./NetworkV3/Layer2_Connection/NetPacketReferenceController.cs" />
 				<include name="./NetworkV3/Layer2_Connection/NetworkLevel2Connection.cs" />
 				<include name="./NetworkV3/Layer2_Connection/NetSharedSecretExchange.cs" />
 				<include name="./NetworkV3/Layer2_Connection/NetworkLevel2Controller.cs" />
 				<include name="./NetworkV3/Layer2_Connection/Test/TestLevel2.cs" />
-				<include name="./NetworkV3/UI/ServerInfo.cs" />
 				<include name="./NetworkV3/STUN/STUN.cs" />
 
-				<include name="./IM/IrcChat.cs" />
-				<include name="./IM/ChatImplementationFactory.cs" />
-				<include name="./IM/IChat.cs" />
-				<include name="./IM/QueryServer.cs" />
-				<include name="./IM/XmlCommands.cs" />
+				
 
 				<include name="./BasicTypes/Color.cs" />
 				<include name="./BasicTypes/Plane.cs" />
@@ -279,6 +274,7 @@
 				<include name="./UI/ContextMenuController.cs" />
 				<include name="./UI/EmergencyDialog.cs" />
 				<include name="./UI/UIController.cs" />
+				<include name="./UI/ServerInfo.cs" />
 				<include name="./UI/DialogHelpers.cs" />
 				
 				<include name="./UI/Dialogs/UIEntitiesPropertiesDialog.cs" />

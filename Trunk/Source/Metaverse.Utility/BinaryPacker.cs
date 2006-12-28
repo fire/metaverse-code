@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
-namespace OSMP
+namespace Metaverse.Utility
 {
     // binarypacker can pack simple types, rank-1 arrays of simple types, classes, and combinations of these things
     // For writing, it just needs whatever you want to write, and an appropriately-sized array to write to

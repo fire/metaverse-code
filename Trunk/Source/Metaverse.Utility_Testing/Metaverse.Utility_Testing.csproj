@@ -1,11 +1,11 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <RootNamespace>Metaverse.Utility</RootNamespace>
-    <AssemblyName>Metaverse.Utility</AssemblyName>
+    <RootNamespace>Metaverse.Utility_Testing</RootNamespace>
+    <AssemblyName>Metaverse.Utility_Testing</AssemblyName>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3F3F41CF-D45F-457E-B810-078180AB68C1}</ProjectGuid>
+    <ProjectGuid>{93DAC5F0-C30B-43D2-8AE3-3D44718E39B8}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -28,24 +28,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomCollections.cs" />
-    <Compile Include="XmlHelper.cs" />
-    <Compile Include="Arguments.cs" />
-    <Compile Include="ArrayHelper.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="EnvironmentHelper.cs" />
-    <Compile Include="LogFile.cs" />
-    <Compile Include="MyRand.cs" />
-    <Compile Include="StreamHelper.cs" />
-    <Compile Include="Test.cs" />
-    <Compile Include="TimeKeeper.cs" />
-    <Compile Include="BinaryPacker.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MathGL\MathGL.csproj">
-      <Project>{F1BF78FA-8831-4598-8AD5-40C654B12DB7}</Project>
-      <Name>MathGL</Name>
-    </ProjectReference>
+    <Compile Include="TestBinaryPacker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>
