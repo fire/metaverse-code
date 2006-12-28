@@ -45,8 +45,8 @@
 
 		<csc target="library" output="${bindir}/Metaverse.Communication.dll" debug="${debug}">
 			<references>
-				<include name="bin/Meebey.SmartIrc4net.dll" />
-				<include name="bin/Metaverse.Utility.dll" />
+				<include name="${bindir}/Meebey.SmartIrc4net.dll" />
+				<include name="${bindir}/Metaverse.Utility.dll" />
 			</references>
 
 			<sources>

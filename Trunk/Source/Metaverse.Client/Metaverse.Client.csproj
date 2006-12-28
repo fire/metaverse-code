@@ -172,17 +172,16 @@
     <Compile Include="Server\XmlCommands.cs" />
     <Compile Include="UI\ServerInfo.cs" />
     <Compile Include="Server\ObjectReplicationClientToServer.cs" />
-    <Compile Include="Server\WorldReplication.cs" />
-    <Compile Include="Server\DirtyObjectQueueSingleClient.cs" />
     <Compile Include="Server\Replication\ReplicationAttributes.cs" />
     <Compile Include="Server\Replication\DirtyObjectController.cs" />
     <Compile Include="Server\Replication\NetObjectReferenceController.cs" />
     <Compile Include="Server\Replication\NetReplicationController.cs" />
-    <Compile Include="Server\Replication\IDirtyObjectQueue.cs" />
     <Compile Include="Replication\ObjectReplicationServerToClient.cs" />
     <Compile Include="GeneratedProxies\WorldControl_ClientProxy_Generated.cs" />
     <Compile Include="GeneratedProxies\ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
     <Compile Include="GeneratedProxies\ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
+    <Compile Include="Server\Replication\WorldReplication.cs" />
+    <Compile Include="Server\Replication\DirtyObjectQueueSingleClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
