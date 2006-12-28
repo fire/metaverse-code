@@ -1,0 +1,28 @@
+
+  <project name="MathGL" default="build" basedir=".">
+        <description>Compiles, cleans and exports the Metaverse.Utility  project</description>
+        <property name="debug" value="false" overwrite="false" />
+        
+		<target name="clean" description="remove all generated files">
+            <delete file="bin/Metaverse.Utility.dll" failonerror="false" />
+            <delete file="bin/Metaverse.Utility.pdb" failonerror="false" />
+        </target>
+
+        <target name="build_library" description="compiles the source code">
+            <csc target="library" output="bin/Metaverse.Utility.dll" doc="bin/Metaverse.Utility.xml" debug="${debug}">
+                <sources>
+                    <include name="*.cs" />
+                </sources>
+            </csc>
+        </target>
+
+		<target name="document" description="documents the code after its been compiled">
+			<exec program="monodocer.bat" commandline="--assembly:Metaverse.Utility.dll --importslashdoc:Metaverse.Utility.xml --path../doc" workingdir="bin" />
+			<exec program="monodocs2html.bat" commandline="-source doc -dest:html" workingdir="." />
+        </target>
+
+		<target name="build" description="Build everything">
+			<call target="build_library" />
+		</target>
+    </project>
+

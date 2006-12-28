@@ -117,7 +117,8 @@ namespace OSMP
             }
             catch
             {
-                EmergencyDialog.WarningMessage("In the config.xml file, the value " + attributename + " in section " + xmlelement.Name + " needs to be a number.  MapDesigner may not run correctly.");
+                //we should not be making view calls from utility class
+                //EmergencyDialog.WarningMessage("In the config.xml file, the value " + attributename + " in section " + xmlelement.Name + " needs to be a number.  MapDesigner may not run correctly.");
                 return 0;
             }
         }
@@ -131,7 +132,8 @@ namespace OSMP
             }
             catch
             {
-                EmergencyDialog.WarningMessage("In the config.xml file, the value " + attributename + " in section " + xmlelement.Name + " needs to be a whole number.  MapDesigner may not run correctly.");
+            	//we should not be making view calls from utility class
+                //EmergencyDialog.WarningMessage("In the config.xml file, the value " + attributename + " in section " + xmlelement.Name + " needs to be a whole number.  MapDesigner may not run correctly.");
                 return 0;
             }
         }
