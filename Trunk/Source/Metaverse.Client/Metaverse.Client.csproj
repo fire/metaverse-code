@@ -116,8 +116,6 @@
     <Compile Include="MovementAndEditing\SelectionController.cs" />
     <Compile Include="MovementAndEditing\SelectionModel.cs" />
     <Compile Include="MovementAndEditing\SelectionView.cs" />
-    <Compile Include="NetworkV3\HelperClasses\BinaryPacker.cs" />
-    <Compile Include="NetworkV3\HelperClasses\TestBinaryPacker.cs" />
     <Compile Include="NetworkV3\Layer1_Implementation\INetworkImplementation.cs" />
     <Compile Include="NetworkV3\Layer1_Implementation\Test\TestNetworkUdp.cs" />
     <Compile Include="NetworkV3\Layer1_Implementation\UDP\NetworkImplementationUdp.cs" />
@@ -148,7 +146,6 @@
     <Compile Include="NetworkV3\ObjectReplication\NetReplicationController.cs" />
     <Compile Include="NetworkV3\ObjectReplication\ReplicationAttributes.cs" />
     <Compile Include="NetworkV3\ObjectReplication\WorldReplication.cs" />
-    <Compile Include="NetworkV3\UI\ServerInfo.cs" />
     <Compile Include="Persistence\IHasProperties.cs" />
     <Compile Include="Persistence\ImportExportPrimBlender.cs" />
     <Compile Include="Persistence\IWorldPersist.cs" />
@@ -204,6 +201,7 @@
     <Compile Include="BasicTypes\mvMath.cs" />
     <Compile Include="Server\QueryServer.cs" />
     <Compile Include="Server\XmlCommands.cs" />
+    <Compile Include="UI\ServerInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
