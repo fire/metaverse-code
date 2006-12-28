@@ -22,15 +22,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Meebey.SmartIrc4net;
+using Metaverse.Utility;
 
-namespace OSMP
+namespace Metaverse.Communication
 {
     public class IrcChat : IChat
     {
         //public string[] serverlist = new string[] {"irc.freenode.org"};
         //public string[] serverlist = new string[] { "irc.gamernet.org" };
         //public int port = 6667;
-        public string channel = "";
+        public string _channel = "";
         
         public event IMReceivedHandler IMReceived;
             
@@ -46,9 +47,6 @@ namespace OSMP
         {
             LogFile.WriteLine( this.GetType().ToString() + " IrcController()" );
             ircclient = new IrcClient();
-
-            MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler( IrcController_Tick );
-
             ircclient.SendDelay = 200;
             ircclient.ActiveChannelSyncing = true; // we use channel sync, means we can use ircclient.GetChannel() and so on
             
@@ -69,7 +67,7 @@ namespace OSMP
 
         void ircclient_OnWho( object sender, WhoEventArgs e )
         {
-            if (e.Server != "hidden" && e.Channel == channel )
+            if (e.Server != "hidden" && e.Channel == _channel )
             {
                 Console.WriteLine( "onwho " + e.IsIrcOp + " " + e.IsOp + " " + e.Server + " " + e.Channel + " " + e.Nick );
                 wholist.Add( e.Nick );
@@ -87,7 +85,7 @@ namespace OSMP
             whocallbacks.Clear();
         }
 
-        void IrcController_Tick()
+        public void Tick()
         {
             ircclient.ListenOnce( false );
         }
@@ -110,12 +108,38 @@ namespace OSMP
                 Config.Coordination coordinationconfig = Config.GetInstance().coordination;
                 string[] serverlist = new string[] { coordinationconfig.ircserver };
                 int port = coordinationconfig.ircport;
-                channel = coordinationconfig.ircchannel;
+                _channel = coordinationconfig.ircchannel;
 
                 LogFile.WriteLine( "ircchat connecting to " + coordinationconfig.ircserver );
                 ircclient.Connect(serverlist, port);
                 ircclient.Login(username, username);
-                ircclient.RfcJoin(channel);                
+                ircclient.RfcJoin(_channel);                
+                if( password != "" )
+                {
+                    ircclient.SendMessage(SendType.Message, "nickserv", "identify " + password );
+                }
+                IsConnected = true;
+            }
+            catch (ConnectionException e)
+            {
+                OnMessage( ChatMessageType.Error, "", "IRC Error: "+e.Message + ". Irc chat will not be available in this session" );
+            }
+            return IsConnected;
+        }
+        
+         public bool Login( string[] serverlist, int port, string channel, string username, string password )
+        {
+            mylogin = username;
+            LogFile.WriteLine( this.GetType().ToString() + " Login()" );
+            //InformClient( "test inform" );
+            try
+            {
+                _channel = channel;
+
+                LogFile.WriteLine( "ircchat connecting to " + serverlist );
+                ircclient.Connect(serverlist, port);
+                ircclient.Login(username, username);
+                ircclient.RfcJoin(_channel);                
                 if( password != "" )
                 {
                     ircclient.SendMessage(SendType.Message, "nickserv", "identify " + password );
@@ -154,7 +178,7 @@ namespace OSMP
             if( IsConnected && message != "" )
             {
                 LogFile.WriteLine( "ircchat.sendchannelmessage " + message );
-                ircclient.SendMessage( SendType.Message, channel, message );
+                ircclient.SendMessage( SendType.Message, _channel, message );
             }
         }
         

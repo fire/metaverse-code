@@ -24,11 +24,10 @@
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
-
-//using System.ComponentModel;
 using Tao.Sdl;
 using Tao.OpenGl;
 using SdlDotNet;
+using Metaverse.Utility;
 
 namespace OSMP
 {

@@ -81,11 +81,6 @@
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Help\DumpLogfile.cs" />
     <Compile Include="Help\HelpAbout.cs" />
-    <Compile Include="IM\ChatImplementationFactory.cs" />
-    <Compile Include="IM\IChat.cs" />
-    <Compile Include="IM\IrcChat.cs" />
-    <Compile Include="IM\QueryServer.cs" />
-    <Compile Include="IM\XmlCommands.cs" />
     <Compile Include="KeyAndMouse\CommandCombos.cs" />
     <Compile Include="KeyAndMouse\KeyCombos.cs" />
     <Compile Include="KeyAndMouse\KeyNameCache.cs" />
@@ -207,6 +202,8 @@
     <None Include="default.build" />
     <None Include="metaverse.client.glade" />
     <Compile Include="BasicTypes\mvMath.cs" />
+    <Compile Include="Server\QueryServer.cs" />
+    <Compile Include="Server\XmlCommands.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
@@ -233,6 +230,10 @@
     <ProjectReference Include="..\Metaverse.Utility\Metaverse.Utility.csproj">
       <Project>{3F3F41CF-D45F-457E-B810-078180AB68C1}</Project>
       <Name>Metaverse.Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metaverse.Communication\Metaverse.Communication.csproj">
+      <Project>{F6437A24-6FDD-4FCF-9539-0464E9560585}</Project>
+      <Name>Metaverse.Communication</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

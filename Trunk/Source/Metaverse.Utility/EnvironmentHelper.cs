@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
+namespace Metaverse.Utility {
     public class EnvironmentHelper
     {
         public static string GetExeFilename()
@@ -42,3 +43,4 @@ using System.IO;
             return GetExeDirectory() + "/Metaverse.ico";
         }
     }
+}

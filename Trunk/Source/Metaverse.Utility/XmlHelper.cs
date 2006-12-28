@@ -19,7 +19,7 @@
 //
 
 using System.Xml;
-
+namespace Metaverse.Utility {
 public class XmlHelper
 {
 	public static XmlDocument CreateDom()
@@ -40,4 +40,5 @@ public class XmlHelper
         parent.AppendChild( childnode );
         return childnode;
     }
+}
 }

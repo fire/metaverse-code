@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Gtk;
-
+using Metaverse.Utility;
     // note: all of these run modally at the moment and will cause disconnection of all clients most likely
     // we should probably shift these to non-modal dialogs
 

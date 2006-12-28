@@ -26,6 +26,7 @@ using System.Runtime.InteropServices;
 using Tao.OpenGl;
 using SdlDotNet;
 using Tao.Sdl;
+using Metaverse.Utility;
 
     public class DisplayGeometryWindows : IDisplayGeometry
     {

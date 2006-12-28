@@ -26,6 +26,7 @@ using System.Xml.Serialization;
 using System.IO;
 using Gtk;
 using System.Net;
+using Metaverse.Utility;
 
 namespace OSMP
 {

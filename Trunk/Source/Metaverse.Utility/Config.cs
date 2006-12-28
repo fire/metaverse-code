@@ -25,7 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace OSMP
+namespace Metaverse.Utility
 {
     public class CommandCombo
     {

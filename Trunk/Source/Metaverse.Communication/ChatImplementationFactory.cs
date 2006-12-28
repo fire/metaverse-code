@@ -19,8 +19,9 @@
 //
 
 using System;
+using Metaverse.Utility;
 
-namespace OSMP
+namespace Metaverse.Communication
 {
     public class ChatImplementationFactory
     {

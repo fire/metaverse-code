@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
+namespace Metaverse.Utility {
     public class StreamHelper
     {
         // from http://www.yoda.arachsys.com/csharp/readbinary.html
@@ -58,3 +59,4 @@ using System.IO;
         }
 
     }
+}

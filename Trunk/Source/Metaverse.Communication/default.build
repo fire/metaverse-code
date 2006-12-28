@@ -1,0 +1,38 @@
+
+  <project name="Metaverse.Communication" default="build" basedir=".">
+        <description>Compiles, cleans and exports the Metaverse.Communication  project</description>
+        <property name="debug" value="false" overwrite="false" />
+        
+		<target name="clean" description="remove all generated files">
+            <delete file="bin/Metaverse.Communication.dll" failonerror="false" />
+            <delete file="bin/Metaverse.Communication.pdb" failonerror="false" />
+        </target>
+
+        <target name="build_library" description="compiles the source code">
+            <nant buildfile="../Metaverse.Utility/default.build" />
+			<copy todir="bin">
+				<fileset basedir="../../Libraries">
+					<include name="Meebey.SmartIrc4net.dll"/>
+				</fileset>
+			</copy>
+			<csc target="library" output="bin/Metaverse.Communication.dll" doc="bin/Metaverse.Communication.xml" debug="${debug}">
+				<references>
+					<include name="bin/Meebey.SmartIrc4net.dll" />
+					<include name="bin/Metaverse.Utility.dll" />
+				</references>
+                <sources>
+                    <include name="*.cs" />
+                </sources>
+            </csc>
+        </target>
+
+		<target name="document" description="documents the code after its been compiled">
+			<exec program="monodocer.bat" commandline="--assembly:Metaverse.Communication.dll --importslashdoc:Metaverse.Communication.xml --path../doc" workingdir="bin" />
+			<exec program="monodocs2html.bat" commandline="-source doc -dest:html" workingdir="." />
+        </target>
+
+		<target name="build" description="Build everything">
+			<call target="build_library" />
+		</target>
+    </project>
+
