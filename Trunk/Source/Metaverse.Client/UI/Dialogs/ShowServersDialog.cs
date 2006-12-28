@@ -23,6 +23,8 @@ using System.Text;
 using System.Net;
 using Glade;
 using Gtk;
+using Metaverse.Utility;
+using Metaverse.Communication;
 
 namespace OSMP
 {

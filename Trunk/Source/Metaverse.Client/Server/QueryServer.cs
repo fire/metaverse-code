@@ -21,6 +21,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Metaverse.Communication;
+using Metaverse.Utility;
 
 namespace OSMP
 {

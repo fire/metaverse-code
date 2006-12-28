@@ -20,6 +20,7 @@
 using System;
 using Gtk;
 using Glade;
+using Metaverse.Utility;
 
 namespace OSMP
 {

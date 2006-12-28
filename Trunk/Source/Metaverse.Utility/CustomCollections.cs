@@ -20,7 +20,7 @@
 using System;
 using System.Collections;
 
-namespace OSMP
+namespace Metaverse.Utility
 {
     public class StringArrayList : ArrayList{
         public StringArrayList( string[] array )

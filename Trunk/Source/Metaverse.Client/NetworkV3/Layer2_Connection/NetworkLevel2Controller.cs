@@ -23,7 +23,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text; // for Encoding
 using System.Net;
-    
+using Metaverse.Utility;
+
 namespace OSMP
 {
     public interface INetPacketHandler

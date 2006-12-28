@@ -19,7 +19,7 @@
 
 using System;
 
-namespace OSMP
+namespace Metaverse.Utility
 {
     public class TimeKeeper
     {

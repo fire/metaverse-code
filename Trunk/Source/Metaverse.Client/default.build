@@ -60,6 +60,13 @@
 				<include name="Metaverse.Utility.dll"/>
 			</fileset>
 		</copy>
+
+		<nant buildfile="../Metaverse.Communication/default.build" />
+		<copy todir="${bindir}">
+			<fileset basedir="../Metaverse.Communication/bin/">
+				<include name="Metaverse.Communication.dll"/>
+			</fileset>
+		</copy>
         
 		<nant buildfile="../stun4cs/default.build" />
 		<copy todir="${bindir}">
@@ -118,7 +125,7 @@
 				<include name="${bindir}/gdk-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
 				<include name="${bindir}/glib-sharp.dll" if="${framework::get-target-framework()=='net-2.0'}"/>
 
-				<include name="${bindir}/Meebey.SmartIrc4net.dll" />
+				
 
 				<include name="${bindir}/Tao.DevIl.dll" />
 				<include name="${bindir}/Tao.FreeGlut.dll" />
@@ -130,6 +137,7 @@
 
 				<include name="System.Drawing.dll" />
 				<include name="${bindir}/Metaverse.Utility.dll" />
+				<include name="${bindir}/Metaverse.Communication.dll" />
 			</references>
 			<pkg-references>
 				<package name="gtk-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />

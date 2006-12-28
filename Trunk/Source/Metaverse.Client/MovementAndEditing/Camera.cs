@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using MathGl;
 using SdlDotNet;
+using Metaverse.Utility;
 
 namespace OSMP
 {

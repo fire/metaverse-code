@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 
+namespace Metaverse.Utility {
+
 public class MyRand
 {
 	Random rand;
@@ -21,4 +23,6 @@ public class MyRand
 	{
 		return rand.Next( min, max + 1 );
 	}
+}
+
 }

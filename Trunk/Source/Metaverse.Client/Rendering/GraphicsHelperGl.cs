@@ -26,6 +26,7 @@ using Tao.OpenGl;
 using Tao.FreeGlut;
 using MathGl;
 using System.Drawing;
+using Metaverse.Utility;
 
 namespace OSMP
 {

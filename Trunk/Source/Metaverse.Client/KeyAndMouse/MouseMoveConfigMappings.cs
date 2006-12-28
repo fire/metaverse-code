@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Metaverse.Utility;
 
 // applies the mappings in mousemoveconfigs/mousemove, in the config file
 // provides a way of obtaining values for mouse movement, that are configurable via the config file

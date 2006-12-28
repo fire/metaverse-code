@@ -22,6 +22,8 @@ using System.Collections;
 using System.Threading;
 using System.Net;
 using OSMP;
+using Metaverse.Utility;
+using Metaverse.Communication;
 
 namespace OSMP
 {
@@ -104,6 +106,8 @@ namespace OSMP
         void LoadChat()
         {
             imimplementation = ChatImplementationFactory.CreateInstance();
+            MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler( imimplementation.Tick );
+            
             userchatdialog = new UserChatDialog();
         }
 

@@ -19,9 +19,9 @@
 //
 
 using System;
-//using System.Windows.Forms;
+using Metaverse.Utility;
 
-namespace OSMP
+namespace Metaverse.Communication
 {
     public enum ChatMessageType
     {
@@ -54,6 +54,8 @@ namespace OSMP
         void SendChannelMessage( string message );
         void SendPrivateMessage( string targetuser, string message );
         bool Login( string username, string password );
+        bool Login( string[] serverlist, int port, string channel, string username, string password );
         void GetUserList( WhoCallback callback );
+        void Tick();
     }
 }

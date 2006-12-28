@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Text;
 using Gtk;
 using Glade;
+using Metaverse.Utility;
 
 namespace OSMP
 {

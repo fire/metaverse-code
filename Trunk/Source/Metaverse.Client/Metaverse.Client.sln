@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stun4cs", "..\stun4cs\stun4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Utility", "..\Metaverse.Utility\Metaverse.Utility.csproj", "{3F3F41CF-D45F-457E-B810-078180AB68C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Communication", "..\Metaverse.Communication\Metaverse.Communication.csproj", "{F6437A24-6FDD-4FCF-9539-0464E9560585}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{3F3F41CF-D45F-457E-B810-078180AB68C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3F3F41CF-D45F-457E-B810-078180AB68C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3F3F41CF-D45F-457E-B810-078180AB68C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6437A24-6FDD-4FCF-9539-0464E9560585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6437A24-6FDD-4FCF-9539-0464E9560585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6437A24-6FDD-4FCF-9539-0464E9560585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6437A24-6FDD-4FCF-9539-0464E9560585}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

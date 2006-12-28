@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 
+namespace Metaverse.Utility {
     // file logging functions
     // ====================
     //
@@ -120,3 +121,5 @@ using System.IO;
             //sw.Close();
         }
     }
+
+}

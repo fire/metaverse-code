@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OSMP
+namespace Metaverse.Utility
 {
     public class ArrayHelper
     {

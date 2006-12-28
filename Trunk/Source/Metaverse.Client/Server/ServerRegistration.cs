@@ -21,12 +21,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Meebey.SmartIrc4net;
 using System.Threading;
 using System.IO;
 using System.Net;
 using System.Xml;
 using System.Xml.Serialization;
+using Metaverse.Communication;
+using Metaverse.Utility;
 
 namespace OSMP
 {
@@ -39,7 +40,7 @@ namespace OSMP
         static ServerRegistration instance = new ServerRegistration();
         public static ServerRegistration GetInstance(){ return instance; }
 
-        IrcClient ircclient = null;
+        IChat chat = null;
         public string ircname;
 
         Config.Coordination coordinationconfig;
@@ -48,27 +49,14 @@ namespace OSMP
         {
             coordinationconfig = Config.GetInstance().coordination;
 
-            MetaverseServer.GetInstance().Tick += new MetaverseServer.TickHandler(ServerRegistration_Tick);
+            chat = ChatImplementationFactory.CreateInstance();
+            MetaverseServer.GetInstance().Tick += new MetaverseServer.TickHandler(chat.Tick);
 
-            ircclient = new IrcClient();
-
-            ircclient.SendDelay = 200;
-            ircclient.ActiveChannelSyncing = true; // we use channel sync, means we can use ircclient.GetChannel() and so on
-
-            ircclient.OnQueryMessage += new IrcEventHandler(OnQueryMessage);
-
-            ircclient.OnError += new Meebey.SmartIrc4net.ErrorEventHandler( OnError );
+            
+            chat.IMReceived += new IMReceivedHandler( this.OnRecieveMessage );
 
             new InputBox( "Please enter a worldname to publish your server to " + coordinationconfig.ircserver + 
                  " irc " + coordinationconfig.ircchannel, new InputBox.Callback( ServernameCallback ) );
-        }
-
-        void ServerRegistration_Tick()
-        {
-            if (ircclient != null)
-            {
-                ircclient.ListenOnce(false);
-            }
         }
 
         void ServernameCallback( string servername )
@@ -102,41 +90,34 @@ namespace OSMP
             string channel = coordinationconfig.ircchannel;
 
             LogFile.WriteLine( "serverregistration connecting to " + coordinationconfig.ircserver + " ..." );
-            ircclient.Connect( serverlist, port );
             LogFile.WriteLine( "serverregistration login as " + ircname );
-            ircclient.Login( ircname, ircname );
             LogFile.WriteLine( "serverregistration join channel " + channel );
-            ircclient.RfcJoin( channel );
+            chat.Login( serverlist, port, channel, ircname, string.Empty );
             LogFile.WriteLine( "serverregistration connected" );
 
         }
-        //public void OnRawMessage( object sender, IrcEventArgs e )
-        //{
-          //  LogFile.WriteLine( "OnRawMessage Replycode " + e.Data.ReplyCode.ToString() + " Received: " + e.Data.RawMessage );
-            //InformClient( "*" + e.Data.Nick + "* " + e.Data.Message );
-        //}
-
-        public void OnQueryMessage( object sender, IrcEventArgs e )
+        
+        
+        public void OnServerRegistration( string nickname, string message )
         {
-            LogFile.WriteLine( "serverregistration. received from " + e.Data.Nick + ": " + e.Data.Message );
-            if (e.Data.Message.StartsWith( "QUERY" ))
+            LogFile.WriteLine( "serverregistration. received from " + nickname + ": " + message );
+            if( message.StartsWith( "QUERY" ))
             {
-                SendCommand( e.Data.Nick, new XmlCommands.ServerInfo(
+                SendCommand(nickname, new XmlCommands.ServerInfo(
                     externaladdress, externalport ) );
             }
             else
             {
                 try
                 {
-                    XmlCommands.Command command = XmlCommands.GetInstance().Decode( e.Data.Message );
+                    XmlCommands.Command command = XmlCommands.GetInstance().Decode( message );
                     if( command.GetType() == typeof( XmlCommands.PingMe ) )
                     {
                         XmlCommands.PingMe pingmecommand = command as XmlCommands.PingMe;
                         LogFile.WriteLine( "serverregistration received pingme command: " + new IPAddress( pingmecommand.MyIPAddress ) +
                             " " + pingmecommand.Myport );
                         IPEndPoint endpoint = new IPEndPoint( new IPAddress( pingmecommand.MyIPAddress ), pingmecommand.Myport );
-                        MetaverseServer.GetInstance().network.networkimplementation
-                            .Send( endpoint, new byte[] { 0 } );
+                        MetaverseServer.GetInstance().network.networkimplementation.Send( endpoint, new byte[] { 0 } );
                     }
                 }
                 catch (Exception ex)
@@ -150,14 +131,22 @@ namespace OSMP
         {
             string message = XmlCommands.GetInstance().Encode( command );
             LogFile.WriteLine( message );
-            ircclient.SendMessage( SendType.Message, targetnick, message );
+            chat.SendPrivateMessage( targetnick, message );
         }
 
-        public void OnError( object sender, Meebey.SmartIrc4net.ErrorEventArgs e )
-        {
-            LogFile.WriteLine( "Error: " + e.ErrorMessage );
-            Thread.Sleep( 10000 );
-            Connect();
+        public void OnRecieveMessage( object source, IMReceivedArgs e ) {
+        	
+        	if( e.chatmessagetype == ChatMessageType.PrivateMessage ) {
+        		OnServerRegistration( e.Sender, e.MessageText );
+        	}
+        	else if( e.chatmessagetype == ChatMessageType.Error ) {
+        		 LogFile.WriteLine( "Error: " + e.MessageText );
+	            Thread.Sleep( 10000 );
+	            Connect();
+        	}
+        	
+        	return;
         }
+        
     }
 }
