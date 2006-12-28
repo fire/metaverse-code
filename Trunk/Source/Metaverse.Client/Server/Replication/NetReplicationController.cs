@@ -99,59 +99,7 @@ namespace OSMP
         int GenerateReference();
     }
     
-    public class ObjectReplicationClientToServer : NetworkInterfaces.IObjectReplicationClientToServer
-    {
-        IPEndPoint connection;
-        public ObjectReplicationClientToServer(IPEndPoint connection) { this.connection = connection; }
-
-        public void ObjectCreated( int remoteclientreference, string typename, int attributebitmap, byte[] entitydata )
-        {
-            MetaverseServer.GetInstance().netreplicationcontroller.ObjectCreatedRpcClientToServer(connection,
-                remoteclientreference, typename, attributebitmap, entitydata );
-        }
-
-        public void ObjectModified( int reference, string typename, int attributebitmap, byte[]entity )
-        {
-            MetaverseServer.GetInstance().netreplicationcontroller.ObjectModifiedRpc(connection,
-                reference, typename, attributebitmap, entity);
-        }
-
-        public void ObjectDeleted(int reference, string typename)
-        {
-            MetaverseServer.GetInstance().netreplicationcontroller.ObjectDeletedRpc(connection,
-                reference, typename );
-        }
-    }
-
-    public class ObjectReplicationServerToClient : NetworkInterfaces.IObjectReplicationServerToClient
-    {
-        IPEndPoint connection;
-        public ObjectReplicationServerToClient(IPEndPoint connection) { this.connection = connection; }
-
-        public void ObjectCreatedServerToCreatorClient(int clientreference, int globalreference )
-        {
-            MetaverseClient.GetInstance().netreplicationcontroller.ObjectCreatedRpcServerToCreatorClient(connection,
-                clientreference,globalreference);
-        }
-
-        public void ObjectCreated(int reference, string typename, int attributebitmap, byte[] entity)
-        {
-            MetaverseClient.GetInstance().netreplicationcontroller.ObjectCreatedRpcServerToClient(connection,
-                reference, typename, attributebitmap, entity);
-        }
-
-        public void ObjectModified(int reference, string typename, int attributebitmap, byte[] entity)
-        {
-            MetaverseClient.GetInstance().netreplicationcontroller.ObjectModifiedRpc(connection,
-                reference, typename, attributebitmap, entity);
-        }
-
-        public void ObjectDeleted(int reference, string typename)
-        {
-            MetaverseClient.GetInstance().netreplicationcontroller.ObjectDeletedRpc(connection,
-                reference, typename );
-        }
-    }
+    
 
     // on client, receives replications from network, creates or modifies the object, if it's a new object,  and creates events for this
     // doesnt delete the object if a deletion is received, since theres no way to delete it; instead notifies observers to delete their own reference of it

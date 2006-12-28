@@ -27,5 +27,37 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Layer1_Implementation\INetworkImplementation.cs" />
+    <Compile Include="Layer1_Implementation\UDP\NetworkImplementationUdp.cs" />
+    <Compile Include="Layer2_Connection\NetPacketReferenceController.cs" />
+    <Compile Include="Layer2_Connection\NetSharedSecretExchange.cs" />
+    <Compile Include="Layer1_Implementation\NetworkImplementationFactory.cs" />
+    <Compile Include="Layer2_Connection\NetworkLevel2Controller.cs" />
+    <Compile Include="Layer2_Connection\NetworkLevel2Connection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Layer4_Rpc\RpcController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="STUN\STUN.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Metaverse.Utility\Metaverse.Utility.csproj">
+      <Project>{3F3F41CF-D45F-457E-B810-078180AB68C1}</Project>
+      <Name>Metaverse.Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetworkInterfaces\NetworkInterfaces.csproj">
+      <Project>{44F0885A-0270-4ACA-8A18-68A786B1E89D}</Project>
+      <Name>NetworkInterfaces</Name>
+    </ProjectReference>
+    <Folder Include="Layer3_PacketAssembly" />
+    <Content Include="Layer3_PacketAssembly\readme.txt" />
+    <Folder Include="STUN" />
+    <ProjectReference Include="..\stun4cs\stun4cs.csproj">
+      <Project>{5F1439D3-88D8-47FF-996C-8D2062AB4016}</Project>
+      <Name>stun4cs</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

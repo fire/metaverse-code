@@ -34,8 +34,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Utility_Testing",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Networking", "..\Metaverse.Networking\Metaverse.Networking.csproj", "{803AA6DA-CB94-442A-97F0-D6BC408C71BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Client.View.3D", "..\Metaverse.Client.View.3D\Metaverse.Client.View.3D.csproj", "{FADF6A10-D272-414C-A9E1-08BA8863D4DA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

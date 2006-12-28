@@ -30,5 +30,15 @@
   <ItemGroup>
     <Compile Include="TestBinaryPacker.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Metaverse.Utility\Metaverse.Utility.csproj">
+      <Project>{3F3F41CF-D45F-457E-B810-078180AB68C1}</Project>
+      <Name>Metaverse.Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metaverse.Client\Metaverse.Client.csproj">
+      <Project>{B43DFCEC-2F68-4108-A83C-A02A773FD8CB}</Project>
+      <Name>Metaverse.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

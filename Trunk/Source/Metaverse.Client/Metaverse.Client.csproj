@@ -89,7 +89,6 @@
     <Compile Include="KeyAndMouse\MouseCache.cs" />
     <Compile Include="KeyAndMouse\MouseMoveConfigMappings.cs" />
     <Compile Include="MovementAndEditing\ViewerState.cs" />
-    <Compile Include="NetworkV3\STUN\STUN.cs" />
     <Compile Include="Rendering\DisplayGeometryFactory.cs" />
     <Compile Include="Rendering\DisplayGeometryWindows.cs" />
     <Compile Include="Rendering\DisplayGeometryX11.cs" />
@@ -116,36 +115,6 @@
     <Compile Include="MovementAndEditing\SelectionController.cs" />
     <Compile Include="MovementAndEditing\SelectionModel.cs" />
     <Compile Include="MovementAndEditing\SelectionView.cs" />
-    <Compile Include="NetworkV3\Layer1_Implementation\INetworkImplementation.cs" />
-    <Compile Include="NetworkV3\Layer1_Implementation\Test\TestNetworkUdp.cs" />
-    <Compile Include="NetworkV3\Layer1_Implementation\UDP\NetworkImplementationUdp.cs" />
-    <Compile Include="NetworkV3\Layer2_Connection\NetPacketReferenceController.cs" />
-    <Compile Include="NetworkV3\Layer2_Connection\NetSharedSecretExchange.cs" />
-    <Compile Include="NetworkV3\Layer1_Implementation\NetworkImplementationFactory.cs" />
-    <Compile Include="NetworkV3\Layer2_Connection\NetworkLevel2Controller.cs" />
-    <Compile Include="NetworkV3\Layer2_Connection\NetworkLevel2Connection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NetworkV3\Layer2_Connection\Test\TestLevel2.cs" />
-    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\LockRpcToClient_ClientProxy_Generated.cs" />
-    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\LockRpcToServer_ClientProxy_Generated.cs" />
-    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
-    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
-    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\WorldControl_ClientProxy_Generated.cs" />
-    <Compile Include="NetworkV3\Layer4_Rpc\RpcController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NetworkV3\Layer4_Rpc\Test\TestInterface.cs" />
-    <Compile Include="NetworkV3\Layer4_Rpc\GeneratedProxies\TestInterface_ClientProxy_Generated.cs" />
-    <Compile Include="NetworkV3\Layer4_Rpc\Test\TestNetRpc.cs" />
-    <Compile Include="NetworkV3\ObjectReplication\DirtyObjectController.cs" />
-    <Compile Include="NetworkV3\ObjectReplication\DirtyObjectQueueSingleClient.cs" />
-    <Compile Include="NetworkV3\ObjectReplication\NetObjectReferenceController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NetworkV3\ObjectReplication\NetReplicationController.cs" />
-    <Compile Include="NetworkV3\ObjectReplication\ReplicationAttributes.cs" />
-    <Compile Include="NetworkV3\ObjectReplication\WorldReplication.cs" />
     <Compile Include="Persistence\IHasProperties.cs" />
     <Compile Include="Persistence\ImportExportPrimBlender.cs" />
     <Compile Include="Persistence\IWorldPersist.cs" />
@@ -202,6 +171,18 @@
     <Compile Include="Server\QueryServer.cs" />
     <Compile Include="Server\XmlCommands.cs" />
     <Compile Include="UI\ServerInfo.cs" />
+    <Compile Include="Server\ObjectReplicationClientToServer.cs" />
+    <Compile Include="Server\WorldReplication.cs" />
+    <Compile Include="Server\DirtyObjectQueueSingleClient.cs" />
+    <Compile Include="Server\Replication\ReplicationAttributes.cs" />
+    <Compile Include="Server\Replication\DirtyObjectController.cs" />
+    <Compile Include="Server\Replication\NetObjectReferenceController.cs" />
+    <Compile Include="Server\Replication\NetReplicationController.cs" />
+    <Compile Include="Server\Replication\IDirtyObjectQueue.cs" />
+    <Compile Include="Replication\ObjectReplicationServerToClient.cs" />
+    <Compile Include="GeneratedProxies\WorldControl_ClientProxy_Generated.cs" />
+    <Compile Include="GeneratedProxies\ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
+    <Compile Include="GeneratedProxies\ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
@@ -212,18 +193,9 @@
       <Project>{F1BF78FA-8831-4598-8AD5-40C654B12DB7}</Project>
       <Name>MathGL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetworkInterfaces\NetworkInterfaces.csproj">
-      <Project>{44F0885A-0270-4ACA-8A18-68A786B1E89D}</Project>
-      <Name>NetworkInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\stun4cs\stun4cs.csproj">
-      <Project>{5F1439D3-88D8-47FF-996C-8D2062AB4016}</Project>
-      <Name>stun4cs</Name>
-    </ProjectReference>
     <Content Include="Changes.txt" />
     <Content Include="config.xml" />
     <Content Include="Metaverse.ico" />
-    <Content Include="NetworkV3\Layer3_PacketAssembly\readme.txt" />
     <Content Include="osmpico32.bmp" />
     <ProjectReference Include="..\Metaverse.Utility\Metaverse.Utility.csproj">
       <Project>{3F3F41CF-D45F-457E-B810-078180AB68C1}</Project>
@@ -233,6 +205,18 @@
       <Project>{F6437A24-6FDD-4FCF-9539-0464E9560585}</Project>
       <Name>Metaverse.Communication</Name>
     </ProjectReference>
+    <Folder Include="Server\Replication" />
+    <ProjectReference Include="..\Metaverse.Networking\Metaverse.Networking.csproj">
+      <Project>{803AA6DA-CB94-442A-97F0-D6BC408C71BE}</Project>
+      <Name>Metaverse.Networking</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetworkInterfaces\NetworkInterfaces.csproj">
+      <Project>{44F0885A-0270-4ACA-8A18-68A786B1E89D}</Project>
+      <Name>NetworkInterfaces</Name>
+    </ProjectReference>
+    <Folder Include="Replication" />
+    <Folder Include="GeneratedProxies" />
+    <Content Include="GeneratedProxies\readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
