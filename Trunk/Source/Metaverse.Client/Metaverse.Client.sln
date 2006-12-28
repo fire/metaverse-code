@@ -32,6 +32,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Communication", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Utility_Testing", "..\Metaverse.Utility_Testing\Metaverse.Utility_Testing.csproj", "{93DAC5F0-C30B-43D2-8AE3-3D44718E39B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Networking", "..\Metaverse.Networking\Metaverse.Networking.csproj", "{803AA6DA-CB94-442A-97F0-D6BC408C71BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Client.View.3D", "..\Metaverse.Client.View.3D\Metaverse.Client.View.3D.csproj", "{FADF6A10-D272-414C-A9E1-08BA8863D4DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +90,14 @@ Global
 		{93DAC5F0-C30B-43D2-8AE3-3D44718E39B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{93DAC5F0-C30B-43D2-8AE3-3D44718E39B8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93DAC5F0-C30B-43D2-8AE3-3D44718E39B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{803AA6DA-CB94-442A-97F0-D6BC408C71BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{803AA6DA-CB94-442A-97F0-D6BC408C71BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{803AA6DA-CB94-442A-97F0-D6BC408C71BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{803AA6DA-CB94-442A-97F0-D6BC408C71BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FADF6A10-D272-414C-A9E1-08BA8863D4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FADF6A10-D272-414C-A9E1-08BA8863D4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADF6A10-D272-414C-A9E1-08BA8863D4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FADF6A10-D272-414C-A9E1-08BA8863D4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
