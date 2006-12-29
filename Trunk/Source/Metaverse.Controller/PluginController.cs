@@ -21,27 +21,30 @@
 using System;
 using System.Collections.Generic;
 using Metaverse.Utility;
+using Metaverse.Common.Controller;
+using OSMP;
 
-namespace OSMP
+namespace Metaverse.Controller
 {
     // Note to self : might be cool to (a) use Reflection and/or (b) use the config file
-    public class PluginsLoader
+    public class PluginController : IPluginController
     {
-        static PluginsLoader instance = new PluginsLoader();
-        public static PluginsLoader GetInstance()
-        {
-            return instance;
-        }
-
+        private static IPluginController _instance = null;
+		
+		public static IPluginController Instance {
+			get {
+				if( _instance == null ) {
+					_instance = new PluginController();
+				}
+				return _instance;
+			}
+		}
+        
         List<object> plugins = new List<object>();
 
-        public void LoadClientPlugins( Arguments arguments )
+        public void LoadClientPlugins()
         {
-            LogFile.WriteLine("unnamed args: ");
-            foreach (string unnamed in arguments.Unnamed)
-            {
-                LogFile.WriteLine("unnamed: " + unnamed);
-            }
+
             LoadGlobalPlugins();
 
 
@@ -90,10 +93,7 @@ namespace OSMP
         {
             UIController.GetInstance();
         }
-
-        //public void LoadPlugins()
-        //{   
-             
-        //}
+ 
+        
     }
 }

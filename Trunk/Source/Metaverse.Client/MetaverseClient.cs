@@ -24,6 +24,7 @@ using System.Net;
 using OSMP;
 using Metaverse.Utility;
 using Metaverse.Communication;
+using Metaverse.Common.Controller;
 
 namespace OSMP
 {
@@ -114,7 +115,8 @@ namespace OSMP
         string targettoload = ""; // incoming url from osmp:// or possibly commandline
 
         public bool waitingforserverconnection = true;
-        public int Go(string[] args)
+        
+        public int Init(string[] args, IClientControllers controllers )
         {
             Arguments arguments = new Arguments(args);
 
@@ -148,7 +150,7 @@ namespace OSMP
             myavatar = new Avatar();
             worldstorage.AddEntity(myavatar);
 
-            PluginsLoader.GetInstance().LoadClientPlugins(arguments);
+           controllers.Plugin.LoadClientPlugins();
             if (!arguments.Unnamed.Contains("nochat"))
             {
                 LoadChat();
