@@ -28,6 +28,7 @@ using System.Xml;
 using System.Net;
 using System.Net.Sockets;
 using Metaverse.Utility;
+using Metaverse.Common.Controller;
 
 namespace OSMP
 {
@@ -96,7 +97,7 @@ namespace OSMP
         }
 
         //! metaverseserver entry point.  Processes commandline arguments; starts dbinterface and serverfileagent components; handles initialization
-        public void Init( string[] args )
+        public void Init( string[] args, IServerControllers controllers )
         {
             Arguments arguments = new Arguments(args);
 
@@ -123,7 +124,7 @@ namespace OSMP
             netreplicationcontroller = new NetReplicationController( rpc );
             World = new WorldModel(netreplicationcontroller);
 
-            PluginsLoader.GetInstance().LoadServerPlugins();
+            controllers.Plugin.LoadServerPlugins();
 
             Test.Info("*** Server initialization complete ***");
         }

@@ -24,6 +24,8 @@ using System.Threading;
 using System.IO;
 using System.Diagnostics;
 using Metaverse.Utility;
+using Metaverse.Controller;
+using Metaverse.Common.Controller;
 
 namespace OSMP
 {
@@ -44,29 +46,27 @@ namespace OSMP
 
                 Arguments arguments = new Arguments(args);
 
+                LogFile.WriteLine("here1");
                 System.Environment.SetEnvironmentVariable( "PATH", System.Environment.GetEnvironmentVariable( "PATH" ) +
                     ";" + EnvironmentHelper.GetExeDirectory(), EnvironmentVariableTarget.Process );
 
+                LogFile.WriteLine("here1");
                 if( arguments.Unnamed.Contains("clientonly") )
                 {
+                	LogFile.WriteLine("here2");
                     LogFile.WriteLine("User requested client only");
-                    MetaverseClient.GetInstance().Go(args);
+                    ClientController.Instance.Initialize(args);
                 }
                 else if (arguments.Unnamed.Contains("serveronly"))
                 {
+                	LogFile.WriteLine("here3");
                     LogFile.WriteLine("User requested server only");
-                    MetaverseServer.GetInstance().Init(args);
-                    while (true)
-                    {
-                        MetaverseServer.GetInstance().OnTick();
-                        Thread.Sleep(50);
-                    }
+                    ServerController.Instance.Initialize( args );
                 }
                 else
                 {
-                    MetaverseServer.GetInstance().Init(args);
-                    MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler(EntryPoint_Tick);
-                    MetaverseClient.GetInstance().Go(args);
+                	LogFile.WriteLine("here4");
+                	ClientController.Instance.InitializeWithServer( args );
                 }
             }
             catch (Exception e)
@@ -87,11 +87,6 @@ namespace OSMP
                     process.Start();
                 }
             }
-        }
-
-        static void EntryPoint_Tick()
-        {
-            MetaverseServer.GetInstance().OnTick();
         }
     }
 

@@ -25,7 +25,7 @@ namespace OSMP
     // provides key/mouse interface to SelectionModel
     // so if you think this sucks, just write a different one ;-)
     // Be sure to register the new one as a plugin, in PluginsLoader.cs , or equivalent
-    class SelectionController
+    public class SelectionController
     {
         SelectionModel selectionmodel;
         

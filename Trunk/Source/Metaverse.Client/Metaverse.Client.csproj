@@ -5,7 +5,7 @@
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B43DFCEC-2F68-4108-A83C-A02A773FD8CB}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OSMP</RootNamespace>
     <AssemblyName>Metaverse.Client</AssemblyName>
@@ -29,15 +29,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="atk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="gdk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="glade-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="glib-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="Meebey.SmartIrc4net, Version=0.3.5.1833, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Meebey.SmartIrc4net.dll</HintPath>
-    </Reference>
     <Reference Include="SdlDotNet, Version=4.0.2.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\SdlDotNet.dll</HintPath>
@@ -70,6 +61,26 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Tao.Sdl.dll</HintPath>
     </Reference>
+    <Reference Include="atk-sharp">
+      <HintPath>..\..\..\..\Mono\1.2.2\lib\mono\gac\atk-sharp\2.8.0.0__35e10195dab3c99f\atk-sharp.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="gtk-sharp">
+      <HintPath>..\..\..\..\Mono\1.2.2\lib\mono\gac\gtk-sharp\2.8.0.0__35e10195dab3c99f\gtk-sharp.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="glib-sharp">
+      <HintPath>..\..\..\..\Mono\1.2.2\lib\mono\gac\glib-sharp\2.8.0.0__35e10195dab3c99f\glib-sharp.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="glade-sharp">
+      <HintPath>..\..\..\..\Mono\1.2.2\lib\mono\gac\glade-sharp\2.8.0.0__35e10195dab3c99f\glade-sharp.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="gdk-sharp">
+      <HintPath>..\..\..\..\Mono\1.2.2\lib\mono\gac\gdk-sharp\2.8.0.0__35e10195dab3c99f\gdk-sharp.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicTypes\Axis.cs" />
@@ -78,7 +89,6 @@
     <Compile Include="BasicTypes\Rot.cs" />
     <Compile Include="BasicTypes\Vector2.cs" />
     <Compile Include="BasicTypes\Vector3.cs" />
-    <Compile Include="EntryPoint.cs" />
     <Compile Include="Help\DumpLogfile.cs" />
     <Compile Include="Help\HelpAbout.cs" />
     <Compile Include="KeyAndMouse\CommandCombos.cs" />
@@ -100,7 +110,6 @@
     </Compile>
     <Compile Include="Rendering\RendererSdl.cs" />
     <Compile Include="Server\ServerRegistration.cs" />
-    <Compile Include="MetaverseClient.cs" />
     <Compile Include="MovementAndEditing\AssignColorHandler.cs" />
     <Compile Include="MovementAndEditing\AssignTextureHandler.cs" />
     <Compile Include="MovementAndEditing\Camera.cs" />
@@ -120,7 +129,6 @@
     <Compile Include="Persistence\IWorldPersist.cs" />
     <Compile Include="Persistence\ProjectFileController.cs" />
     <Compile Include="Persistence\WorldPersistToXml.cs" />
-    <Compile Include="PluginsLoader.cs" />
     <Compile Include="UI\ContextMenuController.cs" />
     <Compile Include="Rendering\GraphicsHelperFactory.cs" />
     <Compile Include="Rendering\GraphicsHelperGl.cs" />
@@ -182,6 +190,7 @@
     <Compile Include="GeneratedProxies\ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
     <Compile Include="Server\Replication\WorldReplication.cs" />
     <Compile Include="Server\Replication\DirtyObjectQueueSingleClient.cs" />
+    <Compile Include="MetaverseClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
@@ -216,6 +225,10 @@
     <Folder Include="Replication" />
     <Folder Include="GeneratedProxies" />
     <Content Include="GeneratedProxies\readme.txt" />
+    <ProjectReference Include="..\Metaverse.Common\Metaverse.Common.csproj">
+      <Project>{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}</Project>
+      <Name>Metaverse.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -225,9 +238,5 @@ xcopy /d /y *_Generated.cs $(ProjectDir)NetworkV3\Layer4_Rpc\GeneratedProxies &g
 
 xcopy /d /y $(ProjectDir)..\..\Libraries\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log
 xcopy /d /y $(ProjectDir)..\..\Libraries\Gtk.Net2.0\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log</PreBuildEvent>
-    <PostBuildEvent>copy /y $(ProjectDir)metaverse.client.glade . &gt;copy.log
-xcopy /d /y $(ProjectDir)\bin\*.dll . &gt;&gt; copy.log
-copy /y $(ProjectDir)config.xml . &gt;&gt;copy.log
-xcopy /d /y $(ProjectDir)metaverse.ico . &gt;&gt; copy.log</PostBuildEvent>
   </PropertyGroup>
 </Project>

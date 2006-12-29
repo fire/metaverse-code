@@ -16,6 +16,10 @@
 		<nant buildfile="../FractalSpline/default.build" target="clean" />
 		<nant buildfile="../NetworkInterfaces/default.build" target="clean" />
 		<nant buildfile="../RpcProxyGenerator/default.build" target="clean" />
+		<nant buildfile="../Metaverse.Common/default.build" target="clean" />
+		<nant buildfile="../Metaverse.Utility/default.build" target="clean" />
+		<nant buildfile="../Metaverse.Communication/default.build" target="clean" />
+		<nant buildfile="../Metaverse.Networking/default.build" target="clean" />
 		<delete failonerror="false">
 			<fileset basedir="${bindir}">
 				<include name="*" />
@@ -65,6 +69,13 @@
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/Metaverse.Communication">
 				<include name="Metaverse.Communication.dll"/>
+			</fileset>
+		</copy>
+
+		<nant buildfile="../Metaverse.Common/default.build" />
+		<copy todir="${bindir}">
+			<fileset basedir="${outputdir}/Metaverse.Common">
+				<include name="Metaverse.Common.dll"/>
 			</fileset>
 		</copy>
 
@@ -119,7 +130,7 @@
 			</fileset>
 		</copy>
 
-		<csc target="exe" output="${bindir}/Metaverse.Client.exe" debug="${debug}">
+		<csc target="library" output="${bindir}/Metaverse.Client.dll" debug="${debug}">
 			<references>
 				<include name="${bindir}/NetworkInterfaces.dll" />
 				<include name="${bindir}/FractalSpline.dll" />
@@ -145,15 +156,14 @@
 				<include name="${bindir}/Metaverse.Utility.dll" />
 				<include name="${bindir}/Metaverse.Communication.dll" />
 				<include name="${bindir}/Metaverse.Networking.dll" />
+				<include name="${bindir}/Metaverse.Common.dll" />
 			</references>
 			<pkg-references>
 				<package name="gtk-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
 				<package name="glade-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />
 			</pkg-references>
 			<sources>
-				<include name="./EntryPoint.cs" />
 				<include name="./MetaverseClient.cs" />
-				<include name="./PluginsLoader.cs" />
 
 				<include name="./Replication/ObjectReplicationServerToClient.cs" />
 
@@ -283,14 +293,6 @@
 		<copy todir="${outputdir}/Metaverse.Client">
 			<fileset basedir="${bindir}">
 				<include name="*"/>
-			</fileset>
-		</copy>
-		<copy todir="${outputdir}/Metaverse.Client">
-			<fileset basedir=".">
-				<include name="metaverse.client.glade"/>
-				<include name="config.xml"/>
-				<include name="Metaverse.ico"/>
-				<include name="Meebey.SmartIrc4net.xml"/>
 			</fileset>
 		</copy>
 
