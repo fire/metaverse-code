@@ -31,7 +31,7 @@ namespace OSMP
         public CurrentEditSpot()
         {
             RendererFactory.GetInstance().WriteNextFrameEvent += new WriteNextFrameCallback(CurrentEditSpot_WriteNextFrameEvent);
-            Terrain.GetInstance().renderableminimap.Render += new RenderableMinimap.RenderHandler(renderableminimap_Render);
+            //Terrain.GetInstance().renderableminimap.Render += new RenderableMinimap.RenderHandler(renderableminimap_Render);
         }
 
         void renderableminimap_Render(int minimapleft, int minimaptop, int minimapwidth, int minimapheight)
@@ -40,8 +40,8 @@ namespace OSMP
             Vector3 intersectpoint = EditingHelper.GetIntersectPoint();
             if (intersectpoint != null)
             {
-                Vector2 minimappos = new Vector2(intersectpoint.x * minimapwidth / Terrain.GetInstance().MapWidth,
-                    intersectpoint.y * minimapheight / Terrain.GetInstance().MapHeight);
+                Vector2 minimappos = new Vector2(intersectpoint.x * minimapwidth / MetaverseClient.GetInstance().worldstorage.terrainmodel.MapWidth,
+                    intersectpoint.y * minimapheight / MetaverseClient.GetInstance().worldstorage.terrainmodel.MapHeight);
 
                 //Console.WriteLine("minmappos: " + minimappos);
                 //double distancefromcamera = (intersectpoint - camerapos).Det();
@@ -65,6 +65,10 @@ namespace OSMP
 
         void CurrentEditSpot_WriteNextFrameEvent( Vector3 camerapos)
         {
+            if (ViewerState.GetInstance().CurrentViewerState != ViewerState.ViewerStateEnum.Terrain)
+            {
+                return;
+            }
             Vector3 intersectpoint = EditingHelper.GetIntersectPoint();
             if (intersectpoint != null)
             {

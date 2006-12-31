@@ -36,7 +36,7 @@ namespace OSMP
         public KeyHandlerQuit()
         {
             LogFile.WriteLine("instantiating keyhandlerquit" );
-            CommandCombos.GetInstance().RegisterCommand("quit", new KeyCommandHandler(QuitKeyDown));
+            CommandCombos.GetInstance().RegisterAtLeastCommand("quit", new KeyCommandHandler(QuitKeyDown));
             //KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
             //keyfiltercombokeys.RegisterCombo( new string[]{"quit"},null, new KeyComboHandler( QuitKeyDown ) );
             

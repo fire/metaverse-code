@@ -152,14 +152,14 @@ namespace OSMP
             return this;
         }        
         
-        public override bool Equals( object two ){return ((Vector3)two).x == this.x && ((Vector3)two).y == this.y && ((Vector3)two).z == this.z;}
-        static public bool operator==( Vector3 first, Vector3 second )	{return first.x == second.x && first.y == second.y && first.z == second.z;	}
-        static public bool operator!=( Vector3 first, Vector3 second ){return first.x != second.x || first.y != second.y || first.z != second.z;}
+        //public override bool Equals( object two ){return ((Vector3)two).x == this.x && ((Vector3)two).y == this.y && ((Vector3)two).z == this.z;}
+        //static public bool operator==( Vector3 first, Vector3 second )	{return first.x == second.x && first.y == second.y && first.z == second.z;	}
+        //static public bool operator!=( Vector3 first, Vector3 second ){return first.x != second.x || first.y != second.y || first.z != second.z;}
         
-        public override int GetHashCode()
-        {
-            return x.GetHashCode() / 3 + y.GetHashCode() / 3 + z.GetHashCode() / 3;
-        }
+        //public override int GetHashCode()
+        //{
+          //  return x.GetHashCode() / 3 + y.GetHashCode() / 3 + z.GetHashCode() / 3;
+        //}
 
         public void WriteToXMLElement( XmlElement xmlelement )
         {

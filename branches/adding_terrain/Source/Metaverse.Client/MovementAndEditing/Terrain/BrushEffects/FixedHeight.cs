@@ -37,13 +37,14 @@ namespace OSMP
         public FixedHeight()
         {
             speed = Config.GetInstance().HeightEditingSpeed;
-            Terrain.GetInstance().TerrainModified += new Terrain.TerrainModifiedHandler( FixedHeight_TerrainModified );
+            MetaverseClient.GetInstance().worldstorage.terrainmodel.TerrainModified += new TerrainModel.TerrainModifiedHandler( FixedHeight_TerrainModified );
         }
 
         void FixedHeight_TerrainModified()
         {
-            minheight = Terrain.GetInstance().MinHeight;
-            maxheight = Terrain.GetInstance().MaxHeight;
+            minheight = MetaverseClient.GetInstance().worldstorage.terrainmodel.MinHeight;
+            maxheight = MetaverseClient.GetInstance().worldstorage.terrainmodel.MaxHeight;
+            LogFile.WriteLine( "FixedHeight_terrainmodified " + minheight + " " + maxheight );
             if (heightscale != null)
             {
                 heightscale.SetRange( minheight, maxheight );
@@ -74,18 +75,18 @@ namespace OSMP
                         int thisx = x + i;
                         int thisy = y + j;
                         if (thisx >= 0 && thisy >= 0 &&
-                            thisx < Terrain.GetInstance().HeightMapWidth &&
-                            thisy < Terrain.GetInstance().HeightMapHeight)
+                            thisx < MetaverseClient.GetInstance().worldstorage.terrainmodel.HeightMapWidth &&
+                            thisy < MetaverseClient.GetInstance().worldstorage.terrainmodel.HeightMapHeight)
                         {
-                            double oldheight = Terrain.GetInstance().Map[thisx, thisy];
+                            double oldheight = MetaverseClient.GetInstance().worldstorage.terrainmodel.Map[thisx, thisy];
                             double newheight = oldheight + (targetheight - oldheight) *
                                 speed * milliseconds / 50 * brushcontribution;
-                            Terrain.GetInstance().Map[thisx, thisy] = newheight;
+                            MetaverseClient.GetInstance().worldstorage.terrainmodel.Map[thisx, thisy] = newheight;
                         }
                     }
                 }
             }
-            Terrain.GetInstance().OnHeightMapInPlaceEdited( x - brushsize, y - brushsize, x + brushsize, y + brushsize );
+            MetaverseClient.GetInstance().worldstorage.terrainmodel.OnHeightMapInPlaceEdited( x - brushsize, y - brushsize, x + brushsize, y + brushsize );
         }
 
         public string Name

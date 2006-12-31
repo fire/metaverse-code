@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace OSMP
 {
@@ -31,13 +32,13 @@ namespace OSMP
     // heightmapheight means northsouth mapsize
     // heightmapwidth means eastwest mapsize
     // display dimensions are 1 heightmap unit = 1 opengl unit
-    public class Terrain
+    public class TerrainModel
     {
         public delegate void TerrainModifiedHandler();
         //public delegate void FeatureAddedHandler(Unit unit, int x, int y);
         //public delegate void FeatureRemovedHandler(Unit unit, int x, int y);
         public delegate void HeightmapInPlaceEditedHandler(int xleft, int ytop, int xright, int ybottom);
-        public delegate void BlendmapInPlaceEditedHandler(MapTextureStage maptexturestage, int xleft, int ytop, int xright, int ybottom);
+        public delegate void BlendmapInPlaceEditedHandler(MapTextureStageModel maptexturestage, int xleft, int ytop, int xright, int ybottom);
 
         public event TerrainModifiedHandler TerrainModified;  // any change to terrain, heightmap, mapblendtexture except for
                                                               // heightmap in-place edited, or blend texture in-placed edited
@@ -46,13 +47,38 @@ namespace OSMP
         //public event FeatureAddedHandler FeatureAdded;
         //public event FeatureRemovedHandler FeatureRemoved;
 
-        static Terrain instance = new Terrain();
-        public static Terrain GetInstance() { return instance; }
+        //static TerrainModel instance = new TerrainModel();
+        //public static TerrainModel GetInstance() { return instance; }
 
         public string Sm3Filename = "";
         public TdfParser tdfparser;
 
+        [Replicate]
+        public string HeightmapRelativeFilename
+        {
+            get
+            {
+                if (HeightmapFilename == "" || HeightmapFilename == null )
+                {
+                    return "";
+                }
+                return ProjectFileController.GetInstance().GetRelativePath( new Uri( HeightmapFilename ) );
+            }
+            set
+            {
+                if (value != "")
+                {
+                    HeightmapFilename = ProjectFileController.GetInstance().GetFullPath( value ).LocalPath;
+                }
+                else
+                {
+                    HeightmapFilename = "";
+                }
+            }
+        }
+
         public string HeightmapFilename = "";
+
         public int HeightMapWidth
         {
             get { return MapWidth + 1; }
@@ -67,27 +93,44 @@ namespace OSMP
         //public int HeightMapHeight = 1025;
         public double[,] Map;
 
+        [Replicate]
         public double MinHeight = 0;
+
+        [Replicate]
         public double MaxHeight = 255;
 
         /// <summary>
         /// mapwidth, not including 1 pixel border on heightmap
         /// </summary>
+        [Replicate]
         public int MapWidth;
         /// <summary>
         /// mapheight, not including 1 pixel border on heightmap
         /// </summary>
+        [Replicate]
         public int MapHeight;
         //public Unit[,] FeatureMap; // assume max one feature per position.  Seems reasonable?
 
-        RenderableHeightMap renderableheightmap;
-        //RenderableAllFeatures renderableallfeatures;
-        RenderableWater renderablewater;
-        public RenderableMinimap renderableminimap;
+        public List<MapTextureStageModel> texturestages = new List<MapTextureStageModel>();
 
-        public List<MapTextureStage> texturestages = new List<MapTextureStage>();
+        [Replicate]
+        public MapTextureStageModel[] texturestagesarray
+        {
+            get
+            {
+                return texturestages.ToArray();
+            }
+            set
+            {
+                texturestages.Clear();
+                foreach (MapTextureStageModel texturestage in value)
+                {
+                    texturestages.Add( texturestage );
+                }
+            }
+        }
 
-        public Terrain()
+        public TerrainModel()
         {
             MapWidth = Config.GetInstance().world_xsize;
             MapHeight = Config.GetInstance().world_ysize;
@@ -99,19 +142,12 @@ namespace OSMP
             InitMap( MinHeight );
             LogFile.WriteLine("HeightMap() " + HeightMapWidth + " " + HeightMapHeight);
 
-            texturestages = new List<MapTextureStage>();
-            texturestages.Add( new MapTextureStage() );
+            texturestages = new List<MapTextureStageModel>();
+            texturestages.Add( new MapTextureStageModel() );
 
             //texturestages = Sm3Persistence.GetInstance().LoadTextureStages(TdfParser.FromFile("maps/Whakamatunga_Riri.sm3").RootSection.SubSection("map/terrain"));
             //Sm3Persistence.GetInstance().LoadHeightMap(TdfParser.FromFile("maps/Whakamatunga_Riri.sm3").RootSection.SubSection("map/terrain"));
 
-            renderableheightmap = new RenderableHeightMap(this, Map, 1, 1, texturestages);
-            //renderableallfeatures = new RenderableAllFeatures(this);
-            // water must be last, otherwise you cant see through it ;-)
-            renderablewater = new RenderableWater(new Vector3(), new Vector2(HeightMapWidth , HeightMapHeight ));
-            // minimap last, covers everything else
-            //renderableminimap = new RenderableMinimap(this, renderableheightmap);
-            
             //OnTerrainModified();
         }
 
@@ -190,7 +226,7 @@ namespace OSMP
             LogFile.WriteLine("HeightMap() " + HeightMapWidth + " " + HeightMapHeight);
 
             texturestages.Clear();
-            texturestages.Add( new MapTextureStage() );
+            texturestages.Add( new MapTextureStageModel() );
             // FeatureMap = new Unit[MapEastWestSize, MapNorthSouthSize];
 
             OnTerrainModified();
@@ -208,7 +244,7 @@ namespace OSMP
         }
 
         // in-place blendmaptexture editing
-        public void OnBlendMapInPlaceEdited( MapTextureStage maptexturestage, int xleft, int ytop, int xright, int ybottom ) // probably could be a little more specific...
+        public void OnBlendMapInPlaceEdited( MapTextureStageModel maptexturestage, int xleft, int ytop, int xright, int ybottom ) // probably could be a little more specific...
         {
             //renderableheightmap.MapTexturesModified(Math.Max(0, xleft), Math.Max(0, ytop), Math.Min(HeightMapWidth - 1, xright), Math.Min(HeightMapHeight - 1, ybottom));
             if (BlendmapInPlaceEdited != null)
@@ -230,21 +266,21 @@ namespace OSMP
         // anything not covered by other handlers
         public void OnTerrainModified()
         {
+            LogFile.WriteLine( "TerrainModel.OnTerrainModified()" );
             if (TerrainModified != null)
             {
                 TerrainModified();
             }
-            renderablewater.Scale = new Vector2(HeightMapWidth, HeightMapHeight );
         }
 
-        public void SetLod(int[] lod)
+        public override string ToString()
         {
-            renderableheightmap.loddistances = lod;
-        }
-
-        public int[] GetLod()
-        {
-            return renderableheightmap.loddistances;
+            string result = "TerrainModel: " + HeightmapFilename + " " + this.MapHeight + " " + this.MapWidth + " " + this.MinHeight + " " + this.MaxHeight;
+            foreach( MapTextureStageModel maptexturestagemodel in this.texturestages )
+            {
+                result += maptexturestagemodel + ", ";
+            }
+            return result;
         }
     }
 }

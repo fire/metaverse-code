@@ -41,7 +41,7 @@ namespace OSMP
             double radius = CurrentEditBrush.GetInstance().BrushSize;
             double displayradius = radius;
 
-            Terrain terrain = Terrain.GetInstance();
+            TerrainModel terrain = MetaverseClient.GetInstance().worldstorage.terrainmodel;
 
             int numsegments = 16;
 
@@ -75,7 +75,7 @@ namespace OSMP
                 {
                     double x = startx + (endx - startx) * segment / numsegments;
                     double y = starty + (endy - starty) * segment / numsegments;
-                    double z = Terrain.GetInstance().Map[(int)(x),
+                    double z = MetaverseClient.GetInstance().worldstorage.terrainmodel.Map[(int)(x),
                         (int)(y)];
                     z = Math.Max( 0.1, z ); // make sure visible over sea
                     Gl.glVertex3d( x, y, z );

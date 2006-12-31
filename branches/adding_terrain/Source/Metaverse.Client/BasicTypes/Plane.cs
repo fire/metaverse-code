@@ -7,7 +7,9 @@ namespace OSMP
     // represents a plane, defined by one normalized normal and one point
     public class Plane
     {
+        [Replicate]
         public Vector3 normalizednormal;
+        [Replicate]
         public Vector3 point;
 
         public Plane() { }

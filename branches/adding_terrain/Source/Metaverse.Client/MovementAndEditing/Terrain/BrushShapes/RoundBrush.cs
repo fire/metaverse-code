@@ -75,7 +75,7 @@ namespace OSMP
             double radius = CurrentEditBrush.GetInstance().BrushSize;
             int segments = 32;
             double anglestep = Math.PI * 2 / segments;
-            Terrain terrain = Terrain.GetInstance();
+            TerrainModel terrain = MetaverseClient.GetInstance().worldstorage.terrainmodel;
             double x, y, z;
             // outer radius
             double displayradius = radius ;

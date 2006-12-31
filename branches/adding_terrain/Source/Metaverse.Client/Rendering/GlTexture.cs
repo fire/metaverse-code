@@ -100,16 +100,20 @@ namespace OSMP
         {
             this.isalpha = isalpha;
             g = GraphicsHelperFactory.GetInstance();
+            g.CheckError();
+            CreateGlId();
             this.width = image.Width;
             this.height = image.Height;
             if (isalpha)
             {
-                GlReference = LoadImageToOpenGlAsAlpha( image );
+                LoadImageToOpenGlAsAlpha( image );
             }
             else
             {
-                GlReference = LoadImageToOpenGl( image );
+                LoadImageToOpenGl( image );
             }
+            g.CheckError();
+            LogFile.WriteLine( "GlTexture.Init id = " + GlReference );
         }
 
         public static GlTexture FromFile( string filename )
@@ -121,6 +125,23 @@ namespace OSMP
         {
             ImageWrapper image = new ImageWrapper( filename );
             return new GlTexture( image, filename, true );
+        }
+
+        public void LoadNewImage( ImageWrapper image, bool isalpha )
+        {
+            g.CheckError();
+            this.isalpha = isalpha;
+            this.width = image.Width;
+            this.height = image.Height;
+            if (isalpha)
+            {
+                LoadImageToOpenGlAsAlpha( image );
+            }
+            else
+            {
+                LoadImageToOpenGl( image );
+            }
+            g.CheckError();
         }
 
         public void LoadFromFile( string filename )
@@ -182,7 +203,13 @@ namespace OSMP
             return (int)Math.Pow( 2.0, power );
         }
 
-        int LoadImageToOpenGl( ImageWrapper image )
+        void CreateGlId()
+        {
+            Gl.glGenTextures( 1, out GlReference );
+            LogFile.WriteLine( "GlTexture generating new texture id: " + GlReference );
+        }
+
+        void LoadImageToOpenGl( ImageWrapper image )
         {
             width = image.Width;
             height = image.Height;
@@ -198,33 +225,16 @@ namespace OSMP
                 }
             }
 
-            //int m_TextureWidth = NextPowerOfTwo(m_Width);
-            //int m_TextureHeight = NextPowerOfTwo(m_Height);
-            //if ((m_TextureWidth != m_Width) || (m_TextureHeight != m_Height))
-            //  Ilu.iluEnlargeCanvas(m_TextureWidth, m_TextureHeight, m_Depth);
-
-            //Ilu.iluFlipImage();
-
-            int m_TextureID;
-            Gl.glGenTextures( 1, out m_TextureID );
-            Gl.glBindTexture( Gl.GL_TEXTURE_2D, m_TextureID );
-            //Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST);
-            //Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
-            //Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, m_BytesPerPixel, m_TextureWidth,
-            //    m_TextureHeight, 0, m_Format, Gl.GL_UNSIGNED_BYTE, dataptr );
+            LogFile.WriteLine( "glreference: " + GlReference );
+            Gl.glBindTexture( Gl.GL_TEXTURE_2D, GlReference );
             Glu.gluBuild2DMipmaps( Gl.GL_TEXTURE_2D, Gl.GL_RGBA8, width, height,
                 Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, image.data );
             Gl.glTexParameteri( Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR );
-
-            return m_TextureID;
-
-            // from devil.net version of this function:
-            //Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, Gl.GL_RGBA8, bitmap.Width, bitmap.Height, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, data);
-            //Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
+            image.Save( "out2.jpg" );
         }
 
         // reads R channel as alpha channel
-        int LoadImageToOpenGlAsAlpha( ImageWrapper image )
+        void LoadImageToOpenGlAsAlpha( ImageWrapper image )
         {
             width = image.Width;
             height = image.Height;
@@ -242,13 +252,9 @@ namespace OSMP
                 }
             }
 
-            int iTextureReference;
-            Gl.glGenTextures( 1, out iTextureReference );
-            Gl.glBindTexture( Gl.GL_TEXTURE_2D, iTextureReference );
+            Gl.glBindTexture( Gl.GL_TEXTURE_2D, GlReference );
             Gl.glTexImage2D( Gl.GL_TEXTURE_2D, 0, Gl.GL_ALPHA8, width, height, 0, Gl.GL_ALPHA, Gl.GL_UNSIGNED_BYTE, dataforgl );
             Gl.glTexParameteri( Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST );
-
-            return iTextureReference;
         }
     }
 }

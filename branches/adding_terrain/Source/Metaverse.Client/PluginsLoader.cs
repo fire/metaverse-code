@@ -36,14 +36,15 @@ namespace OSMP
 
         public void LoadClientPlugins( Arguments arguments )
         {
+            Tao.DevIl.Il.ilInit();
+            Tao.DevIl.Ilu.iluInit();
+
             LogFile.WriteLine("unnamed args: ");
             foreach (string unnamed in arguments.Unnamed)
             {
                 LogFile.WriteLine("unnamed: " + unnamed);
             }
             LoadGlobalPlugins();
-
-            Terrain.GetInstance();
 
             UIEntityPropertiesDialog.GetInstance();
             Editing3d.GetInstance();
@@ -67,13 +68,44 @@ namespace OSMP
             FractalSplineRing.Register();
             FractalSplineTorus.Register();
 
-            WorldView.GetInstance();
+            //WorldView.GetInstance();
 
             //plugins.Add(new DrawAxes());
             FrustrumCulling.GetInstance();
 
             ServerInfo.GetInstance();
             ConnectToServerDialog.GetInstance();
+
+            MainTerrainWindow.GetInstance();
+            BrushEffectController.GetInstance().Register( new RaiseLower() );
+            BrushEffectController.GetInstance().Register( new FixedHeight() );
+            BrushEffectController.GetInstance().Register( new Flatten() );
+            BrushEffectController.GetInstance().Register( new PaintTexture() );
+            BrushShapeController.GetInstance().Register( new RoundBrush() );
+            BrushShapeController.GetInstance().Register( new SquareBrush() );
+            EditController.GetInstance();
+            plugins.Add( new CurrentEditSpot() );
+
+            // add allowed serialization/deserialization types (security measure)
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( Prim ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( Vector3) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( Rot ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( Vector2 ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( TerrainModel ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( Color ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( MapTextureStageModel ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( FractalSplineBox ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( FractalSplineCylinder ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( FractalSplinePrim ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( FractalSplinePrism ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( FractalSplineRing ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( FractalSplineTorus ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( FractalSplineTube ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( Avatar ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( EntityGroup ) );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( Entity ) );
+
+            MetaverseClient.GetInstance().worldstorage.terrainmodel.NewMap();
 
             DumpLogfile.GetInstance();
             HelpAbout.GetInstance();

@@ -38,5 +38,6 @@ namespace OSMP
         void LoadFromFile( string filename );
         void SaveAlphaToFile( string filename );
         void ReloadAlpha();
+        void LoadNewImage( ImageWrapper image, bool isalpha );
     }
 }

@@ -51,21 +51,41 @@ namespace OSMP
             if( entity != null )
             {
                 LogFile.WriteLine("AssignTextureHandler registering in contextmenu");
-                ContextMenuController.GetInstance().RegisterContextMenu(new string[]{ "Assign &Texture..." }, new ContextMenuHandler( AssignTextureClick ) );
+                ContextMenuController.GetInstance().RegisterContextMenu(new string[]{ "Assign &Texture", "&All Faces" }, new ContextMenuHandler( AssignTextureAllFacesClick ) );
+                ContextMenuController.GetInstance().RegisterContextMenu( new string[] { "Assign &Texture", "&Single Face" }, new ContextMenuHandler( AssignTextureSingleFaceClick ) );
             }
         }
         
         public void AssignTexture( int FaceNumber, Uri uri )
         {
-            //Bitmap bitmap = DevIL.
             if( entity is FractalSplinePrim )
             {
                 ((FractalSplinePrim)entity).SetTexture( FaceNumber, uri );
                 MetaverseClient.GetInstance().worldstorage.OnModifyEntity(entity);
             }
         }
-        
-        public void AssignTextureClick( object source, ContextMenuArgs e )
+
+        public void AssignTextureAllFacesClick( object source, ContextMenuArgs e )
+        {
+            if (!(entity is Prim))
+            {
+                return;
+            }
+
+            int FaceNumber = FractalSpline.Primitive.AllFaces;
+
+            string filename = DialogHelpers.GetFilePath( "Select image file (*.bmp,*.jpg,*.gif,*.tga):", "*.JPG" );
+            if (filename != "")
+            {
+                Console.WriteLine( filename );
+                if (File.Exists( filename ))
+                {
+                    AssignTexture( FaceNumber, new Uri( filename ) );
+                }
+            }
+        }
+
+        public void AssignTextureSingleFaceClick( object source, ContextMenuArgs e )
         {
             if( ! ( entity is Prim ) )
             {

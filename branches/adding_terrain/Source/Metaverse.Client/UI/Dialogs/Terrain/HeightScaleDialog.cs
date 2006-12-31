@@ -52,7 +52,7 @@ namespace OSMP
                 double maximumheight = Convert.ToDouble(maximumheightentry.Text);
                 if (minimumheight >= maximumheight)
                 {
-                    DialogHelpers.ShowErrorMessage(heightscaledialog, "Maximum height should be greater than minimum height");
+                    new MessageBox( MessageBox.MessageType.Warning, "Issue:", "Maximum height should be greater than minimum height", null );
                     return;
                 }
                 bool Scale = radioScale.Active;
@@ -64,7 +64,7 @@ namespace OSMP
                 //Console.WriteLine(operation);
                 //heightscaledialog.Hide();
 
-                Terrain.GetInstance().ChangeHeightScale(minimumheight, maximumheight, Scale);
+                MetaverseClient.GetInstance().worldstorage.terrainmodel.ChangeHeightScale(minimumheight, maximumheight, Scale);
 
                 heightscaledialog.Destroy();
             }
@@ -72,17 +72,17 @@ namespace OSMP
             catch
             {
                 //Console.WriteLine(ex);
-                DialogHelpers.ShowErrorMessage(heightscaledialog, "Maximum height should be greater than minimum height");
+                new MessageBox( MessageBox.MessageType.Warning, "Issue:", "Maximum height should be greater than minimum height", null );
                 return;
             }
         }
 
         public HeightScaleDialog()
         {
-            Glade.XML app = new Glade.XML("./MapDesigner.glade", "heightscaledialog", "");
+            Glade.XML app = new Glade.XML( "./TerrainEditing.glade", "heightscaledialog", "" );
             app.Autoconnect(this);
-            minimumheightentry.Text = Terrain.GetInstance().MinHeight.ToString();
-            maximumheightentry.Text = Terrain.GetInstance().MaxHeight.ToString();
+            minimumheightentry.Text = MetaverseClient.GetInstance().worldstorage.terrainmodel.MinHeight.ToString();
+            maximumheightentry.Text = MetaverseClient.GetInstance().worldstorage.terrainmodel.MaxHeight.ToString();
         }
     }
 }

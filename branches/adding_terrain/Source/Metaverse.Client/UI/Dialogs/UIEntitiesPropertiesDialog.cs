@@ -151,8 +151,20 @@ namespace OSMP
         {
             selectionmodel = SelectionModel.GetInstance();
             ContextMenuController.GetInstance().ContextMenuPopup += new ContextMenuHandler(_ContextMenuPopup);
-
+            ViewerState.GetInstance().StateChanged += new ViewerState.StateChangedHandler(UIEntityPropertiesDialog_StateChanged);
         //    SetFormSize();
+        }
+
+        void UIEntityPropertiesDialog_StateChanged(ViewerState.ViewerStateEnum currenteditstate, ViewerState.ViewerStateEnum newviewstate)
+        {
+            if (currenteditstate != ViewerState.ViewerStateEnum.Edit3d)
+            {
+                if (entitypropertiesdialog != null)
+                {
+                    entitypropertiesdialog.Destroy();
+                    entitypropertiesdialog = null;
+                }
+            }
         }
 
         public void _ContextMenuPopup(object source, ContextMenuArgs e)
@@ -173,6 +185,7 @@ namespace OSMP
             LogFile.WriteLine("close button clicked");
             WriteProperties();
             entitypropertiesdialog.Destroy();
+            entitypropertiesdialog = null;
         }
 
         void LoadProperties()
@@ -247,6 +260,8 @@ namespace OSMP
             thisentity.RegisterProperties(this);
             LoadProperties();
             // Show();
+
+            ViewerState.GetInstance().ActivateEdit3d();
 
             // hack to add a semblance of user-friendliness
             DialogHelpers.ShowInfoMessageModal(null, "Hold down z to move the object, x to change scale and v to rotate.");

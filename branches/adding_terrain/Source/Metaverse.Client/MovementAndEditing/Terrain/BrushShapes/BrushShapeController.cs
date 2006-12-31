@@ -46,21 +46,24 @@ namespace OSMP
 
         void BrushShapeController_WriteNextFrameEvent( Vector3 camerapos )
         {
-            if (CurrentEditBrush.GetInstance().BrushShape != null)
+            if (ViewerState.GetInstance().CurrentViewerState == ViewerState.ViewerStateEnum.Terrain)
             {
-                if (CurrentEditBrush.GetInstance().BrushEffect.Repeat)
+                if (CurrentEditBrush.GetInstance().BrushShape != null)
                 {
-                    Vector3 intersectpos = EditingHelper.GetIntersectPoint();
-                    if (intersectpos == null)
+                    if (CurrentEditBrush.GetInstance().BrushEffect.Repeat)
                     {
-                        return;
-                    }
+                        Vector3 intersectpos = EditingHelper.GetIntersectPoint();
+                        if (intersectpos == null)
+                        {
+                            return;
+                        }
 
-                    Gl.glDisable( Gl.GL_LIGHTING );
-                    Gl.glColor3ub( 0, 255, 200 );
-                    CurrentEditBrush.GetInstance().BrushShape.Render( intersectpos );
-                    Gl.glColor3ub( 255, 255, 255 );
-                    Gl.glEnable( Gl.GL_LIGHTING );
+                        Gl.glDisable(Gl.GL_LIGHTING);
+                        Gl.glColor3ub(0, 255, 200);
+                        CurrentEditBrush.GetInstance().BrushShape.Render(intersectpos);
+                        Gl.glColor3ub(255, 255, 255);
+                        Gl.glEnable(Gl.GL_LIGHTING);
+                    }
                 }
             }
         }
@@ -73,7 +76,7 @@ namespace OSMP
             {
                 CurrentEditBrush.GetInstance().BrushShape = brushshape;
             }
-            MainUI.GetInstance().uiwindow.AddBrushShape( brushshape.Name, brushshape.Description, brushshape );
+            MainTerrainWindow.GetInstance().AddBrushShape( brushshape.Name, brushshape.Description, brushshape );
         }
     }
 }

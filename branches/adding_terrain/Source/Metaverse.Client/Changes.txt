@@ -21,6 +21,16 @@ Next release:
 - changed world boundaries in config file from worldboundingbox to world node
 - changed near and far clip planes( near: 0.5 -> 10, far: 100 -> 2000)
 - world got a lot bigger
+- moved viewer state logic from Camera, PlayerMovement, Editing3d etc to ViewerState
+- added StateChanged event to ViewerState
+- press middle mousebutton for mouselook (configurable via config.xml)
+- context menu will only appear if no other keys pressed at same time
+- new context menu option: can now assign texture to all faces
+- new context menu option: can now assign color to all faces
+- paint splatted texture now works
+- change terrain height now works
+- serializing splatted terrain to/from xml now works (as long as you've saved blend textures, splattextures and heightmap first)
+- corrected bug in picker3dmodelgl that could lead to random crashes on a left mouse-click
 
 Release 0.4:
 - migrated context menu to GTK#
