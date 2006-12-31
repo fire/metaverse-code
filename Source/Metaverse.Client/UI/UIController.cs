@@ -43,6 +43,8 @@ namespace OSMP
             Application.Init();
 
             contextmenu = new UIContextMenu();
+
+            new MessageBox(MessageBox.MessageType.Info, "Movement", "Middle mouse button to mouselook, asdf or arrowkeys to move, e and c to fly", null);
         }
 
         void UIController_Tick()

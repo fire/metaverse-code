@@ -33,18 +33,28 @@ namespace OSMP
 
         public EditController()
         {
-            CommandCombos.GetInstance().RegisterCommand( "increaseheight", new KeyCommandHandler( handler_IncreaseHeight ) );
-            CommandCombos.GetInstance().RegisterCommand( "decreaseheight", new KeyCommandHandler( handler_DecreaseHeight ) );
+            CommandCombos.GetInstance().RegisterAtLeastCommand("increaseheight", new KeyCommandHandler(handler_IncreaseHeight));
+            CommandCombos.GetInstance().RegisterAtLeastCommand("decreaseheight", new KeyCommandHandler(handler_DecreaseHeight));
             MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler(EditController_Tick);
+            ViewerState.GetInstance().StateChanged += new ViewerState.StateChangedHandler(EditController_StateChanged);
+        }
+
+        void EditController_StateChanged(ViewerState.ViewerStateEnum neweditstate, ViewerState.ViewerStateEnum newviewstate)
+        {
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="IsInitialMouseclick">When mouse button is initially pressed, this is true.</param>
-        void ApplyBrush( bool IsInitialMouseclick )
+        void ApplyBrush(bool IsInitialMouseclick)
         {
             if (!(increaseheight || decreaseheight))
+            {
+                return;
+            }
+
+            if (ViewerState.GetInstance().CurrentViewerState != ViewerState.ViewerStateEnum.Terrain)
             {
                 return;
             }
@@ -69,47 +79,58 @@ namespace OSMP
             double x = intersectpoint.x;
             double y = intersectpoint.y;
             if (x >= 0 && y >= 0 &&
-                x < (Terrain.GetInstance().HeightMapWidth ) &&
-                y < (Terrain.GetInstance().HeightMapHeight ))
+                x < (MetaverseClient.GetInstance().worldstorage.terrainmodel.HeightMapWidth) &&
+                y < (MetaverseClient.GetInstance().worldstorage.terrainmodel.HeightMapHeight))
             {
-                double milliseconds = DateTime.Now.Subtract( LastDateTime ).TotalMilliseconds;
+                double milliseconds = DateTime.Now.Subtract(LastDateTime).TotalMilliseconds;
                 LastDateTime = DateTime.Now;
                 CurrentEditBrush.GetInstance().BrushEffect.ApplyBrush(
                     CurrentEditBrush.GetInstance().BrushShape, CurrentEditBrush.GetInstance().BrushSize,
-                    x, y, increaseheight, milliseconds );
+                    x, y, increaseheight, milliseconds);
             }
         }
 
         void EditController_Tick()
         {
-            ApplyBrush( false );
+            ApplyBrush(false);
         }
 
         bool increaseheight = false;
         bool decreaseheight = false;
         DateTime LastDateTime;
 
-        void handler_IncreaseHeight( string command, bool down )
+        void handler_IncreaseHeight(string command, bool down)
         {
+            //LogFile.WriteLine("EditController.handler_increaseheight");
+            //if (ViewerState.GetInstance().CurrentViewerState == ViewerState.ViewerStateEnum.Terrain)
+            //{
             if (down)
             {
-                LastDateTime = DateTime.Now;
-                increaseheight = true;
-                ApplyBrush( true );
+                if (ViewerState.GetInstance().CurrentViewerState == ViewerState.ViewerStateEnum.Terrain)
+                {
+                    LastDateTime = DateTime.Now;
+                    increaseheight = true;
+                    ApplyBrush(true);
+                }
             }
             else
             {
                 increaseheight = false;
             }
+            //}
         }
 
-        void handler_DecreaseHeight( string command, bool down )
+        void handler_DecreaseHeight(string command, bool down)
         {
+            //LogFile.WriteLine("EditController.handler_decreaseheight");
             if (down)
             {
-                LastDateTime = DateTime.Now;
-                decreaseheight = true;
-                ApplyBrush( true );
+                if (ViewerState.GetInstance().CurrentViewerState == ViewerState.ViewerStateEnum.Terrain)
+                {
+                    LastDateTime = DateTime.Now;
+                    decreaseheight = true;
+                    ApplyBrush(true);
+                }
             }
             else
             {

@@ -94,26 +94,51 @@ namespace OSMP
             return instance;
         }
 
-        const string CMD_ZOOM = "camerazoom";
-        const string CMD_PAN = "camerapan";
-        const string CMD_ORBIT = "cameraorbit";
+        //const string CMD_ZOOM = "camerazoom";
+        //const string CMD_PAN = "camerapan";
+        //const string CMD_ORBIT = "cameraorbit";
 
         public Camera()
         {
             MouseCache mousefiltermousecache = MouseCache.GetInstance();
-            CommandCombos.GetInstance().RegisterCommandGroup(
-                new string[]{ CMD_ZOOM, CMD_PAN, CMD_ORBIT }, new KeyCommandHandler(CameraModeHandler));
+
+            ViewerState.GetInstance().StateChanged += new ViewerState.StateChangedHandler(Camera_StateChanged);
+
+          //  CommandCombos.GetInstance().RegisterCommandGroup(
+            //    new string[]{ CMD_ZOOM, CMD_PAN, CMD_ORBIT }, new KeyCommandHandler(CameraModeHandler));
             //CommandCombos.GetInstance().RegisterCommand(
               //  "cameraorbit", new KeyCommandHandler(CameraModeOrbitHandler));
             //CommandCombos.GetInstance().RegisterCommand(
               //  "camerapan", new KeyCommandHandler(CamerModePanHandler));
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "toggleviewpoint", new KeyCommandHandler(ToggleViewpointHandler));
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "leftmousebutton", new KeyCommandHandler(MouseDown));
             MouseCache.GetInstance().MouseMove += new MouseMoveHandler(Camera_MouseMove);
               
             RendererFactory.GetInstance().PreDrawEvent += new PreDrawCallback(Camera_PreDrawEvent);
+        }
+
+        void Camera_StateChanged(ViewerState.ViewerStateEnum neweditstate, ViewerState.ViewerStateEnum newviewstate)
+        {
+            switch (newviewstate)
+            {
+                case ViewerState.ViewerStateEnum.CameraOrbit:
+                    CurrentMove = CameraMoveType.Orbit;
+                    break;
+
+                case ViewerState.ViewerStateEnum.CameraPan:
+                    CurrentMove = CameraMoveType.Pan;
+                    break;
+
+                case ViewerState.ViewerStateEnum.CameraZoom:
+                    CurrentMove = CameraMoveType.AltZoom;
+                    break;
+
+                default:
+                    CurrentMove = CameraMoveType.Pan;
+                    break;
+            }
         }
 
         void Camera_PreDrawEvent()
@@ -121,63 +146,6 @@ namespace OSMP
             ApplyCamera();
         }
 
-        public void CameraModeHandler(string command, bool down)
-        {
-            if (command == CMD_ORBIT)
-            {
-                CameraModeOrbitHandler(command, down);
-            }
-            else if (command == CMD_PAN)
-            {
-                CameraModePanHandler(command, down);
-            }
-            else if (command == CMD_ZOOM)
-            {
-                CameraModeZoomHandler(command, down);
-            }
-            if (down)
-            {
-                ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.RoamingCamera;
-            }
-            else
-            {
-                ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.None;
-            }
-        }
-
-        public void CameraModeZoomHandler( string command, bool down )
-        {
-            if (down)
-            {
-                CurrentMove = CameraMoveType.AltZoom;
-            }
-            else
-            {
-                CurrentMove = CameraMoveType.None;
-            }
-        }
-        public void CameraModeOrbitHandler(string command, bool down)
-        {
-            if (down)
-            {
-                CurrentMove = CameraMoveType.Orbit;
-            }
-            else
-            {
-                CurrentMove = CameraMoveType.None;
-            }
-        }
-        public void CameraModePanHandler(string command, bool down)
-        {
-            if (down)
-            {
-                CurrentMove = CameraMoveType.Pan;
-            }
-            else
-            {
-                CurrentMove = CameraMoveType.None;
-            }
-        }
         public void ToggleViewpointHandler(string command, bool down)
         {
             if( down )
@@ -190,8 +158,8 @@ namespace OSMP
         
         public void MouseDown( string command, bool down )
         {
-            if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.RoamingCamera)
-            {
+            //if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.RoamingCamera)
+            //{
                 switch (CurrentMove)
                 {
                     case CameraMoveType.AltZoom:
@@ -204,12 +172,12 @@ namespace OSMP
                         InitiatePanCamera(MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
                         break;
                 }
-            }
+            //}
         }
         void Camera_MouseMove()
         {
-            if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.RoamingCamera)
-            {
+            //if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.RoamingCamera)
+            //{
                 switch (CurrentMove)
                 {
                     case CameraMoveType.AltZoom:
@@ -222,7 +190,7 @@ namespace OSMP
                         UpdatePanCamera(MouseCache.GetInstance().MouseX, MouseCache.GetInstance().MouseY);
                         break;
                 }
-            }
+            //}
         }
     
         public void InitiateOrbitSlashAltZoom( int imousex, int imousey, CameraMoveType eMoveType )

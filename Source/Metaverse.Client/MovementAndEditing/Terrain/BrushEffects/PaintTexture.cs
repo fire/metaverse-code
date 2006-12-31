@@ -27,39 +27,40 @@ namespace OSMP
 {
     public class PaintTexture : IBrushEffect
     {
-        double speed = 0.2;
+        double speed;
 
         public PaintTexture()
         {
-            speed = Config.GetInstance().HeightEditingSpeed;
+            speed = Config.GetInstance().HeightEditingSpeed * 20;
         }
 
-        MapTextureStage maptexturestage = null;
-        ITexture thistexture = null;
+        MapTextureStageModel maptexturestage = null;
+        ImageWrapper thistexture = null;
         int texturewidth;
         int textureheight;
         double[,] alphadata = null;
 
-        void LoadTextureData( MapTextureStage maptexturestage )
+        void LoadTextureData( MapTextureStageModel maptexturestage )
         {
+            LogFile.WriteLine( "PaintTexture.LoadTextureData( " + maptexturestage );
             thistexture = maptexturestage.blendtexture;
             if (thistexture != null)
             {
                 texturewidth = thistexture.Width;
                 textureheight = thistexture.Height;
-                LogFile.GetInstance().WriteLine( "edittexture width " + texturewidth + " height " + textureheight );
+                LogFile.WriteLine( "edittexture width " + texturewidth + " height " + textureheight );
                 alphadata = new double[texturewidth, textureheight];
                 for (int x = 0; x < texturewidth; x++)
                 {
                     for (int y = 0; y < textureheight; y++)
                     {
-                        alphadata[x, y] = thistexture.AlphaData[x, y];
+                        alphadata[x, y] = thistexture.GetRed( x, y );
                     }
                 }
             }
         }
 
-        public void SetCurrentEditTexture( MapTextureStage maptexturestage )
+        public void SetCurrentEditTexture( MapTextureStageModel maptexturestage )
         {
             this.maptexturestage = maptexturestage;
             LoadTextureData( maptexturestage );
@@ -79,8 +80,8 @@ namespace OSMP
 
                 int mapx = (int)(brushcentrex );
                 int mapy = (int)(brushcentrey );
-                int mapwidth = Terrain.GetInstance().HeightMapWidth - 1;
-                int mapheight = Terrain.GetInstance().HeightMapHeight - 1;
+                int mapwidth = MetaverseClient.GetInstance().worldstorage.terrainmodel.HeightMapWidth - 1;
+                int mapheight = MetaverseClient.GetInstance().worldstorage.terrainmodel.HeightMapHeight - 1;
                 int texturex = (int)(texturewidth * mapx / mapwidth);
                 int texturey = (int)(textureheight * mapy / mapheight);
                 int texturebrushwidth = (int)(texturewidth * brushsize / mapwidth);
@@ -100,6 +101,7 @@ namespace OSMP
                                 thisy < textureheight)
                             {
                                 // we update our double array then set the int array iwthin ITexture itself
+                                //LogFile.WriteLine( speed + " " + directionmultiplier + " " + timemultiplier + " " + brushshapecontribution );
                                 alphadata[thisx, thisy] += speed * directionmultiplier * timemultiplier * brushshapecontribution;
                                 if (alphadata[thisx, thisy] >= 255)
                                 {
@@ -109,15 +111,21 @@ namespace OSMP
                                 {
                                     alphadata[thisx, thisy] = 0;
                                 }
-                                thistexture.AlphaData[thisx, thisy] = (byte)alphadata[thisx, thisy];
+                                thistexture.SetPixel( thisx, thisy, (byte)alphadata[thisx, thisy], (byte)alphadata[thisx, thisy], (byte)alphadata[thisx, thisy], 255 );
+                                //LogFile.WriteLine( "setting pixel " + thisx + " " + thisy + " to " + (byte)alphadata[thisx, thisy] );
+                                //thistexture.AlphaData[thisx, thisy] = (byte)alphadata[thisx, thisy];
                                 //  Console.WriteLine(thisx + " " + thisy + " " + (byte)alphadata[thisx, thisy]);
                             }
                         }
                     }
                 }
-                thistexture.ReloadAlpha();
-                thistexture.Modified = true;
-                Terrain.GetInstance().OnBlendMapInPlaceEdited( maptexturestage, mapx - brushsize, mapy - brushsize, mapx + brushsize, mapy + brushsize );
+
+                thistexture.Save( "editedblend.jpg" );
+
+                //thistexture.ReloadAlpha();
+                maptexturestage.onChanged();
+                //thistexture.Modified = true;
+                MetaverseClient.GetInstance().worldstorage.terrainmodel.OnBlendMapInPlaceEdited( maptexturestage, mapx - brushsize, mapy - brushsize, mapx + brushsize, mapy + brushsize );
             }
         }
 

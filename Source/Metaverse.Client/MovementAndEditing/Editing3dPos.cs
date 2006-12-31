@@ -203,6 +203,7 @@ namespace OSMP
             graphics.Rotate( 90, 0, 1, 0 );
             
             graphics.DrawCone();
+            RendererFactory.GetPicker3dModel().EndHitTarget();
             graphics.PopMatrix();
         }
         

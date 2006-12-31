@@ -151,11 +151,28 @@
 				<include name="./MovementAndEditing/AssignTextureHandler.cs" />
 				<include name="./MovementAndEditing/AssignColorHandler.cs" />
 
+				<include name="./MovementAndEditing/Terrain/CurrentEditBrush.cs" />
+				<include name="./MovementAndEditing/Terrain/CurrentEditSpot.cs" />
+				<include name="./MovementAndEditing/Terrain/EditingHelper.cs" />
+				<include name="./MovementAndEditing/Terrain/EditController.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushEffects/PaintTexture.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushEffects/RaiseLower.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushEffects/Flatten.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushEffects/FixedHeight.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushEffects/IBrushEffect.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushEffects/BrushEffectController.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushShapes/RoundBrush.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushShapes/IBrushShape.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushShapes/SquareBrush.cs" />
+				<include name="./MovementAndEditing/Terrain/BrushShapes/BrushShapeController.cs" />
+
 				<include name="./Persistence/IHasProperties.cs" />
 				<include name="./Persistence/IWorldPersist.cs" />
 				<include name="./Persistence/ProjectFileController.cs" />
 				<include name="./Persistence/ImportExportPrimBlender.cs" />
 				<include name="./Persistence/WorldPersistToXml.cs" />
+				<include name="./Persistence/HeightMapPersistence.cs" />
+				<include name="./Persistence/Sm3Persistence.cs" />
 
 				<include name="./KeyAndMouse/KeyCombos.cs" />
 				<include name="./KeyAndMouse/Layer2MouseEvents.cs" />
@@ -181,6 +198,7 @@
 				<include name="./HelperClasses/EnvironmentHelper.cs" />
 				<include name="./HelperClasses/ImageWrapper.cs" />
 				<include name="./HelperClasses/TdfParser.cs" />
+				<include name="./HelperClasses/OsmpXmlSerializer.cs" />
 
 				<include name="./NetworkV3/ObjectReplication/NetObjectReferenceController.cs" />
 				<include name="./NetworkV3/ObjectReplication/ReplicationAttributes.cs" />
@@ -225,30 +243,32 @@
 
 				<include name="./WorldModel/Entity.cs" />
 				<include name="./WorldModel/EntityCreationProperties.cs" />
+				<include name="./WorldModel/Prim.cs" />
 				<include name="./WorldModel/Avatar.cs" />
-				<include name="./WorldModel/FractalSplinePrim.cs" />
-				<include name="./WorldModel/FractalSplineCylinder.cs" />
-				<include name="./WorldModel/WorldView.cs" />
-				<include name="./WorldModel/FractalSplineTorus.cs" />
 				<include name="./WorldModel/SimpleCube.cs" />
 				<include name="./WorldModel/EntityGroup.cs" />
 				<include name="./WorldModel/SimpleCone.cs" />
+				<include name="./WorldModel/FractalSplinePrim.cs" />
+				<include name="./WorldModel/FractalSplineCylinder.cs" />
+				<include name="./WorldModel/FractalSplineTorus.cs" />
 				<include name="./WorldModel/FractalSplineBox.cs" />
 				<include name="./WorldModel/FractalSplinePrism.cs" />
 				<include name="./WorldModel/TextureController.cs" />
-				<include name="./WorldModel/Prim.cs" />
 				<include name="./WorldModel/FractalSplineTube.cs" />
 				<include name="./WorldModel/FractalSplineRing.cs" />
 				<include name="./WorldModel/WorldModel.cs" />
+				<include name="./WorldModel/WorldView.cs" />
 
-				<include name="./WorldModel/Terrain/MapTextureStage.cs" />
-				<include name="./WorldModel/Terrain/RenderableHeightMap.cs" />
-				<include name="./WorldModel/Terrain/RenderableMinimap.cs" />
-				<include name="./WorldModel/Terrain/RenderableWater.cs" />
-				<include name="./WorldModel/Terrain/RendererPass.cs" />
-				<include name="./WorldModel/Terrain/RendererTextureStage.cs" />
-				<include name="./WorldModel/Terrain/Terrain.cs" />
-
+				<include name="./WorldModel/Terrain/Model/MapTextureStageModel.cs" />
+				<include name="./WorldModel/Terrain/Model/TerrainModel.cs" />
+				
+				<include name="./WorldModel/Terrain/View/MapTextureStageView.cs" />
+				<include name="./WorldModel/Terrain/View/RenderableHeightMap.cs" />
+				<include name="./WorldModel/Terrain/View/RenderableWater.cs" />
+				<include name="./WorldModel/Terrain/View/RendererPass.cs" />
+				<include name="./WorldModel/Terrain/View/RendererTextureStage.cs" />
+				<include name="./WorldModel/Terrain/View/TerrainView.cs" />
+				
 				<include name="./Rendering/DisplayGeometryX11.cs" />
 				<include name="./Rendering/DrawAxes.cs" />
 				<include name="./Rendering/IRenderer.cs" />
@@ -287,6 +307,10 @@
 				<include name="./UI/Dialogs/ShowUsersDialog.cs" />
 				<include name="./UI/Dialogs/ShowServersDialog.cs" />
 				<include name="./UI/Dialogs/RemoteServerInfoDialog.cs" />
+				<include name="./UI/Dialogs/Terrain/MainTerrainWindow.cs" />
+				<include name="./UI/Dialogs/Terrain/LodDialog.cs" />
+				<include name="./UI/Dialogs/Terrain/HeightScaleDialog.cs" />
+				<include name="./UI/Dialogs/Terrain/MapSizeDialog.cs" />
 			</sources>
 		</csc>
 		<copy todir="${outputdir}/Metaverse.Client">
@@ -296,6 +320,7 @@
 		</copy>
 		<copy todir="${outputdir}/Metaverse.Client">
 			<fileset basedir=".">
+				<include name="TerrainEditing.glade"/>
 				<include name="metaverse.client.glade"/>
 				<include name="config.xml"/>
 				<include name="Metaverse.ico"/>

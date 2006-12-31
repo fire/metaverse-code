@@ -93,6 +93,11 @@ using System.IO;
             instance.writeLine( o.ToString() );
         }
 
+        public static void WriteLine( string s )
+        {
+            instance.writeLine( s );
+        }
+
         public void writeLine( object o )
         {
             writeLine( o.ToString() );

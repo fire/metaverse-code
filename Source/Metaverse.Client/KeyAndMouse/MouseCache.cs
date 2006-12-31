@@ -110,13 +110,16 @@ namespace OSMP
 
         // used by contextmenu to reinject right mouse up button
         // hack
+        bool PutBackRightMouseButton = false;
         public void OnRightMouseUp()
         {
             _rightbuttondown = false;
-            if (MouseUp != null)
-            {
-                MouseUp(this, new MouseButtonEventArgs( MouseButton.SecondaryButton, false, (short)MouseX, (short)MouseY ) );
-            }
+            PutBackRightMouseButton = true;
+            //if (MouseUp != null)
+            //{
+              //  LogFile.WriteLine("OnRightMouseUp()");
+//                MouseUp(this, new MouseButtonEventArgs( MouseButton.SecondaryButton, false, (short)MouseX, (short)MouseY ) );
+  //          }
         }
 
         void renderer_MouseDown(object sender, MouseButtonEventArgs e)
@@ -145,6 +148,16 @@ namespace OSMP
                     if (MouseDown != null)
                     {
                         MouseDown(sender, e);
+                    }
+                    if (PutBackRightMouseButton)
+                    {
+                        _rightbuttondown = false;
+                        if (MouseUp != null)
+                        {
+                            MouseUp(this, new MouseButtonEventArgs(MouseButton.SecondaryButton,
+                                false, (short)MouseX, (short)MouseY));
+                        }
+                        PutBackRightMouseButton = false;
                     }
                     break;
                 case MouseButton.WheelDown:

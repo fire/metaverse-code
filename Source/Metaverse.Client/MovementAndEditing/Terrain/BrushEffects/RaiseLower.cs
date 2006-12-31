@@ -36,7 +36,7 @@ namespace OSMP
 
         public void ApplyBrush( IBrushShape brushshape, int brushsize, double brushcentre_x, double brushcentre_y, bool israising, double timespanmilliseconds )
         {
-            Terrain terrain = Terrain.GetInstance();
+            TerrainModel terrain = MetaverseClient.GetInstance().worldstorage.terrainmodel;
             double[,] mesh = terrain.Map;
 
             int x = (int)(brushcentre_x );

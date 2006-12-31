@@ -56,7 +56,7 @@ namespace OSMP
             {
                 int mapwidth = width * 64;
                 int mapheight = height * 64;
-                Terrain.GetInstance().ChangeMapSize( mapwidth, mapheight, radioScale.Active );
+                MetaverseClient.GetInstance().worldstorage.terrainmodel.ChangeMapSize( mapwidth, mapheight, radioScale.Active );
                 // CommandQueueFactory.FromUI.Enqueue(new CmdMapSizeChange(width, height));
             }
             else
@@ -66,21 +66,21 @@ namespace OSMP
         }
         void Init()
         {
-            int width = (Terrain.GetInstance().HeightMapWidth - 1) / 64;
-            int height = (Terrain.GetInstance().HeightMapHeight - 1) / 64;
+            int width = (MetaverseClient.GetInstance().worldstorage.terrainmodel.HeightMapWidth - 1) / 64;
+            int height = (MetaverseClient.GetInstance().worldstorage.terrainmodel.HeightMapHeight - 1) / 64;
             widthentry.Entry.Text = width.ToString();
             heightentry.Entry.Text = height.ToString();
         }
         public MapSizeDialog()
         {
-            Glade.XML app = new Glade.XML("./MapDesigner.glade", "mapsizedialog", "");
+            Glade.XML app = new Glade.XML( "./TerrainEditing.glade", "mapsizedialog", "" );
             app.Autoconnect(this);
             Init();
         }
         public MapSizeDialog(DoneCallback callback)
         {
             this.callback = callback;
-            Glade.XML app = new Glade.XML("./MapDesigner.glade", "mapsizedialog", "");
+            Glade.XML app = new Glade.XML( "./TerrainEditing.glade", "mapsizedialog", "" );
             app.Autoconnect(this);
             Init();
         }

@@ -43,9 +43,9 @@ namespace OSMP
             selectionmodel = SelectionModel.GetInstance();
             
             //KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
-            CommandCombos.GetInstance().RegisterCommand("selectobject",
+            CommandCombos.GetInstance().RegisterAtLeastCommand("selectobject",
                 new KeyCommandHandler(SelectObjectKeyDown));
-            CommandCombos.GetInstance().RegisterCommand("selectindividual",
+            CommandCombos.GetInstance().RegisterAtLeastCommand("selectindividual",
                 new KeyCommandHandler(SelectIndividualKeyDown));
 
             //keyfiltercombokeys.RegisterCombo( new string[]{"selectobject"},null, new KeyComboHandler( SelectObjectKeyDown ) );

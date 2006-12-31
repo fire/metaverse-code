@@ -42,6 +42,7 @@ namespace OSMP
         public IRenderer renderer;
         public PlayerMovement playermovement;
         public WorldModel worldstorage; // client's copy of worldmodel
+        public WorldView worldview;
 
         public NetworkLevel2Controller network;
         public RpcController rpc;
@@ -94,8 +95,8 @@ namespace OSMP
         //! Gets world state from server
         void InitializePlayermovement()
         {
-            playermovement.avatarpos = new Vector3( -5, 0, 0 );
-            playermovement.avatarzrot = 0;
+            playermovement.avatarpos = new Vector3( 20, 20, 20 );
+            playermovement.avatarzrot = 45;
             playermovement.avataryrot = 0;
         }
 
@@ -136,15 +137,20 @@ namespace OSMP
             rpc = new RpcController(network);
             netreplicationcontroller = new NetReplicationController(rpc);
 
+            renderer = RendererFactory.GetInstance();
+            renderer.Tick += new OSMP.TickHandler( MainLoop );
+            renderer.Init();
+
             playermovement = PlayerMovement.GetInstance();
             worldstorage = new WorldModel(netreplicationcontroller);
+            worldview = new WorldView( worldstorage );
 
             InitializePlayermovement();
 
             myavatar = new Avatar();
             worldstorage.AddEntity(myavatar);
 
-            PluginsLoader.GetInstance().LoadClientPlugins(arguments);
+            PluginsLoader.GetInstance().LoadClientPlugins( arguments );
             if (!arguments.Unnamed.Contains("nochat"))
             {
                 LoadChat();
@@ -165,9 +171,6 @@ namespace OSMP
                 }
             }
 
-            renderer = RendererFactory.GetInstance();
-            renderer.Tick += new OSMP.TickHandler(MainLoop);
-            renderer.Init();
             renderer.StartMainLoop();
 
             return 0;

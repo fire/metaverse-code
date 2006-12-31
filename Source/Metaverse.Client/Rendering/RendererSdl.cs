@@ -86,10 +86,12 @@ namespace OSMP
 
             Gl.glLoadIdentity();
 
+            new GraphicsHelperGl().CheckError();
             if (PreDrawEvent != null)
             {
                 PreDrawEvent();
             }
+            new GraphicsHelperGl().CheckError();
 
             // note to self: move lighting to subscriber object?
             float[] ambientLight = new float[] { 0.4f, 0.4f, 0.4f, 1.0f };
@@ -103,16 +105,19 @@ namespace OSMP
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position);
 
             Vector3 camerapos = Camera.GetInstance().CameraPos;
+            new GraphicsHelperGl().CheckError();
             if (WriteNextFrameEvent != null)
             {
                 //LogFile.WriteLine("writenextframe");
                 WriteNextFrameEvent(camerapos);
             }
 
+            new GraphicsHelperGl().CheckError();
             if (WriteAlpha != null)
             {
                 WriteAlpha( camerapos );
             }
+            new GraphicsHelperGl().CheckError();
 
             // rotate so z axis is up, and x axis is forward
             //Gl.glRotatef( 90f, 0.0f, 0.0f, 1.0f );
@@ -133,10 +138,12 @@ namespace OSMP
 
         public void ApplyViewingMatrices()
         {
+            new GraphicsHelperGl().CheckError();
             if (PreDrawEvent != null)
             {
                 PreDrawEvent();
             }
+            new GraphicsHelperGl().CheckError();
         }
 
         bool IsRunning = true;
