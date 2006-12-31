@@ -318,7 +318,7 @@ namespace OSMP
         
         public FractalSplinePrim()
         {
-            Test.Debug( "FractalSplinePrim::FractalSplinePrim" );
+            //Test.Debug( "FractalSplinePrim::FractalSplinePrim" );
             for (int i = 0; i < facecolors.GetLength(0); i++)
             {
                 facecolors[i] = new Color();

@@ -46,7 +46,6 @@ namespace OSMP
         
         public FractalSplineBox()
         {
-            Test.Debug( "Box::Box" );
             primitive = new FractalSpline.Box( FractalSpline.RendererOpenGl.GetInstance() );
             LoadDefaults();
         }
