@@ -28,7 +28,7 @@ namespace OSMP
     // represents one renderer texture stage, targets terrains
     public class RendererTextureStage
     {
-        public RendererTextureStage(MapTextureStage maptexturestage, int maptexturestagepass, bool UsingMultipass, int mapwidth, int mapheight)
+        public RendererTextureStage(MapTextureStageView maptexturestage, int maptexturestagepass, bool UsingMultipass, int mapwidth, int mapheight)
         {
             this.maptexturestage = maptexturestage;
             this.maptexturestagepass = maptexturestagepass;
@@ -43,7 +43,7 @@ namespace OSMP
             maptexturestage.Apply(maptexturestagepass, UsingMultipass, mapwidth, mapheight);
         }
         int mapwidth, mapheight;
-        public MapTextureStage maptexturestage;
+        public MapTextureStageView maptexturestage;
         public int maptexturestagepass = 0;
         public bool UsingMultipass = false;
     }

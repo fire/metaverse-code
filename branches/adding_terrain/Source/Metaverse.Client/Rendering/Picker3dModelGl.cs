@@ -39,6 +39,8 @@ namespace OSMP
     // responsible for picking, which in OpenGl means essentially using a glSelect buffer to decide what you clicked on.
     // This is the OpenGl specific class; you can derive others from IPicker3dModel
     // You can get an instance of this class at runtime by doing RendererFactory().GetInstance().GetPicker3dModel();
+    //
+    // name = 0 is reserved, means no name
     public class Picker3dModelGl : IPicker3dModel
     {
         static Picker3dModelGl instance = new Picker3dModelGl();
@@ -73,12 +75,15 @@ namespace OSMP
                 //int thisitem = Marshal.ReadInt32(selectbufferptr, (i * 4 + 3) * 4);
                 //int thisdepth = Marshal.ReadInt32(selectbufferptr, (i * 4 + 1) * 4);
                 int thisitem = selectbuffer[i * 4 + 3];
-                int thisdepth = selectbuffer[i * 4 + 1];
-                if (thisdepth < bestdepth || bestpick == -1)
+                if (thisitem > 0)
                 {
-                    //  cout << "new best depth: " << bestdepth << " pick: " << thisitem << endl;
-                    bestdepth = thisdepth;
-                    bestpick = (int)thisitem;
+                    int thisdepth = selectbuffer[i * 4 + 1];
+                    if (thisdepth < bestdepth || bestpick == -1)
+                    {
+                        //  cout << "new best depth: " << bestdepth << " pick: " << thisitem << endl;
+                        bestdepth = thisdepth;
+                        bestpick = (int)thisitem;
+                    }
                 }
             }
             // cout<< "best hit: " << bestpick << endl;
@@ -93,6 +98,17 @@ namespace OSMP
                 //Test.Debug("adding name " + hittarget.ToString() );
                 hittargets.Add( hittarget );
                 Gl.glLoadName( hittargets.Count );  // note: this isnt quite the index; it is index + 1
+            }
+        }
+
+        /// <summary>
+        /// calls Gl.glLoadName(0);
+        /// </summary>
+        public void EndHitTarget()
+        {
+            if (bAddingNames)
+            {
+                Gl.glLoadName(0);
             }
         }
         
@@ -114,48 +130,52 @@ namespace OSMP
         // - Tao.OpenGl        
         public HitTarget GetClickedHitTarget( IRenderable renderable, int MouseX, int MouseY )
         {
+            GraphicsHelperGl g = new GraphicsHelperGl();
+            g.CheckError();
+
             IRenderer renderer = RendererFactory.GetInstance();
             ArrayList results = new ArrayList();
             
             int[] viewport = new int[ 4 ];
             Gl.glGetIntegerv( Gl.GL_VIEWPORT, viewport );
+            g.CheckError();
             CreateSelectBuffer();
+            g.CheckError();
         
             // This Creates A Matrix That Will Zoom Up To A Small Portion Of The Screen, Where The Mouse Is.
-            Gl.glMatrixMode( Gl.GL_PROJECTION );        
+            Gl.glMatrixMode( Gl.GL_PROJECTION );
+            g.CheckError();
             Gl.glPushMatrix();   // save old matrix, we restore it at end         
-            Gl.glLoadIdentity();        
-            Glu.gluPickMatrix( (float)MouseX, (float) (renderer.WindowHeight - MouseY ), 1.0f, 1.0f, viewport);        
-            Glu.gluPerspective(renderer.FieldOfView, (float)renderer.WindowWidth / (float)renderer.WindowHeight, renderer.NearClip, renderer.FarClip);
+            g.CheckError();
+            Gl.glLoadIdentity();
+            g.CheckError();
+            Glu.gluPickMatrix( (float)MouseX, (float)(renderer.WindowHeight - MouseY), 1.0f, 1.0f, viewport );
+            g.CheckError();
+            Glu.gluPerspective( renderer.FieldOfView, (float)renderer.WindowWidth / (float)renderer.WindowHeight, renderer.NearClip, renderer.FarClip );
+            g.CheckError();
             
-            Gl.glMatrixMode(Gl.GL_MODELVIEW);   
+            Gl.glMatrixMode(Gl.GL_MODELVIEW);
+            g.CheckError();
             
             Gl.glRenderMode( Gl.GL_SELECT );
+            g.CheckError();
             Gl.glInitNames();
-            Gl.glPushName(0);            // Push one entry onto the stack; we will use LoadName to change this value throughout the rendering
-            
+            g.CheckError();
+            Gl.glPushName( 0 );            // Push one entry onto the stack; we will use LoadName to change this value throughout the rendering
+
+            g.CheckError();
             bAddingNames = true;
             hittargets = new ArrayList();
             renderable.Render();            
             bAddingNames = false;
 
-            if (hittargets.Count == 0)
-            {
-                return null;
-            }
-
             // return projection matrix to normal
-            Gl.glMatrixMode(Gl.GL_PROJECTION);
-            Gl.glPopMatrix();        
-            Gl.glMatrixMode(Gl.GL_MODELVIEW);                    
-            
-            int iNumHits = Gl.glRenderMode( Gl.GL_RENDER );    
-            
-            if( iNumHits == 0 )
-            {
-                //LogFile.WriteLine("no hits");
-                return null;
-            }
+            Gl.glMatrixMode( Gl.GL_PROJECTION );
+            Gl.glPopMatrix();
+            Gl.glMatrixMode( Gl.GL_MODELVIEW );
+
+            int iNumHits = Gl.glRenderMode( Gl.GL_RENDER );
+
             int hitname = GetNearestBufferName( iNumHits );
             LogFile.WriteLine( "hitname: " + hitname.ToString() );
             if( hitname == -1 || hitname == 0 )
@@ -165,6 +185,18 @@ namespace OSMP
             }
 
             FreeSelectBuffer();
+            new GraphicsHelperGl().CheckError();
+
+            if (hittargets.Count == 0)
+            {
+                return null;
+            }
+
+            if (iNumHits == 0)
+            {
+                //LogFile.WriteLine("no hits");
+                return null;
+            }
 
             //LogFile.WriteLine(hittargets[hitname - 1]);
             return (HitTarget)hittargets[ hitname - 1 ];

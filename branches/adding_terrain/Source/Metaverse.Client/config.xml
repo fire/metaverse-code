@@ -2,9 +2,9 @@
 
 	<client>
 		<display width="1024" height="768" />
-		<world x_size="1024" y_size="1024" mingroundheight="-50" maxgroundheight="200" ceiling="1000" />
-		<heightediting speed="0.6" defaultbrushsize="2" />
-		<movement acceleration="30" verticalmovespeed="20" movespeed="40" deceleration="10" turnspeed="0.25"/>
+		<world x_size="256" y_size="256" mingroundheight="-5" maxgroundheight="50" ceiling="1000" />
+		<heightediting speed="0.04" defaultbrushsize="20" />
+		<movement acceleration="3" verticalmovespeed="2" movespeed="4" deceleration="1" turnspeed="0.25"/>
   <keymappings description="keyboard mappings">
     <keyreference>
 You can select a key value from any of the following values:
@@ -14,8 +14,6 @@ uparrow, leftarrow, rightarrow, downarrow,
 spacebar, shift, alt, ctrl, delete, enter
     </keyreference>
     <key command="quit" keycode="escape"/>
-
-	  <key command="mouselook" keycode="leftmousebutton" />
 
 	  <key command="moveleft" keycode="a"/>
     <key command="moveleft" keycode="leftarrow"/>
@@ -28,8 +26,7 @@ spacebar, shift, alt, ctrl, delete, enter
     <key command="moveup" keycode="e"/>
     <key command="movedown" keycode="c"/>
     
-	  <key command="contextmenu" keycode="rightmousebutton" />
-
+	  <key command="mouselook" keycode="middlemousebutton" />
 	  <key command="camerazoom" keycode="alt" />
 	  <key command="cameraorbit" keycode="alt-ctrl"/>
     <key command="camerapan" keycode="alt-shift-ctrl"/>
@@ -37,8 +34,11 @@ spacebar, shift, alt, ctrl, delete, enter
     <key command="editposition" keycode="z"/>
     <key command="editscale" keycode="x"/>
     <key command="editrotation" keycode="v"/>
-    
-    <key command="selectobject" keycode="shift-leftmousebutton"/>
+
+	  <key command="increaseheight" keycode="ctrl-leftmousebutton"/>
+	  <key command="decreaseheight" keycode="ctrl-rightmousebutton"/>
+
+	  <key command="selectobject" keycode="shift-leftmousebutton"/>
     <key command="selectindividual" keycode="ctrl-leftmousebutton"/>
     
     <key command="delete" keycode="delete"/>

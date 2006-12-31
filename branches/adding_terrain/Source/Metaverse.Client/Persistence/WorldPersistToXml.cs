@@ -34,7 +34,10 @@ namespace OSMP
         // what we will save/load
         public class World
         {
+            [Replicate]
             public Entity[] Entities;
+            [Replicate]
+            public TerrainModel TerrainModel;
         }
 
         static WorldPersistToXml instance = new WorldPersistToXml();
@@ -155,9 +158,9 @@ namespace OSMP
             }
             
             //XmlSerializer serializer = new XmlSerializer( worldmodel.entities.GetType(), (Type[])types.ToArray( typeof( Type ) ) );
-            XmlSerializer serializer = new XmlSerializer( typeof( World),
-                (Type[])types.ToArray( typeof( Type ) ) );
-            StreamWriter streamwriter = new StreamWriter( filename );
+            //XmlSerializer serializer = new XmlSerializer( typeof( World),
+                //(Type[])types.ToArray( typeof( Type ) ) );
+            //StreamWriter streamwriter = new StreamWriter( filename );
             ProjectFileController.GetInstance().SetProjectPath( new Uri( Path.GetDirectoryName( filename ) + "/" ) );
             List<Entity> entitiestoserialize = new List<Entity>();
             foreach (Entity entity in worldmodel.entities)
@@ -171,8 +174,18 @@ namespace OSMP
             }
             World world = new World();
             world.Entities = entitiestoserialize.ToArray();
-            serializer.Serialize( streamwriter, world );
-            streamwriter.Close();
+            world.TerrainModel = MetaverseClient.GetInstance().worldstorage.terrainmodel;
+
+            StringWriter stringwriter = new StringWriter();
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( World ) );
+            OsmpXmlSerializer.GetInstance().Serialize( stringwriter, world );
+            stringwriter.Close();
+
+            StreamWriter sw = new StreamWriter( filename, false );
+            sw.WriteLine( stringwriter.ToString() );
+            sw.Close();
+            //serializer.Serialize( streamwriter, world );
+            //streamwriter.Close();
         }
 
         public void Restore( string filename )
@@ -189,18 +202,27 @@ namespace OSMP
             WorldModel worldmodel = MetaverseClient.GetInstance().worldstorage;
 
             // note to self: should make these types a publisher/subscriber thing
-            XmlSerializer serializer = new XmlSerializer( typeof( World ), new Type[]{
-                typeof( Avatar ),
-                typeof( FractalSplineCylinder ), 
-                typeof( FractalSplineRing ), 
-                typeof( FractalSplineBox ),
-                typeof( FractalSplineTorus ),
-                typeof( FractalSplinePrism ),
-                typeof( FractalSplineTube )
-                } );
+            //XmlSerializer serializer = new XmlSerializer( typeof( World ), new Type[]{
+              //  typeof( Avatar ),
+//                typeof( FractalSplineCylinder ), 
+  //              typeof( FractalSplineRing ), 
+    //            typeof( FractalSplineBox ),
+      //          typeof( FractalSplineTorus ),
+        //        typeof( FractalSplinePrism ),
+          //      typeof( FractalSplineTube )
+            //    } );
             //DialogHelpers.ShowInfoMessage( null, serializer.Deserialize(filestream).GetType().ToString());
             ProjectFileController.GetInstance().SetProjectPath( projecturi );
-            World world = (World)serializer.Deserialize( stream );
+
+            StreamReader sr = new StreamReader( stream );
+            string contents = sr.ReadToEnd();
+            sr.Close();
+            StringReader stringreader = new StringReader( contents );
+            OsmpXmlSerializer.GetInstance().RegisterType( typeof( World ) );
+            World world = (World)OsmpXmlSerializer.GetInstance().Deserialize( stringreader );
+            stringreader.Close();
+            //World world = (World)serializer.Deserialize( stream );
+
             worldmodel.Clear();
             foreach (Entity entity in world.Entities)
             {
@@ -210,6 +232,15 @@ namespace OSMP
                     worldmodel.AddEntity(entity);
                 }
             }
+            if( world.TerrainModel.HeightmapFilename != "" )
+            {
+                HeightMapPersistence.GetInstance().Load( world.TerrainModel.HeightmapFilename );
+            }
+            worldmodel.terrainmodel.texturestagesarray = world.TerrainModel.texturestagesarray;
+            LogFile.WriteLine( worldmodel );
+            worldmodel.terrainmodel.MinHeight = world.TerrainModel.MinHeight;
+            worldmodel.terrainmodel.MaxHeight = world.TerrainModel.MaxHeight;
+            worldmodel.terrainmodel.OnTerrainModified();
         }
     }
 }

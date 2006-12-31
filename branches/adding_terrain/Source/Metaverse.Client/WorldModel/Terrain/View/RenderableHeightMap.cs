@@ -45,7 +45,8 @@ namespace OSMP
         bool multipass = false;
         List<RendererPass> rendererpasses;
 
-        Terrain parent;
+        TerrainModel terrainmodel;
+        TerrainView terrainview;
 
         /// <summary>
         /// Cache of normal of each quad, indexed by topleft of quad, at resolution of heightmap.
@@ -53,33 +54,44 @@ namespace OSMP
         /// </summary>
         public Vector3[,] normalsperquad;
 
-        List<MapTextureStage> maptexturestages;
+        List<MapTextureStageModel> maptexturestagemodels;
+        //List<MapTextureStageView> maptexturestageviews;
+        //Dictionary<MapTextureStageModel, MapTextureStageView> viewbymodel = new Dictionary<MapTextureStageModel, MapTextureStageView>();
 
-        Dictionary<MapTextureStage, bool[,]> chunkusestexturestage = new Dictionary<MapTextureStage, bool[,]>();
+        Dictionary<MapTextureStageModel, bool[,]> chunkusestexturestage = new Dictionary<MapTextureStageModel, bool[,]>();
 
         // pass a pointer to a heightmap
         // when rendered, x pos will be multiplied by xscale, and y points by yscale
-        public RenderableHeightMap(Terrain parent, double[,] heightmap, int xscale, int yscale, List<MapTextureStage> maptexturestages)
+        public RenderableHeightMap(TerrainView terrainview, TerrainModel terrainmodel, int xscale, int yscale )
         {
-            this.parent = parent;
-            this.heightmap = heightmap;
+            this.terrainmodel = terrainmodel;
+            this.terrainview = terrainview;
+
+            this.heightmap = terrainmodel.Map;
             width = heightmap.GetLength(0) - 1;
             height = heightmap.GetLength(1) - 1;
             this.xscale = xscale;
             this.yscale = yscale;
-            this.maptexturestages = maptexturestages;
+
+            //maptexturestageviews = terrainview.maptexturestageviews;
+            maptexturestagemodels = terrainmodel.texturestages;
+        //    foreach (MapTextureStageView maptexturestageview in maptexturestageviews)
+          //  {
+            //    viewbymodel.Add( maptexturestageview.maptexturestagemodel, maptexturestageview );
+            //}
+
             CacheChunkTextureStageUsage();
             normalsperquad = new Vector3[width, height];
             terrain_HeightmapInPlaceEdited(0, 0, width - 1, height - 1);
             RendererFactory.GetInstance().WriteNextFrameEvent += new WriteNextFrameCallback(Render);
-            parent.HeightmapInPlaceEdited += new Terrain.HeightmapInPlaceEditedHandler(terrain_HeightmapInPlaceEdited);
-            parent.TerrainModified += new Terrain.TerrainModifiedHandler(terrain_TerrainModified);
-            parent.BlendmapInPlaceEdited += new Terrain.BlendmapInPlaceEditedHandler(terrain_BlendmapInPlaceEdited);
+            terrainmodel.HeightmapInPlaceEdited += new TerrainModel.HeightmapInPlaceEditedHandler(terrain_HeightmapInPlaceEdited);
+            terrainmodel.TerrainModified += new TerrainModel.TerrainModifiedHandler(terrain_TerrainModified);
+            terrainmodel.BlendmapInPlaceEdited += new TerrainModel.BlendmapInPlaceEditedHandler(terrain_BlendmapInPlaceEdited);
         }
 
         void terrain_HeightmapInPlaceEdited(int xleft, int ytop, int xright, int ybottom)
         {
-            //LogFile.GetInstance().WriteLine("RHM data changed " + xleft + " " + ytop + " " + xright + " " + ybottom);
+            //LogFile.WriteLine("RHM data changed " + xleft + " " + ytop + " " + xright + " " + ybottom);
             for (int mapx = xleft; mapx <= xright; mapx++)
             {
                 for (int mapy = ytop; mapy <= ybottom; mapy++)
@@ -96,8 +108,9 @@ namespace OSMP
             }
         }
 
-        void terrain_BlendmapInPlaceEdited(MapTextureStage maptexturestage, int xleft, int ytop, int xright, int ybottom)
+        void terrain_BlendmapInPlaceEdited(MapTextureStageModel maptexturestagemodel, int xleft, int ytop, int xright, int ybottom)
         {
+            MapTextureStageView maptexturestageview = terrainview.mapviewbymapmodel[maptexturestagemodel];
             for (int chunkx = xleft / chunksize; chunkx <= xright / chunksize && chunkx < width / chunksize;
                 chunkx++)
             {
@@ -108,7 +121,7 @@ namespace OSMP
                     //for (int texturestageindex = 0; texturestageindex < maptexturestages.GetLength(0); texturestageindex++)
                     //{
 //                        maptexturestage = maptexturestages[texturestageindex];
-                    if (maptexturestage.Operation == MapTextureStage.OperationType.Blend)
+                    if (maptexturestagemodel.Operation == MapTextureStageModel.OperationType.Blend)
                     {
                         bool texturestageused = false;
                         // go through each point in chunk and check if texturestage is used
@@ -120,14 +133,14 @@ namespace OSMP
                             {
                                 //if (mapx < width && mapy < height)
                                 //{
-                                    if (maptexturestage.Affects(mapx, mapy, width, height))
+                                    if (maptexturestagemodel.Affects(mapx, mapy, width, height))
                                     {
                                         texturestageused = true;
                                     }
                                 //}
                             }
                         }
-                        chunkusestexturestage[maptexturestage][chunkx, chunky] = texturestageused;
+                        chunkusestexturestage[maptexturestagemodel][chunkx, chunky] = texturestageused;
                         //  if (chunkusestexturestage[texturestageindex][chunkx, chunky])
                         //{
                         //  Console.WriteLine("texturestage used: " + texturestageindex + " " + chunkx + " " + chunky);
@@ -135,7 +148,7 @@ namespace OSMP
                     }
                     else
                     {
-                        chunkusestexturestage[maptexturestage][chunkx, chunky] = true;
+                        chunkusestexturestage[maptexturestagemodel][chunkx, chunky] = true;
                     }
                     //}
                 }
@@ -144,8 +157,16 @@ namespace OSMP
 
         void terrain_TerrainModified()
         {
-            this.maptexturestages = parent.texturestages;
-            this.heightmap = parent.Map;
+            LogFile.WriteLine( "terrain.terrainmodified()" );
+            //this.maptexturestageviews = terrainview.maptexturestageviews;
+            this.maptexturestagemodels = terrainmodel.texturestages;
+            //viewbymodel.Clear();
+            //foreach (MapTextureStageModel maptexturestagemodel in maptexturestagemodels)
+            //{
+              //  viewbymodel.Add( maptexturestageview.maptexturestagemodel, maptexturestageview );
+            //}
+            this.heightmap = terrainmodel.Map;
+
             width = heightmap.GetLength(0) - 1;
             height = heightmap.GetLength(1) - 1;
             CacheChunkTextureStageUsage();
@@ -157,10 +178,12 @@ namespace OSMP
         // only affects blend really
         void CacheChunkTextureStageUsage()
         {
+            LogFile.WriteLine( "Cachchunktexturestageusage" );
+
             int numxchunks = width / chunksize;
             int numychunks = height / chunksize;
-            chunkusestexturestage = new Dictionary<MapTextureStage, bool[,]>();
-            foreach(MapTextureStage maptexturestage in maptexturestages )
+            chunkusestexturestage = new Dictionary<MapTextureStageModel, bool[,]>();
+            foreach(MapTextureStageModel maptexturestage in maptexturestagemodels )
             {
                 chunkusestexturestage.Add(maptexturestage, new bool[numxchunks, numychunks]);
             }
@@ -169,11 +192,12 @@ namespace OSMP
                 for (int chunky = 0; chunky < numychunks; chunky++)
                 {
                     //    Console.WriteLine("chunk " + chunkx + " " + chunky);
-                    for (int texturestageindex = 0; texturestageindex < maptexturestages.Count; texturestageindex++)
+                    for (int texturestageindex = 0; texturestageindex < maptexturestagemodels.Count; texturestageindex++)
                     {
-                        MapTextureStage texturestage = maptexturestages[texturestageindex];
+                        MapTextureStageModel texturestagemodel = maptexturestagemodels[texturestageindex];
+                        //MapTextureStageView texturestageview = terrainview.mapviewbymapmodel[texturestagemodel];
                         //Console.WriteLine("texturestage " + texturestageindex + " " + texturestage.Operation );
-                        if (texturestage.Operation == MapTextureStage.OperationType.Blend)
+                        if (texturestagemodel.Operation == MapTextureStageModel.OperationType.Blend)
                         {
                             bool texturestageused = false;
                             // go through each point in chunk and check if texturestage is used
@@ -183,26 +207,26 @@ namespace OSMP
                                 for (int mapy = chunky * chunksize; mapy < (chunky + 1) * chunksize && !texturestageused;
                                     mapy++)
                                 {
-                                    if (texturestage.Affects(mapx, mapy, width, height))
+                                    if (texturestagemodel.Affects(mapx, mapy, width, height))
                                     {
                                         texturestageused = true;
                                     }
                                 }
                             }
-                            chunkusestexturestage[texturestage][chunkx, chunky] = texturestageused;
+                            chunkusestexturestage[texturestagemodel][chunkx, chunky] = texturestageused;
                             //  if (chunkusestexturestage[texturestageindex][chunkx, chunky])
                             //{
                             //  Console.WriteLine("texturestage used: " + texturestageindex + " " + chunkx + " " + chunky);
                             //}
                         }
-                        else if (texturestage.Operation == MapTextureStage.OperationType.Nop)
+                        else if (texturestagemodel.Operation == MapTextureStageModel.OperationType.Nop)
                         {
-                            chunkusestexturestage[texturestage][chunkx, chunky] = false;
+                            chunkusestexturestage[texturestagemodel][chunkx, chunky] = false;
                         }
                         else
                         {
                             //Console.WriteLine("RenderableHeightMap,, cache chunk usage, true");
-                            chunkusestexturestage[texturestage][chunkx, chunky] = true;
+                            chunkusestexturestage[texturestagemodel][chunkx, chunky] = true;
                         }
                     }
                 }
@@ -210,9 +234,9 @@ namespace OSMP
             maxtexels = RendererSdl.GetInstance().MaxTexelUnits;
 
             int totaltexturestagesneeded = 0;
-            foreach (MapTextureStage maptexturestage in maptexturestages)
+            foreach (MapTextureStageModel maptexturestagemodel in maptexturestagemodels)
             {
-                totaltexturestagesneeded += maptexturestage.NumTextureStagesRequired;
+                totaltexturestagesneeded += terrainview.mapviewbymapmodel[ maptexturestagemodel ].NumTextureStagesRequired;
             }
 
             multipass = false;
@@ -225,11 +249,13 @@ namespace OSMP
             //int currenttexel = 0;
 
             multipass = true; // force multipass for now for simplicity
+            LogFile.WriteLine( "Adding rendererpasses" );
             if (multipass)
             {
-                for (int i = 0; i < maptexturestages.Count; i++)
+                for (int i = 0; i < maptexturestagemodels.Count; i++)
                 {
-                    MapTextureStage maptexturestage = maptexturestages[i];
+                    MapTextureStageModel maptexturestagemodel = maptexturestagemodels[i];
+                    MapTextureStageView maptexturestage = terrainview.mapviewbymapmodel[maptexturestagemodel];
                     int numtexturestagesrequired = maptexturestage.NumTextureStagesRequired;
                     if (numtexturestagesrequired > 0) // exclude Nops
                     {
@@ -239,6 +265,7 @@ namespace OSMP
                             rendererpass.AddStage(new RendererTextureStage(maptexturestage, j, true, width, height));
                         }
                         rendererpasses.Add(rendererpass);
+                        LogFile.WriteLine( "Adding rendererpass: " + rendererpass );
                     }
                 }
             }
@@ -275,7 +302,7 @@ namespace OSMP
                 {
                     for (int chunky = 0; chunky < numychunks - 1; chunky++)
                     {
-                        if (chunkusestexturestage[rendererpass.texturestages[0].maptexturestage][chunkx, chunky])
+                        if (chunkusestexturestage[rendererpass.texturestages[0].maptexturestage.maptexturestagemodel][chunkx, chunky])
                         {
                             //if (iSectorsDrawn == 0)
                             //{
@@ -349,6 +376,7 @@ namespace OSMP
         {
             //Console.WriteLine("render chunk " + chunkx + " " + chunky + " " + step);
             Vector3 normal;
+
             for (int mapx = chunkx * chunksize; mapx <= (chunkx + 1) * chunksize; mapx += step)
             {
                 Gl.glBegin(Gl.GL_TRIANGLE_STRIP);
@@ -359,7 +387,7 @@ namespace OSMP
 
                     v = (float)mapy;
 
-                    normal = GetNormal( mapx + step, mapy );
+                    normal = GetNormal(Math.Min(mapx + step, width), mapy);
                     Gl.glNormal3d( normal.x, normal.y, normal.z );
 
                     u = (float)mapx + step;

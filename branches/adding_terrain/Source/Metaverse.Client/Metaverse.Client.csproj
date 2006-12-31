@@ -33,7 +33,10 @@
     <Reference Include="gdk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="glade-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="glib-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\bin\GTK\2.8\lib\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="Meebey.SmartIrc4net, Version=0.3.5.1833, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Meebey.SmartIrc4net.dll</HintPath>
@@ -88,6 +91,7 @@
     <Compile Include="HelperClasses\LogFile.cs" />
     <Compile Include="HelperClasses\mvMath.cs" />
     <Compile Include="HelperClasses\MyRand.cs" />
+    <Compile Include="HelperClasses\OsmpXmlSerializer.cs" />
     <Compile Include="HelperClasses\StreamHelper.cs" />
     <Compile Include="HelperClasses\TdfParser.cs" />
     <Compile Include="HelperClasses\Test.cs" />
@@ -123,6 +127,8 @@
     <Compile Include="MovementAndEditing\Terrain\EditingHelper.cs" />
     <Compile Include="MovementAndEditing\ViewerState.cs" />
     <Compile Include="NetworkV3\STUN\STUN.cs" />
+    <Compile Include="Persistence\HeightMapPersistence.cs" />
+    <Compile Include="Persistence\Sm3Persistence.cs" />
     <Compile Include="Rendering\DisplayGeometryFactory.cs" />
     <Compile Include="Rendering\DisplayGeometryWindows.cs" />
     <Compile Include="Rendering\DisplayGeometryX11.cs" />
@@ -238,18 +244,20 @@
     <Compile Include="WorldModel\Prim.cs" />
     <Compile Include="WorldModel\SimpleCone.cs" />
     <Compile Include="WorldModel\SimpleCube.cs" />
-    <Compile Include="WorldModel\Terrain\MapTextureStage.cs" />
-    <Compile Include="WorldModel\Terrain\RenderableHeightMap.cs" />
-    <Compile Include="WorldModel\Terrain\RenderableMinimap.cs" />
-    <Compile Include="WorldModel\Terrain\RenderableWater.cs" />
-    <Compile Include="WorldModel\Terrain\RendererPass.cs" />
-    <Compile Include="WorldModel\Terrain\RendererTextureStage.cs" />
-    <Compile Include="WorldModel\Terrain\Terrain.cs" />
+    <Compile Include="WorldModel\Terrain\Model\MapTextureStageModel.cs" />
+    <Compile Include="WorldModel\Terrain\Model\TerrainModel.cs" />
+    <Compile Include="WorldModel\Terrain\View\MapTextureStageView.cs" />
+    <Compile Include="WorldModel\Terrain\View\RenderableHeightMap.cs" />
+    <Compile Include="WorldModel\Terrain\View\RenderableWater.cs" />
+    <Compile Include="WorldModel\Terrain\View\RendererPass.cs" />
+    <Compile Include="WorldModel\Terrain\View\RendererTextureStage.cs" />
+    <Compile Include="WorldModel\Terrain\View\TerrainView.cs" />
     <Compile Include="WorldModel\TextureController.cs" />
     <Compile Include="WorldModel\WorldModel.cs" />
     <Compile Include="WorldModel\WorldView.cs" />
     <None Include="default.build" />
     <None Include="metaverse.client.glade" />
+    <None Include="TerrainEditing.glade" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
@@ -268,10 +276,15 @@
       <Project>{5F1439D3-88D8-47FF-996C-8D2062AB4016}</Project>
       <Name>stun4cs</Name>
     </ProjectReference>
+    <Content Include="BasicTypes\Readme.txt" />
     <Content Include="Changes.txt" />
     <Content Include="config.xml" />
+    <Content Include="HelperClasses\Readme.txt" />
+    <Content Include="IM\IM.txt" />
+    <Content Include="KeyAndMouse\KeyAndMouse.txt" />
     <Content Include="Metaverse.ico" />
     <Content Include="NetworkV3\Layer3_PacketAssembly\readme.txt" />
+    <Content Include="NetworkV3\Network.txt" />
     <Content Include="osmpico32.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -285,6 +298,8 @@ xcopy /d /y $(ProjectDir)..\..\Libraries\Gtk.Net2.0\*.dll $(ProjectDir)bin &gt;&
     <PostBuildEvent>copy /y $(ProjectDir)metaverse.client.glade . &gt;copy.log
 xcopy /d /y $(ProjectDir)\bin\*.dll . &gt;&gt; copy.log
 copy /y $(ProjectDir)config.xml . &gt;&gt;copy.log
-xcopy /d /y $(ProjectDir)metaverse.ico . &gt;&gt; copy.log</PostBuildEvent>
+xcopy /d /y $(ProjectDir)metaverse.ico . &gt;&gt; copy.log
+copy /y $(ProjectDir)TerrainEditing.glade . &gt;&gt;copy.log
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -46,6 +46,8 @@ namespace OSMP
                 System.Environment.SetEnvironmentVariable( "PATH", System.Environment.GetEnvironmentVariable( "PATH" ) +
                     ";" + EnvironmentHelper.GetExeDirectory(), EnvironmentVariableTarget.Process );
 
+                Tao.DevIl.Il.ilInit();
+
                 if( arguments.Unnamed.Contains("clientonly") )
                 {
                     LogFile.WriteLine("User requested client only");

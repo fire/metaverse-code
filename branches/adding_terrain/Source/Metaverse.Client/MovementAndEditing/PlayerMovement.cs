@@ -37,7 +37,7 @@ namespace OSMP
         Vector3 WorldBoundingBoxMin;
         Vector3 WorldBoundingBoxMax;
 
-        public Vector3 avatarpos = new Vector3( 0, 0, 10 );
+        public Vector3 avatarpos = new Vector3();
         public Rot avatarrot = new Rot();
 
         public bool bAvatarMoved;  //! If avatar has moved (so it should be synchronized to server)
@@ -59,7 +59,8 @@ namespace OSMP
         
         public bool bJumping;//!< set by keyboardandmouse, and used by playermovement to set current player object velocity
         
-        public double avatarzrot,avataryrot;    //!< avatar z and y rot, used to get avatar rotation
+        public double avatarzrot;
+        public double avataryrot;    //!< avatar z and y rot, used to get avatar rotation
         
         static PlayerMovement instance = new PlayerMovement();
         public static PlayerMovement GetInstance()
@@ -114,24 +115,26 @@ namespace OSMP
             camera = Camera.GetInstance();
             //KeyFilterComboKeys keyfiltercombokeys = KeyFilterComboKeys.GetInstance();
 
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "moveleft", new KeyCommandHandler(MoveLeft));
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "moveright", new KeyCommandHandler(MoveRight));
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "movebackwards", new KeyCommandHandler(MoveBackwards));
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "moveforwards", new KeyCommandHandler(MoveForwards));
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "moveup", new KeyCommandHandler(MoveUp));
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "movedown", new KeyCommandHandler(MoveDown));
 
-            CommandCombos.GetInstance().RegisterCommand(
-              "mouselook", new KeyCommandHandler(ActivateMouseLook));
+            ViewerState.GetInstance().StateChanged += new ViewerState.StateChangedHandler(PlayerMovement_StateChanged);
 
-            CommandCombos.GetInstance().RegisterCommand(
-              "leftmousebutton", new KeyCommandHandler(MouseDown));
+            //CommandCombos.GetInstance().RegisterCommand(
+              //"mouselook", new KeyCommandHandler(ActivateMouseLook));
+
+            //CommandCombos.GetInstance().RegisterCommand(
+              //"leftmousebutton", new KeyCommandHandler(MouseDown));
 
             MouseCache.GetInstance().MouseMove += new MouseMoveHandler(PlayerMovement_MouseMove);
 
@@ -154,6 +157,23 @@ namespace OSMP
             Test.Debug("PlayerMovement instantiated");
         }
 
+        void PlayerMovement_StateChanged(ViewerState.ViewerStateEnum neweditstate, ViewerState.ViewerStateEnum newviewstate)
+        {
+            //bcapturing = down;
+
+            if (newviewstate == ViewerState.ViewerStateEnum.MouseLook)
+            {
+                LogFile.WriteLine("PlayerMovement.ActivateMouseLook");
+                istartmousex = MouseCache.GetInstance().MouseX;
+                istartmousey = MouseCache.GetInstance().MouseY;
+                startavatarzrot = avatarzrot;
+                startavataryrot = avataryrot;
+            }
+            else
+            {
+            }
+        }
+
         //bool bcapturing = false; // if someone else filtered our MouseDown (ie SelectionModel, Camera,etc...), we shouldnt be processing MouseMove
         //bool _bcapturing;
 
@@ -162,34 +182,12 @@ namespace OSMP
         double startavatarzrot;
         double startavataryrot;
 
-        public void ActivateMouseLook(string command, bool down)
-        {
-            LogFile.WriteLine("PlayerMovement.ActivateMouseLook " + down);
-            //bcapturing = down;
-
-            if (down)
-            {
-                istartmousex = MouseCache.GetInstance().MouseX;
-                istartmousey = MouseCache.GetInstance().MouseY;
-                startavatarzrot = avatarzrot;
-                startavataryrot = avataryrot;
-
-                //ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.Mouselook;
-            }
-            else
-            {
-                //ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.None;
-                InMouseMoveDrag = false;
-            }
-        }
-
-        bool InMouseMoveDrag = false;
-
         void PlayerMovement_MouseMove()
         {
             //LogFile.WriteLine("PlayerMovement.MouseMove " + bcapturing);
-            if ( InMouseMoveDrag &&
-                ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.None)
+            //if ( InMouseMoveDrag &&
+             //   ViewerState.GetInstance().CurrentViewerState == ViewerState.ViewerStateEnum.MouseLook)
+            if (ViewerState.GetInstance().CurrentViewerState == ViewerState.ViewerStateEnum.MouseLook)
             {
                 avatarzrot = startavatarzrot - (double)(MouseCache.GetInstance().MouseX - istartmousex) * fAvatarTurnSpeed;
                 avataryrot = Math.Min(Math.Max(startavataryrot + (double)(MouseCache.GetInstance().MouseY - istartmousey) * fAvatarTurnSpeed, -90), 90);
@@ -197,19 +195,19 @@ namespace OSMP
             }
         }
 
-        public void MouseDown(string command, bool down)
-        {
+        //public void MouseDown(string command, bool down)
+        //{
             //Test.Debug("Playermovement MouseDown " + e.ToString() );
             //LogFile.WriteLine("PlayerMovement.MouseDown " + down + " " + bcapturing);
-            if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.None)
-            {
-                InMouseMoveDrag = down;
-            }
-            else
-            {
-                InMouseMoveDrag = false;
-            }
-        }
+          //  if (ViewerState.GetInstance().CurrentViewerState == ViewerState.ViewerStateEnum.MouseLook)
+//            {
+  //              InMouseMoveDrag = down;
+    //        }
+      //      else
+        //    {
+          //      InMouseMoveDrag = false;
+            //}
+        //}
 
         //public void MouseMove( object source, MouseEventArgs e )
         //{
@@ -307,7 +305,7 @@ namespace OSMP
                         avatarpos.y = Math.Min( avatarpos.y, WorldBoundingBoxMax.y );
                         avatarpos.z = Math.Min( avatarpos.z, WorldBoundingBoxMax.z );
 
-                        avatarpos.z = Math.Max( avatarpos.z, Terrain.GetInstance().Map[
+                        avatarpos.z = Math.Max( avatarpos.z, MetaverseClient.GetInstance().worldstorage.terrainmodel.Map[
                             (int)avatarpos.x, (int)avatarpos.y] + avatarradius );
                                 
                         break;

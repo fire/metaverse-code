@@ -55,12 +55,13 @@ namespace OSMP
         
         Color[] facecolors = new Color[ iMaxFaces ];
 
-        [Replicate]
-        [XmlIgnore]
+        //[Replicate]
+        //[XmlIgnore]
         // for client/server replication, or perhaps not
         public string[] TextureFullPaths
         {
             get{
+                LogFile.WriteLine( "get texturefullpaths" );
                 string[] texturefullpathstrings = new string[texturefullpaths.GetLength( 0 )];
                 for (int i = 0; i < texturefullpaths.GetLength( 0 ); i++)
                 {
@@ -76,6 +77,7 @@ namespace OSMP
                 return texturefullpathstrings;
             }
             set{
+                LogFile.WriteLine( "set texturefullpaths" );
                 // Note to self: this should be moved somewhere else really
                 texturefullpaths = new Uri[ value.GetLength(0) ];
                 for (int i = 0; i < value.GetLength( 0 ); i++)
@@ -91,7 +93,7 @@ namespace OSMP
             }
         }
 
-        // xml serialization only
+        [Replicate]
         public string[] TextureRelativePaths
         {
             get
@@ -100,28 +102,29 @@ namespace OSMP
                 string[] relativepaths = new string[texturefullpaths.GetLength( 0 )];
                 for (int i = 0; i < relativepaths.GetLength( 0 ); i++)
                 {
-                    LogFile.WriteLine( "i: " + i );
+                    //LogFile.WriteLine( "i: " + i );
                     if (texturefullpaths[i] != null)
                     {
                         relativepaths[i] = ProjectFileController.GetInstance().GetRelativePath( texturefullpaths[i] );
+                        LogFile.WriteLine( "i " + texturefullpaths[i] + " -> " + relativepaths[i] );
                     }
                     else
                     {
                         relativepaths[i] = "";
                     }
-                    LogFile.WriteLine( relativepaths[i] );
                 }
                 return relativepaths;
             }
             set
             {
+                LogFile.WriteLine( "set texturerelativepaths" );
                 for (int i = 0; i < value.GetLength( 0 ); i++)
                 {
                     if (value[i] != null && value[i] != "" )
                     {
-                        Test.Debug( "loading texture " + value[i] + "..." );
                         texturefullpaths[i] = ProjectFileController.GetInstance().GetFullPath( value[i] );
                         int textureid = (int)TextureController.GetInstance().LoadUri( texturefullpaths[i] );
+                        Test.Debug( "loading texture " + value[i] + " -> " + texturefullpaths[i] );
                         _SetTexture( i, textureid );
                     }
                 }
@@ -380,13 +383,14 @@ namespace OSMP
         }
         public void _SetTexture( int face, int opengltextureid )
         {
+            LogFile.WriteLine( "FractalSplinePrim, setting texture to " + opengltextureid );
             primitive.SetTexture( face, opengltextureid );
         }
         public void SetTexture( int face, Uri uri )
         {
             if( face == FractalSpline.Primitive.AllFaces )
             {
-                for( int i = 0; i < TextureFullPaths.GetUpperBound(0) + 1; i++ )
+                for (int i = 0; i < texturefullpaths.GetUpperBound( 0 ) + 1; i++)
                 {
                     texturefullpaths[i] = uri; // Note to self: fix this dependency, wrong level of abstraction
                 }

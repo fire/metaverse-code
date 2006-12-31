@@ -31,11 +31,12 @@ namespace OSMP
     {
         WorldModel worldmodel;
         IGraphicsHelper graphics;
+        public TerrainView terrainview;
 
         Vector2[] LandCoords = new Vector2[ 1000 ];  //!< coordinates of hardcoded green plateau (?)
         
-        static WorldView instance = new WorldView();
-        public static WorldView GetInstance(){ return instance; }
+        //static WorldView instance = new WorldView();
+        //public static WorldView GetInstance(){ return instance; }
 
         public class HitTargetLandCoord : HitTarget
         {
@@ -46,10 +47,12 @@ namespace OSMP
             }
         };
                 
-        public WorldView()
+        public WorldView( WorldModel worldmodel )
         {
-            worldmodel = MetaverseClient.GetInstance().worldstorage;
+            LogFile.WriteLine( "WorldView(" + worldmodel + ")" );
+            this.worldmodel = worldmodel;
             graphics = GraphicsHelperFactory.GetInstance();
+            terrainview = new TerrainView( worldmodel.terrainmodel );
             RendererFactory.GetInstance().WriteNextFrameEvent += new WriteNextFrameCallback(WorldView_WriteNextFrameEvent);
         }
 
@@ -93,7 +96,9 @@ namespace OSMP
         {
             //Test.Debug("drawobjects");
             Gl.glMaterialfv(Gl.GL_FRONT, Gl.GL_AMBIENT_AND_DIFFUSE, new float[]{1.0f, 0.0f, 0.5f, 1.0f});
-            
+
+            Gl.glEnable( Gl.GL_TEXTURE_2D );
+
             Avatar myavatar = MetaverseClient.GetInstance().myavatar;
             
             Picker3dController picker3dcontroller = Picker3dController.GetInstance();
@@ -109,6 +114,7 @@ namespace OSMP
                         Gl.glRasterPos3f((float)worldmodel.entities[i].pos.x, (float)worldmodel.entities[i].pos.y, (float)worldmodel.entities[i].pos.z);
                         picker3dcontroller.AddHitTarget( worldmodel.entities[i] );
                         worldmodel.entities[i].Draw();
+                        picker3dcontroller.EndHitTarget();
                         graphics.Bind2DTexture( 0 );    
                     }
                     else
@@ -116,24 +122,26 @@ namespace OSMP
                         Gl.glRasterPos3f( (float)worldmodel.entities[i].pos.x, (float)worldmodel.entities[i].pos.y, (float)worldmodel.entities[i].pos.z);
                         picker3dcontroller.AddHitTarget( worldmodel.entities[i] );
                         worldmodel.entities[i].Draw();
-                        graphics.Bind2DTexture( 0 );
+                        picker3dcontroller.EndHitTarget();
+                        graphics.Bind2DTexture(0);
                     }
                 }
             }
         }
         
-        void DrawLights()
-        {
-            Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, new float[]{-100.5f, 100.0f, 100.0f, 1.0f});            
-        }
+        //void DrawLights()
+        //{
+          //  Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, new float[]{-100.5f, 100.0f, 100.0f, 1.0f});            
+        //}
         
         public void Render()
         {
+            //DrawLights();
             //LogFile.WriteLine("render");
-            DrawLandscape();
+            //DrawLandscape();
+            // note to self: add Terrain perhaps?
             DrawEntities();
             SelectionView.GetInstance().Render();
-            DrawLights();
         }
     }
 }

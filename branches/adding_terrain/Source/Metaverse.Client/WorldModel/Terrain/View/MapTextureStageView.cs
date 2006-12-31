@@ -18,38 +18,6 @@
 // http://www.opensource.org/licenses/gpl-license.php
 //
 
-// Concepts and implementation details based on code by Jelmer Cnossen, 
-// in particular, TerrainTexEnvMapping.cpp from the Spring project.
-// Licence header from this file:
-/*
----------------------------------------------------------------------
-   Terrain Renderer using texture splatting and geomipmapping
-   Copyright (c) 2006 Jelmer Cnossen
-
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
-   damages arising from the use of this software.
-
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
-   redistribute it freely, subject to the following restrictions:
-
-   1. The origin of this software must not be misrepresented; you
-      must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
-      documentation would be appreciated but is not required.
-
-   2. Altered source versions must be plainly marked as such, and
-      must not be misrepresented as being the original software.
-
-   3. This notice may not be removed or altered from any source
-      distribution.
-
-   Jelmer Cnossen
-   j.cnossen at gmail dot com
----------------------------------------------------------------------
-*/
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -60,115 +28,45 @@ namespace OSMP
 {
     // represents a single maptexture stage, eg one stage from md3
     // this could represent two opengl texture stages, eg for blend
-    public class MapTextureStage
+    public class MapTextureStageView
     {
-        public enum OperationType
-        {
-            NoTexture,  // hack to allow map to run with no texturestages. note to self: cleanup
-            Blend,
-            Add,
-            Multiply,
-            Subtract,
-            Replace,
-            Nop
-        };
+        public MapTextureStageModel maptexturestagemodel;
 
-        public OperationType Operation = OperationType.NoTexture;
-        public ITexture texture;
+        public ITexture splattexture;
         public ITexture blendtexture;
-        public int Tilesize;
 
-        public string BlendTextureFilename
+        public MapTextureStageView( MapTextureStageModel maptexturestagemodel )
         {
-            get
-            {
-                if (blendtexture == null)
-                {
-                    return "";
-                }
-                return blendtexture.Filename;
-            }
+            LogFile.WriteLine( "MapTextureStageView(" + maptexturestagemodel + ")" );
+            this.maptexturestagemodel = maptexturestagemodel;
+            splattexture = new GlTexture( maptexturestagemodel.splattexture, false );
+            blendtexture = new GlTexture( maptexturestagemodel.blendtexture, true );
+
+            maptexturestagemodel.Changed += new MapTextureStageModel.ChangedHandler( maptexturestagemodel_Changed );
         }
 
-        public string SplatTextureFilename{ get {
-                if (texture == null)
-                {
-                    return "";
-                }
-                return texture.Filename;
-            }
+        void maptexturestagemodel_Changed() // note to self: need to differentaite between global change, blend teture, splattexture
+        {
+            LogFile.WriteLine( "maptexturestageview.Changed" );
+            //maptexturestagemodel.splattexture.Save( "out.jpg" ); -> Ok
+            splattexture.LoadNewImage( maptexturestagemodel.splattexture, false );
+            blendtexture.LoadNewImage( maptexturestagemodel.blendtexture, true );
         }
 
         public int NumTextureStagesRequired
         {
             get
             {
-                if (Operation == OperationType.Nop)
+                if (maptexturestagemodel.Operation == MapTextureStageModel.OperationType.Nop)
                 {
                     return 0;
                 }
-                if (Operation == OperationType.Blend)
+                if (maptexturestagemodel.Operation == MapTextureStageModel.OperationType.Blend)
                 {
                     return 2;
                 }
                 return 1;
             }
-        }
-
-        void CreateBlankTexture()
-        {
-            LogFile.WriteLine("CreateBlankTexture()");
-            //Bitmap bitmap = new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            //Graphics g = Graphics.FromImage(bitmap);
-            //Pen pen = new Pen(System.Drawing.Color.FromArgb(255,255, 255, 255));
-            //g.DrawRectangle(pen, 0, 0, 1, 1);
-            //DevIL.DevIL.SaveBitmap("testout.JPG", bitmap);
-            ImageWrapper image = new ImageWrapper( 1, 1 );
-            image.SetPixel(0, 0, 255, 255, 255, 255);
-            this.texture = new GlTexture(image,false);
-        }
-
-        void CreateBlankBlendTexture()
-        {
-            //Bitmap bitmap = new Bitmap(512, 512);
-            this.blendtexture = new GlTexture( 512, 512, true);
-        }
-
-        // defaults to no texture
-        public MapTextureStage()
-        {
-            this.Operation = OperationType.Replace;
-            this.Tilesize = 50;
-            CreateBlankTexture();
-            CreateBlankBlendTexture();
-        }
-
-        public MapTextureStage(OperationType operation)
-        {
-            LogFile.WriteLine("MapTextureStage(), operation");
-            this.Operation = operation;
-            this.Tilesize = 50;
-            CreateBlankTexture();
-            CreateBlankBlendTexture();
-        }
-        
-        public MapTextureStage(OperationType operation, int Tilesize, ITexture texture)
-        {
-            LogFile.WriteLine("MapTextureStage(), single stages");
-            this.Operation = operation;
-            this.texture = texture;
-            this.Tilesize = Tilesize;
-            CreateBlankBlendTexture();
-        }
-
-        // blend needs two textures
-        public MapTextureStage(OperationType operation, int Tilesize, ITexture texture, ITexture blendtexture)
-        {
-            LogFile.WriteLine("MapTextureStage(), two stages");
-            this.Operation = operation;
-            this.texture = texture;
-            this.blendtexture = blendtexture;
-            this.Tilesize = Tilesize;
         }
 
         void SetTextureScale(double scale)
@@ -190,25 +88,25 @@ namespace OSMP
         // either we're using multipass or we're using multitexture.  multipass still uses 2 multitexture units, but not 4, 6, 8, ...
         public void Apply(int texturestagenum, bool UsingMultipass, int mapwidth, int mapheight)
         {
-            //Console.WriteLine("Apply");
+            //Console.WriteLine( "MapTextureStageView for " + maptexturestagemodel + " " + ((GlTexture)splattexture).GlReference +  " Apply" );
             GlTextureCombine texturecombine;
             GraphicsHelperGl g = new GraphicsHelperGl();
-            switch (Operation)
+            switch (maptexturestagemodel.Operation)
             {
-                case OperationType.NoTexture:
+                case MapTextureStageModel.OperationType.NoTexture:
                     g.DisableTexture2d();
                     g.EnableModulate();
                     break;
-                case OperationType.Add:
-                    texture.Apply();
-                    SetTextureScale(1 / (double)Tilesize);
+                case MapTextureStageModel.OperationType.Add:
+                    splattexture.Apply();
+                    SetTextureScale(1 / (double)maptexturestagemodel.Tilesize);
                     texturecombine = new GlTextureCombine();
                     texturecombine.Operation = GlTextureCombine.OperationType.Add;
                     texturecombine.Args[0].SetRgbaSource(GlCombineArg.Source.Previous);
                     texturecombine.Args[1].SetRgbaSource(GlCombineArg.Source.Texture);
                     texturecombine.Apply();
                     break;
-                case OperationType.Blend:
+                case MapTextureStageModel.OperationType.Blend:
                     if (UsingMultipass)
                     {
                         if (texturestagenum == 0)
@@ -222,8 +120,8 @@ namespace OSMP
                         }
                         else
                         {
-                            texture.Apply();
-                            SetTextureScale(1 / (double)Tilesize);
+                            splattexture.Apply();
+                            SetTextureScale( 1 / (double)maptexturestagemodel.Tilesize );
                             new GraphicsHelperGl().EnableModulate();
                         }
                     }
@@ -241,8 +139,8 @@ namespace OSMP
                         }
                         else
                         {
-                            texture.Apply();
-                            SetTextureScale(1 / (double)Tilesize);
+                            splattexture.Apply();
+                            SetTextureScale( 1 / (double)maptexturestagemodel.Tilesize );
                             texturecombine = new GlTextureCombine();
                             texturecombine.Operation = GlTextureCombine.OperationType.Interpolate;
                             texturecombine.Args[0].SetRgbaSource(GlCombineArg.Source.Previous);
@@ -253,27 +151,27 @@ namespace OSMP
                         }
                     }
                     break;
-                case OperationType.Multiply:
-                    texture.Apply();
-                    SetTextureScale(1 / (double)Tilesize);
+                case MapTextureStageModel.OperationType.Multiply:
+                    splattexture.Apply();
+                    SetTextureScale( 1 / (double)maptexturestagemodel.Tilesize );
                     texturecombine = new GlTextureCombine();
                     texturecombine.Operation = GlTextureCombine.OperationType.Modulate;
                     texturecombine.Args[0].SetRgbaSource(GlCombineArg.Source.Previous);
                     texturecombine.Args[1].SetRgbaSource(GlCombineArg.Source.Texture);
                     texturecombine.Apply();
                     break;
-                case OperationType.Subtract:
-                    texture.Apply();
-                    SetTextureScale(1 / (double)Tilesize);
+                case MapTextureStageModel.OperationType.Subtract:
+                    splattexture.Apply();
+                    SetTextureScale( 1 / (double)maptexturestagemodel.Tilesize );
                     texturecombine = new GlTextureCombine();
                     texturecombine.Operation = GlTextureCombine.OperationType.Subtract;
                     texturecombine.Args[0].SetRgbaSource(GlCombineArg.Source.Previous);
                     texturecombine.Args[1].SetRgbaSource(GlCombineArg.Source.Texture);
                     texturecombine.Apply();
                     break;
-                case OperationType.Replace:
-                    texture.Apply();
-                    SetTextureScale(1 / (double)Tilesize);
+                case MapTextureStageModel.OperationType.Replace:
+                    splattexture.Apply();
+                    SetTextureScale( 1 / (double)maptexturestagemodel.Tilesize );
                     texturecombine = new GlTextureCombine();
                     texturecombine.Operation = GlTextureCombine.OperationType.Modulate;
                     texturecombine.Args[0].SetRgbaSource(GlCombineArg.Source.Texture);
@@ -281,37 +179,6 @@ namespace OSMP
                     texturecombine.Apply();
                     break;
             }
-        }
-
-        // determines if this stage affects the map coordinates specified
-        // returns true always, except for Blend
-        public bool Affects(int mapx, int mapy, int mapwidth, int mapheight)
-        {
-            //Console.WriteLine("Affects");
-            if (Operation == OperationType.Nop)
-            {
-              //  Console.WriteLine("return false: Nop");
-                return false;
-            }
-            if (Operation != OperationType.Blend)
-            {
-                //Console.WriteLine("return true: !Blend");
-                return true;
-            }
-            int texturex = ( blendtexture.AlphaData.GetUpperBound(0) * mapx ) / mapwidth;
-            int texturey = (blendtexture.AlphaData.GetUpperBound(1) * mapy) / mapheight;
-            try
-            {
-                if (blendtexture.AlphaData[texturex, texturey] > 0)
-                {
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                throw new Exception("texturex: " + texturex + " " + texturey + " mapx " + mapx + " mapy " + mapy + " mapwidth " + mapwidth + " " + mapheight);
-            }
-            return false;
         }
     }
 }

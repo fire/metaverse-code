@@ -8,7 +8,7 @@ namespace OSMP
     // renders the minimap
     public class RenderableMinimap
     {
-        Terrain parent;
+        TerrainModel parent;
 
         public delegate void RenderHandler( int minimapleft, int minimaptop, int minimapwidth, int minimapheight );
         /// <summary>
@@ -29,7 +29,7 @@ namespace OSMP
 
         int minimaptexture;
 
-        public RenderableMinimap(Terrain parent, RenderableHeightMap renderableheightmap ) // note could upgrade this to use Isomething later, but Terrain works for now
+        public RenderableMinimap(TerrainModel parent, RenderableHeightMap renderableheightmap ) // note could upgrade this to use Isomething later, but Terrain works for now
         {
             this.parent = parent;
             this.renderableheightmap = renderableheightmap;
@@ -47,7 +47,7 @@ namespace OSMP
 
             GraphicsHelperGl g = new GraphicsHelperGl();
             g.CheckError();
-            //LogFile.GetInstance().WriteLine( windowwidth + " " + windowheight + " " + RendererSdl.GetInstance().OuterWindowWidth + " " + RendererSdl.GetInstance().OuterWindowHeight );
+            //LogFile.WriteLine( windowwidth + " " + windowheight + " " + RendererSdl.GetInstance().OuterWindowWidth + " " + RendererSdl.GetInstance().OuterWindowHeight );
             g.ApplyOrtho( windowwidth, windowheight, RendererSdl.GetInstance().OuterWindowWidth, RendererSdl.GetInstance().OuterWindowHeight );
             g.CheckError();
             DrawMinimap();
@@ -72,7 +72,7 @@ namespace OSMP
 
         void GetDimensions()
         {
-            Terrain terrain = Terrain.GetInstance();
+            TerrainModel terrain = MetaverseClient.GetInstance().worldstorage.terrainmodel;
 
             windowwidth = RendererFactory.GetInstance().WindowWidth;
             windowheight = RendererFactory.GetInstance().WindowHeight;
@@ -124,7 +124,7 @@ namespace OSMP
         // note to self: move this to subscriber?
         void DrawMinimap()
         {
-            Terrain terrain = Terrain.GetInstance();
+            TerrainModel terrain = MetaverseClient.GetInstance().worldstorage.terrainmodel;
 
             if (DateTime.Now.Subtract(LastMinimapUpdate).TotalMilliseconds > 1000)
             //if( true )
@@ -136,7 +136,7 @@ namespace OSMP
                 {
                     for (int i = 0; i < terrain.texturestages.Count; i++)
                     {
-                        MapTextureStage maptexturestage = terrain.texturestages[i];
+                        MapTextureStageModel maptexturestage = terrain.texturestages[i];
                         int numtexturestagesrequired = maptexturestage.NumTextureStagesRequired;
                         if (numtexturestagesrequired > 0) // exclude Nops
                         {

@@ -49,6 +49,18 @@ namespace OSMP
 
         [Widget]
         Window levelofdetaildialog = null;
+        
+        // Get rid of compiler warnings
+        void KillWarnings()
+        {
+            on_lod1_value_changed( null, null );
+            on_lod2_value_changed( null, null );
+            on_lod3_value_changed( null, null );
+            on_lod4_value_changed( null, null );
+            on_lod5_value_changed( null, null );
+            on_lod6_value_changed( null, null );
+            KillWarnings();
+        }
 
         void on_lod1_value_changed(object o, EventArgs e)
         {
@@ -96,7 +108,7 @@ namespace OSMP
             lodlist.Add(lod4value);
             lodlist.Add(lod5value);
             lodlist.Add(lod6value);
-            Terrain.GetInstance().SetLod(lodlist.ToArray());
+            MetaverseClient.GetInstance().worldview.terrainview.SetLod(lodlist.ToArray());
         }
 
         public void on_okbutton_clicked(object o, EventArgs e)
@@ -107,15 +119,16 @@ namespace OSMP
 
         public LodDialog()
         {
-            Glade.XML app = new Glade.XML("./MapDesigner.glade", "levelofdetaildialog", "");
+            Glade.XML app = new Glade.XML( "./TerrainEditing.glade", "levelofdetaildialog", "" );
             app.Autoconnect(this);
-            int[] lod = Terrain.GetInstance().GetLod();
+
+            int[] lod = MetaverseClient.GetInstance().worldview.terrainview.GetLod();
             lod1.Value = lod[0];
-            //LogFile.GetInstance().WriteLine( lod[0] + " " + lod1.Value);
+            //LogFile.WriteLine( lod[0] + " " + lod1.Value);
             lod2.Value = lod[1];
-            //LogFile.GetInstance().WriteLine(lod[1] + " " + lod2.Value);
+            //LogFile.WriteLine(lod[1] + " " + lod2.Value);
             lod3.Value = lod[2];
-            //LogFile.GetInstance().WriteLine(lod[2] + " " + lod3.Value);
+            //LogFile.WriteLine(lod[2] + " " + lod3.Value);
             lod4.Value = lod[3];
             lod5.Value = lod[4];
             lod6.Value = lod[5];

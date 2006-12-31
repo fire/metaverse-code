@@ -102,6 +102,14 @@ namespace OSMP
         {
             picker3dmodel.AddHitTarget( new HitTargetEntity( entity ) );
         }
+
+        /// <summary>
+        /// optional, calls Gl.GlBindName(0);
+        /// </summary>
+        public void EndHitTarget()
+        {
+            picker3dmodel.EndHitTarget();
+        }
         
         public Entity GetClickedEntity( int iMouseX, int iMouseY )
         {

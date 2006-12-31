@@ -277,6 +277,7 @@ namespace OSMP
 
                 byte[] entitydata = new byte[4096];
                 int nextposition = 0;
+                ProjectFileController.GetInstance().SetProjectPath( new Uri( EnvironmentHelper.GetExeDirectory() ) );
                 new BinaryPacker().PackObjectUsingSpecifiedAttributes(entitydata, ref nextposition,
                     e.TargetObject, e.modificationtypeattributes);
 
@@ -324,7 +325,8 @@ namespace OSMP
 
                 byte[] entitydata = new byte[4096];
                 int nextposition = 0;
-                new BinaryPacker().PackObjectUsingSpecifiedAttributes(entitydata, ref nextposition,
+                ProjectFileController.GetInstance().SetProjectPath( new Uri( EnvironmentHelper.GetExeDirectory() ) );
+                new BinaryPacker().PackObjectUsingSpecifiedAttributes( entitydata, ref nextposition,
                     e.TargetObject, AttributeTypeList);
 
                 byte[]entitydatatotransmit = new byte[ nextposition ];
@@ -362,7 +364,8 @@ namespace OSMP
             List<Type> AttributeTypeList = new ReplicateAttributeHelper().BitmapToAttributeTypeArray(attributebitmap);
 
             int nextposition = 0;
-            new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes(entitydata, ref nextposition,
+            ProjectFileController.GetInstance().SetProjectPath( new Uri( EnvironmentHelper.GetExeDirectory() ) );
+            new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes( entitydata, ref nextposition,
                 newobject, new Type[] { typeof(Replicate) });
             LogFile.WriteLine("server received replicated object: " + newobject.GetType());
 
@@ -439,7 +442,8 @@ namespace OSMP
             List<Type> AttributeTypeList = new ReplicateAttributeHelper().BitmapToAttributeTypeArray(attributebitmap);
 
             int nextposition = 0;
-            new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes(entitydata, ref nextposition,
+            ProjectFileController.GetInstance().SetProjectPath( new Uri( EnvironmentHelper.GetExeDirectory() ) );
+            new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes( entitydata, ref nextposition,
                 newobject, new Type[] { typeof(Replicate) });
 
             if (!replicatedobjectcontroller.HasEntityForReference(newobject.Reference))
@@ -472,7 +476,8 @@ namespace OSMP
                     return;
                 }
                 int nextposition = 0;
-                new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes(entity, ref nextposition,
+                ProjectFileController.GetInstance().SetProjectPath( new Uri( EnvironmentHelper.GetExeDirectory() ) );
+                new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes( entity, ref nextposition,
                     thisobject, new Type[] { typeof(Replicate) });
 
                 LogFile.WriteLine("server received replicated modified object: " + thisobject);
@@ -504,7 +509,8 @@ namespace OSMP
                     objectisnew = true;
                 }
                 int nextposition = 0;
-                new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes(entity, ref nextposition,
+                ProjectFileController.GetInstance().SetProjectPath( new Uri( EnvironmentHelper.GetExeDirectory() ) );
+                new BinaryPacker().UnpackIntoObjectUsingSpecifiedAttributes( entity, ref nextposition,
                     thisobject, new Type[] { typeof(Replicate) });
 
                 LogFile.WriteLine("client received replicated modified object: " + thisobject);

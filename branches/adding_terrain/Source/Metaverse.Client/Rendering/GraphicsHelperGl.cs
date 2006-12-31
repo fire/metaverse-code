@@ -92,11 +92,11 @@ namespace OSMP
                 renderer.ScreenDistanceScreenCoords,
                 renderer.WindowWidth / 2 - mousex,
                 renderer.WindowHeight / 2 - mousey);
-            LogFile.WriteLine("MouseVectorObserverAxes: " + MouseVectorObserverAxes);
+            //LogFile.WriteLine("MouseVectorObserverAxes: " + MouseVectorObserverAxes);
             MouseVectorObserverAxes.Normalize();
-            LogFile.WriteLine("MouseVectorObserverAxes (normalized): " + MouseVectorObserverAxes);
+            //LogFile.WriteLine("MouseVectorObserverAxes (normalized): " + MouseVectorObserverAxes);
             Vector3 MouseVectorWorldAxes = MouseVectorObserverAxes * OurRot.Inverse();
-            LogFile.WriteLine("MouseVectorWorldAxes: " + MouseVectorWorldAxes.ToString());
+            //LogFile.WriteLine("MouseVectorWorldAxes: " + MouseVectorWorldAxes.ToString());
             MouseVectorWorldAxes.Normalize();
             return MouseVectorWorldAxes;
         }
@@ -702,7 +702,39 @@ namespace OSMP
             int error = Gl.glGetError();
             if (error != Gl.GL_NO_ERROR)
             {
-                throw new Exception("Gl error: " + error);
+                string errortype = "unknown";
+                switch (error)
+                {
+                    case Gl.GL_OUT_OF_MEMORY:
+                        errortype = "out of memory";
+                        break;
+
+                    case Gl.GL_TABLE_TOO_LARGE:
+                        errortype = "table too large";
+                        break;
+
+                    case Gl.GL_INVALID_ENUM:
+                        errortype = "invalid enum";
+                        break;
+
+                    case Gl.GL_INVALID_VALUE:
+                        errortype = "invalid value";
+                        break;
+
+                    case Gl.GL_INVALID_OPERATION:
+                        errortype = "invalid operation";
+                        break;
+
+                    case Gl.GL_STACK_OVERFLOW:
+                        errortype = "stack overflow";
+                        break;
+
+                    case Gl.GL_STACK_UNDERFLOW:
+                        errortype = "stack underflow";
+                        break;
+
+                }
+                throw new Exception( "Gl error: " + error + " " + errortype );
             }
         }
     }

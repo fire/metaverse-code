@@ -38,6 +38,11 @@ namespace OSMP
 {
     interface IGraphicsHelper
     {
+        /// <summary>
+        /// throws exception if gl error has occurred
+        /// </summary>
+        void CheckError();
+
         void PrintText(string text);
         void ScreenPrintText(int x, int y, string text);
         Vector3 GetMouseVector(Vector3 OurPos, Rot rOurRot, int imousex, int imousey);
