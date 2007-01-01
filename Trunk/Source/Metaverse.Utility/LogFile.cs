@@ -94,6 +94,11 @@ namespace Metaverse.Utility {
             instance.writeLine( o.ToString() );
         }
 
+        public static void WriteLine( string s )
+        {
+            instance.writeLine( s );
+        }
+
         public void writeLine( object o )
         {
             writeLine( o.ToString() );
@@ -121,5 +126,4 @@ namespace Metaverse.Utility {
             //sw.Close();
         }
     }
-
 }

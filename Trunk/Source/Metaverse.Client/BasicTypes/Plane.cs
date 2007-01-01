@@ -7,7 +7,9 @@ namespace OSMP
     // represents a plane, defined by one normalized normal and one point
     public class Plane
     {
+        [Replicate]
         public Vector3 normalizednormal;
+        [Replicate]
         public Vector3 point;
 
         public Plane() { }
@@ -19,6 +21,10 @@ namespace OSMP
         public double GetDistance(Vector3 candidate)
         {
             return Vector3.DotProduct((candidate - point), normalizednormal);
+        }
+        public override string ToString()
+        {
+            return "Plane: point: " + point + " normal: " + normalizednormal;
         }
     }
 }

@@ -24,10 +24,10 @@
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+using Metaverse.Utility;
 using Tao.Sdl;
 using Tao.OpenGl;
 using SdlDotNet;
-using Metaverse.Utility;
 
 namespace OSMP
 {
@@ -41,6 +41,7 @@ namespace OSMP
         public static RendererSdl GetInstance() { return instance; }
 
         public event WriteNextFrameCallback WriteNextFrameEvent;
+        public event WriteNextFrameCallback WriteAlpha;
         public event PreDrawCallback PreDrawEvent;
         public event TickHandler Tick;
 
@@ -84,10 +85,12 @@ namespace OSMP
 
             Gl.glLoadIdentity();
 
+            new GraphicsHelperGl().CheckError();
             if (PreDrawEvent != null)
             {
                 PreDrawEvent();
             }
+            new GraphicsHelperGl().CheckError();
 
             // note to self: move lighting to subscriber object?
             float[] ambientLight = new float[] { 0.4f, 0.4f, 0.4f, 1.0f };
@@ -100,12 +103,20 @@ namespace OSMP
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPECULAR, specularLight);
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position);
 
+            Vector3 camerapos = Camera.GetInstance().CameraPos;
+            new GraphicsHelperGl().CheckError();
             if (WriteNextFrameEvent != null)
             {
                 //LogFile.WriteLine("writenextframe");
-                Vector3 camerapos = Camera.GetInstance().CameraPos;
                 WriteNextFrameEvent(camerapos);
             }
+
+            new GraphicsHelperGl().CheckError();
+            if (WriteAlpha != null)
+            {
+                WriteAlpha( camerapos );
+            }
+            new GraphicsHelperGl().CheckError();
 
             // rotate so z axis is up, and x axis is forward
             //Gl.glRotatef( 90f, 0.0f, 0.0f, 1.0f );
@@ -126,10 +137,12 @@ namespace OSMP
 
         public void ApplyViewingMatrices()
         {
+            new GraphicsHelperGl().CheckError();
             if (PreDrawEvent != null)
             {
                 PreDrawEvent();
             }
+            new GraphicsHelperGl().CheckError();
         }
 
         bool IsRunning = true;
@@ -225,7 +238,7 @@ namespace OSMP
 
             Gl.glEnable(Gl.GL_DEPTH_TEST);
             //Gl.glEnable(Gl.GL_TEXTURE_2D);
-            Gl.glEnable (Gl.GL_CULL_FACE);
+            //Gl.glEnable (Gl.GL_CULL_FACE);
 
             Gl.glEnable(Gl.GL_LIGHTING);
             Gl.glEnable(Gl.GL_LIGHT0);
@@ -328,8 +341,8 @@ namespace OSMP
 
         int _ScreenDistanceScreenCoords;
         double _FieldOfView;
-        double _FarClip = 100;
-        double _NearClip = 0.5;
+        double _FarClip = 1500;
+        double _NearClip = 1.5;
 
         public int ScreenDistanceScreenCoords{ get { return _ScreenDistanceScreenCoords; } }
         public double FieldOfView { get { return _FieldOfView; } }

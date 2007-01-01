@@ -27,35 +27,6 @@ using Metaverse.Utility;
 
 namespace OSMP
 {
-            // failed attempt to get asynchronous color change
-    /*
-    class AsyncColorDialog
-    {
-        ColorDialog colordialog;
-        
-        public AsyncColorDialog()
-        {
-        }
-        
-        public Color Color{
-            get{ return new Color( (double)colordialog.Color.R/255, (double)colordialog.Color.G/255, (double)colordialog.Color.B/255 );
-            }
-        }
-        
-        public bool IsFinished;
-        
-        public void Run()
-        {
-            colordialog = new ColorDialog();
-            colordialog.AllowFullOpen = true;
-            colordialog.FullOpen = true;
-            colordialog.AnyColor = true;
-            colordialog.ShowDialog();
-            IsFinished = true;
-        }
-    }
-    */
-    
     // This class hooks into the gui, providing an Assign Color... option to the context menu.  Yay!
     public class AssignColorHandler
     {
@@ -83,7 +54,8 @@ namespace OSMP
             if( entity != null )
             {
                 LogFile.WriteLine("AssignColorHandler registering in contextmenu");
-                ContextMenuController.GetInstance().RegisterContextMenu(new string[]{ "Assign &Color..." }, new ContextMenuHandler( AssignColorClick ) );
+                ContextMenuController.GetInstance().RegisterContextMenu(new string[]{ "Assign &Color", "&All Faces" }, new ContextMenuHandler( AssignColorAllFacesClick ) );
+                ContextMenuController.GetInstance().RegisterContextMenu( new string[] { "Assign &Color", "&Single Face" }, new ContextMenuHandler( AssignColorSingleFaceClick ) );
             }
         }
         
@@ -95,8 +67,25 @@ namespace OSMP
                 MetaverseClient.GetInstance().worldstorage.OnModifyEntity(entity);
             }
         }
-        
-        public void AssignColorClick( object source, ContextMenuArgs e )
+
+        public void AssignColorAllFacesClick( object source, ContextMenuArgs e )
+        {
+            if (!(entity is Prim))
+            {
+                return;
+            }
+
+            int FaceNumber = FractalSpline.Primitive.AllFaces;
+
+            Color newcolor = DialogHelpers.GetColor();
+
+            if (newcolor != null)
+            {
+                AssignColor( FaceNumber, newcolor );
+            }
+        }
+
+        public void AssignColorSingleFaceClick( object source, ContextMenuArgs e )
         {
             if( ! ( entity is Prim ) )
             {

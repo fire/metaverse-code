@@ -40,8 +40,6 @@
     <Compile Include="IReplicated.cs" />
     <Compile Include="ITestInterface.cs" />
     <Compile Include="IWorldControl.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="default.build" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

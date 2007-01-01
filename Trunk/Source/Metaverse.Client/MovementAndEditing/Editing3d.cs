@@ -95,24 +95,11 @@ namespace OSMP
 
             CommandCombos.GetInstance().RegisterCommandGroup(
                 new string[] { CMD_EDITPOSITION, CMD_EDITSCALE, CMD_EDITROTATION }, new KeyCommandHandler(EditModeKeyEvent));
-            //CommandCombos.GetInstance().RegisterCommand(
-              //  "editscale", new string[] { "leftmousebutton" }, new KeyCommandHandler(ScaleEditModeKeyEvent));
-            //CommandCombos.GetInstance().RegisterCommand(
-              //  "editrotation", new string[] { "leftmousebutton" }, new KeyCommandHandler(RotEditModeKeyEvent));
 
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "leftmousebutton", new KeyCommandHandler(MouseDown));
 
-            //KeyFilterComboKeys.GetInstance().RegisterCombo(
-                //new string[]{"editmode"}, new string[]{"editalternativeaxes"}, new KeyComboHandler( PosEditModeKeyEvent ) );
-            //KeyFilterComboKeys.GetInstance().RegisterCombo(
-              //  new string[]{"editmode","editrotation"}, new string[]{"editalternativeaxes"}, new KeyComboHandler( RotEditModeKeyEvent ) );
-            //KeyFilterComboKeys.GetInstance().RegisterCombo(
-              //  new string[]{"editmode","editscale"}, new string[]{"editalternativeaxes"}, new KeyComboHandler( ScaleEditModeKeyEvent ) );
-                
-            //mousefiltermousecache.MouseDown += new MouseButtonEventHandler( MouseDown );
             mousefiltermousecache.MouseMove += new MouseMoveHandler( MouseMove );
-            //mousefiltermousecache.MouseUp += new MouseButtonEventHandler(MouseUp);
                 
             editing3dpos = new Editing3dPos( this );
             editing3drot = new Editing3dRot( this );
@@ -181,7 +168,7 @@ namespace OSMP
 
         public void MouseDown( string command, bool down )
         {
-            if (ViewerState.GetInstance().CurrentViewState == ViewerState.ViewerStateEnum.Edit3d)
+            if (ViewerState.GetInstance().CurrentViewerState == ViewerState.ViewerStateEnum.Edit3d)
             {
                 InEditDrag = down;
                 if (down)
@@ -252,14 +239,14 @@ namespace OSMP
 
         public void EditModeKeyEvent(string command, bool down)
         {
-            if (down)
-            {
-                ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.Edit3d;
-            }
-            else
-            {
-                ViewerState.GetInstance().CurrentViewState = ViewerState.ViewerStateEnum.None;
-            }
+            //if (down)
+            //{
+              //  ViewerState.GetInstance().CurrentViewerState = ViewerState.ViewerStateEnum.Edit3d;
+            //}
+            //else
+            //{
+              //  ViewerState.GetInstance().CurrentViewerState = ViewerState.ViewerStateEnum.None;
+            //}
             if (command == CMD_EDITPOSITION)
             {
                 PosEditModeKeyEvent(command, down);
