@@ -30,6 +30,11 @@
 
 	<target name="build" description="compiles the source code">
 		<echo message="Metaverse.Controller build running build" />
+		<copy todir="${bindir}">
+			<fileset basedir="../../Libraries">
+				<include name="Nini.dll"/>
+			</fileset>
+		</copy>
       
 		<nant buildfile="../Metaverse.Utility/default.build" />
 		<copy todir="${bindir}">
@@ -57,6 +62,7 @@
 				<include name="${bindir}/Metaverse.Common.dll" />
 				<include name="${bindir}/Metaverse.Utility.dll" />
 				<include name="${bindir}/Metaverse.Client.dll" />
+				<include name="${bindir}/Nini.dll" />
 			</references>
 			<sources>
 				<include name="./*.cs" />

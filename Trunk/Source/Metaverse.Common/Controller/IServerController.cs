@@ -8,6 +8,7 @@
  */
 
 using System;
+using Nini.Config;
 
 namespace Metaverse.Common.Controller
 {
@@ -16,6 +17,7 @@ namespace Metaverse.Common.Controller
 	/// </summary>
 	public interface IServerController
 	{
-		void Initialize( string[] args );
+		void Initialize( IConfigSource commandlineConfig );
+		void InitializeServer();
 	}
 }

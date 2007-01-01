@@ -32,6 +32,10 @@
       <HintPath>..\..\Libraries\mono-2.0\Nini.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="Nini">
+      <HintPath>..\..\Libraries\Nini.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntryPoint.cs" />

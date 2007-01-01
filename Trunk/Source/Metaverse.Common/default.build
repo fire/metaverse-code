@@ -28,8 +28,16 @@
 
 	<target name="build" description="compiles the source code">
 		<echo message="Metaverse.Common build running build" />
+		<copy todir="${bindir}">
+			<fileset basedir="../../Libraries">
+				<include name="Nini.dll"/>
+			</fileset>
+		</copy>
 
 		<csc target="library" output="${bindir}/Metaverse.Common.dll" debug="${debug}">
+			<references>
+				<include name="${bindir}/Nini.dll" />
+			</references>
 			<sources>
 	
 				<include name="./*.cs" />

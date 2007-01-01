@@ -29,6 +29,7 @@ using System.Net;
 using System.Net.Sockets;
 using Metaverse.Utility;
 using Metaverse.Common.Controller;
+using Nini.Config;
 
 namespace OSMP
 {
@@ -97,9 +98,8 @@ namespace OSMP
         }
 
         //! metaverseserver entry point.  Processes commandline arguments; starts dbinterface and serverfileagent components; handles initialization
-        public void Init( string[] args, IServerControllers controllers )
+        public void Init( IConfigSource commandlineConfig, IServerControllers controllers )
         {
-            Arguments arguments = new Arguments(args);
 
             config = Config.GetInstance();
 
@@ -108,13 +108,10 @@ namespace OSMP
             Running = true;
 
             network = new NetworkLevel2Controller();
-            Test.Debug("Creating Metaverse Client listener on port " + config.ServerPort);
-            ServerPort = config.ServerPort;
-
-            if (arguments.Named.Contains("serverport"))
-            {
-                ServerPort = Convert.ToInt32(arguments.Named["serverport"]);
-            }
+            
+            ServerPort = commandlineConfig.Configs["CommandLineArgs"].GetInt( "serverport", config.ServerPort );
+		Test.Debug("Creating Metaverse Client listener on port " + ServerPort );
+            
             network.ListenAsServer(ServerPort);
 
             network.NewConnection += new Level2NewConnectionHandler(network_NewConnection);

@@ -25,6 +25,7 @@ using OSMP;
 using Metaverse.Utility;
 using Metaverse.Communication;
 using Metaverse.Common.Controller;
+using Nini.Config;
 
 namespace OSMP
 {
@@ -115,25 +116,15 @@ namespace OSMP
 
         public bool waitingforserverconnection = true;
         
-        public int Init(string[] args, IClientControllers controllers )
+        public int Init( IConfigSource commandlineConfig, IClientControllers controllers )
         {
         	Tao.DevIl.Il.ilInit();
            	Tao.DevIl.Ilu.iluInit();
-            Arguments arguments = new Arguments(args);
 
             config = Config.GetInstance();
 
-            string serverip = config.ServerIPAddress;
-            int port = config.ServerPort;
-
-            if (arguments.Named.ContainsKey("serverip"))
-            {
-                serverip = arguments.Named["serverip"];
-            }
-            if( arguments.Named.ContainsKey("serverport") )
-            {
-                port = Convert.ToInt32(arguments.Named["serverport"]);
-            }
+            string serverip = commandlineConfig.Configs["CommandLineArgs"].GetString( "serverip", config.ServerIPAddress );
+            int port = commandlineConfig.Configs["CommandLineArgs"].GetInt( "serverport", config.ServerPort );
 
             network = new NetworkLevel2Controller();
             network.NewConnection += new Level2NewConnectionHandler(network_NewConnection);
@@ -158,23 +149,24 @@ namespace OSMP
  			
            
            controllers.Plugin.LoadClientPlugins();
-            if (!arguments.Unnamed.Contains("nochat"))
+            if (!commandlineConfig.Configs["CommandLineArgs"].Contains("nochat" ))
             {
                 LoadChat();
             }
 
-            if( arguments.Named.ContainsKey( "url" ) )
+            if( commandlineConfig.Configs["CommandLineArgs"].Contains("url" ) )
             {
-                LogFile.WriteLine( "url: " + arguments.Named["url"] );
-                string urlarg = arguments.Named["url"];
-                if (urlarg.StartsWith( "osmp://" ))
+			string url = commandlineConfig.Configs["CommandLineArgs"].GetString("url" );
+                LogFile.WriteLine( "url: " +  url);
+
+                if (url.StartsWith( "osmp://" ))
                 {
-                    targettoload = "http://" + urlarg.Substring( "osmp://".Length );
+                    targettoload = "http://" + url.Substring( "osmp://".Length );
                     LogFile.WriteLine( "target: " + targettoload );
                 }
                 else
                 {
-                    targettoload = urlarg;
+                    targettoload = url;
                 }
             }
 
