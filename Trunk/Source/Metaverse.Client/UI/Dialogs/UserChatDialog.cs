@@ -83,7 +83,7 @@ namespace OSMP
 
             imimplementation.IMReceived += new IMReceivedHandler( MessageReceived );
 
-            CommandCombos.GetInstance().RegisterCommand(
+            CommandCombos.GetInstance().RegisterAtLeastCommand(
                 "activatechat", new KeyCommandHandler(EnterChat));
 
             btnshowusers.Clicked += new EventHandler( btnshowusers_Clicked );

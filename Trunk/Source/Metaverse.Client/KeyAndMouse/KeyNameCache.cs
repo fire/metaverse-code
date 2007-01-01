@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SdlDotNet;
+using Metaverse.Utility;
 
 namespace OSMP
 {
@@ -92,6 +93,7 @@ namespace OSMP
                 keynamesdown.Add(keyname);
                 if (KeyDown != null)
                 {
+                    LogFile.WriteLine("down: " + keyname);
                     KeyDown(keyname);
                 }
             }
@@ -104,6 +106,7 @@ namespace OSMP
                 keynamesdown.Remove(keyname);
                 if (KeyUp != null)
                 {
+                    LogFile.WriteLine("up: " + keyname);
                     KeyUp(keyname);
                 }
             }
@@ -111,6 +114,7 @@ namespace OSMP
 
         void KeyNameCache_MouseDown(object sender, SdlDotNet.MouseButtonEventArgs e)
         {
+            Console.WriteLine("KeyNameCache_MouseDown");
             string mousebuttonname = MouseEventToKeyName(e);
             if (mousebuttonname != "")
             {
@@ -120,6 +124,7 @@ namespace OSMP
 
         void KeyNameCache_MouseUp(object sender, SdlDotNet.MouseButtonEventArgs e)
         {
+            Console.WriteLine("KeyNameCache_MouseUp");
             string mousebuttonname = MouseEventToKeyName(e);
             if (mousebuttonname != "")
             {

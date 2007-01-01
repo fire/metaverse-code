@@ -40,6 +40,7 @@
     <Compile Include="Test.cs" />
     <Compile Include="TimeKeeper.cs" />
     <Compile Include="BinaryPacker.cs" />
+    <Compile Include="TdfParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MathGL\MathGL.csproj">

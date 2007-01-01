@@ -36,8 +36,6 @@
     <Compile Include="EntryPoint.cs" />
     <Compile Include="NetworkProxyBuilder.cs" />
     <Compile Include="RunGenerator.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="default.build" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

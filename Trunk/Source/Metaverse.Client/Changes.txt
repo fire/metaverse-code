@@ -2,9 +2,6 @@ Next release:
 - world format changed to be inter-compatible between mono and .net
 - osmp shortcut added to setup project for windows
 - setup detects automatically whether to create shortcuts for mono or .net
-- split Outputs directory into Outputs/mono-2.0 and outputs/net-2.0
-- spit Metaverse.Client/bin directory into Metaverse.Client/bin/mono-2.0 and Metaverse.Client/bin/net-2.0
-- added DumpLogFile to Help menu
 - added static methods LogFile.WriteLine( string ), LogFile.BlankLine() and LogFile.WriteLine( object )
 - replaced all Console.WriteLines with LogFile.WriteLines
 - layer1 keepalive packets now contain a byte of data -> fixed layer1 server disconnections
@@ -21,6 +18,19 @@ Next release:
 - "Connect" button added to "Show servers..." dialog box
 - "pingme" command added to xmlcommands
 - possible that this will work with port restricted NAT now, as well as full cone and restricted cone
+- changed world boundaries in config file from worldboundingbox to world node
+- changed near and far clip planes( near: 0.5 -> 10, far: 100 -> 2000)
+- world got a lot bigger
+- moved viewer state logic from Camera, PlayerMovement, Editing3d etc to ViewerState
+- added StateChanged event to ViewerState
+- press middle mousebutton for mouselook (configurable via config.xml)
+- context menu will only appear if no other keys pressed at same time
+- new context menu option: can now assign texture to all faces
+- new context menu option: can now assign color to all faces
+- paint splatted texture now works
+- change terrain height now works
+- serializing splatted terrain to/from xml now works (as long as you've saved blend textures, splattextures and heightmap first)
+- corrected bug in picker3dmodelgl that could lead to random crashes on a left mouse-click
 
 Release 0.4:
 - migrated context menu to GTK#

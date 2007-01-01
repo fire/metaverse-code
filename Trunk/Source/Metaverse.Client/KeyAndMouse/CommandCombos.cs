@@ -35,9 +35,67 @@ namespace OSMP
             public KeyCommandHandler handler;
             public virtual void Check() { }
         }
+        class RegistrationExact : Registration
+        {
+            bool isdown = false; // state from previous check
+            public string command;
+            public RegistrationExact(string command, KeyCommandHandler handler) { this.command = command; this.handler = handler; }
+            public override void Check()
+            {
+                bool newdown = GetNewDown();
+                if (newdown)
+                {
+                    if (!isdown)
+                    {
+                        LogFile.WriteLine("Registration down: " + command);
+                        handler(command, true);
+                    }
+                }
+                else
+                {
+                    if (isdown)
+                    {
+                        LogFile.WriteLine("Registration up: " + command);
+                        handler(command, false);
+                    }
+                }
+                isdown = newdown;
+            }
+            bool GetNewDown()
+            {
+                if (!KeyCombos.GetInstance().IsPressed(command))
+                {
+                    return false;
+                }
+                List<string> allkeysforcommand = new List<string>();
+                foreach (CommandCombo commandcombo in Config.GetInstance().CommandCombos)
+                {
+                    if (commandcombo.command == command)
+                    {
+                        foreach (string key in commandcombo.keycombo)
+                        {
+                            if (!allkeysforcommand.Contains(key))
+                            {
+                                allkeysforcommand.Add(key);
+                            }
+                        }
+                    }
+                }
+
+                // check if eligible commands have any extra keys
+                foreach (string key in KeyNameCache.GetInstance().keynamesdown)
+                {
+                    if (!allkeysforcommand.Contains(key))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
         class RegistrationAtLeastCommand : Registration
         {
-            bool isdown = false;
+            bool isdown = false; // state from previous check
             public string command;
             public RegistrationAtLeastCommand(string command, KeyCommandHandler handler) { this.command = command; this.handler = handler; }
 
@@ -206,9 +264,19 @@ namespace OSMP
         /// </summary>
         /// <param name="command"></param>
         /// <param name="handler"></param>
-        public void RegisterCommand(string command, KeyCommandHandler handler)
+        public void RegisterAtLeastCommand(string command, KeyCommandHandler handler)
         {
             registrations.Add(new RegistrationAtLeastCommand(command, handler));
+        }
+
+        /// <summary>
+        /// register a single command.  Extraneous keys will negate the down state
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="handler"></param>
+        public void RegisterExactCommand(string command, KeyCommandHandler handler)
+        {
+            registrations.Add(new RegistrationExact(command, handler));
         }
 
         /// <summary>

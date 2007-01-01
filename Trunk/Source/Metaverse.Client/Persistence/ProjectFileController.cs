@@ -49,7 +49,8 @@ namespace OSMP
         public string GetRelativePath( Uri uri )
         {
             LogFile.WriteLine( ProjectDirectoryUri + " " + uri );
-            string relativepath = ProjectDirectoryUri.MakeRelativeUri( uri ).ToString();
+            //string relativepath = ProjectDirectoryUri.MakeRelativeUri( uri ).ToString();
+            string relativepath = ProjectDirectoryUri.MakeRelative( uri );
             Test.Debug( uri + " -> " + relativepath );
             return relativepath;
         }

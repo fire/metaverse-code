@@ -52,6 +52,7 @@ namespace OSMP
 
             void LoadTexture(byte[] bytes)
             {
+                LogFile.WriteLine( "loading texture to opengl, bytescount = " + bytes.Length );
                 // from http://svn.sourceforge.net/viewvc/boogame/trunk/BooGame/src/Texture.cs?view=markup
                 int ilImage;
                 Il.ilGenImages(1, out ilImage);
@@ -65,6 +66,7 @@ namespace OSMP
                 int m_Height = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT);
                 int m_Format = Il.ilGetInteger(Il.IL_IMAGE_FORMAT);
                 int m_Depth = Il.ilGetInteger(Il.IL_IMAGE_DEPTH);
+                LogFile.WriteLine( "size: " + m_Width + " x " + m_Height + " depth " + m_Depth + " bytesperpixel " + m_BytesPerPixel );
 
                 int m_TextureWidth = NextPowerOfTwo(m_Width);
                 int m_TextureHeight = NextPowerOfTwo(m_Height);
@@ -86,6 +88,7 @@ namespace OSMP
                 byte[] bytes = null;
                 if (uri.IsFile)
                 {
+                    LogFile.WriteLine( "local path: " + uri.LocalPath );
                     FileStream fs = new FileStream( uri.LocalPath, FileMode.Open );
                     //bytes = StreamHelper.ReadFully( fs, fs.Length );
                     bytes = new byte[fs.Length];
@@ -148,9 +151,11 @@ namespace OSMP
 
             public TextureProxy(Uri uri)
             {
+                LogFile.WriteLine( "new TextureProxy for " + uri );
                 this.uri = uri;
                 idingraphicsengine = CreateGraphicsEngineId();
-                LoadUri(uri);
+                LogFile.WriteLine( "id: " + idingraphicsengine );
+                LoadUri( uri );
             }
 
             public void Tick()
@@ -186,6 +191,7 @@ namespace OSMP
 
         public int LoadUri( Uri uri )
         {
+            LogFile.WriteLine( "TextureController.LoadUri " + uri );
             if( !TextureProxies.ContainsKey( uri ) )
             {
                 TextureProxies.Add( uri, new TextureProxy( uri ) );

@@ -67,15 +67,13 @@
     <Compile Include="Tube.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
+    <None Include="default.build" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MathGL\MathGL.csproj">
       <Project>{F1BF78FA-8831-4598-8AD5-40C654B12DB7}</Project>
       <Name>MathGL</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="default.build" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

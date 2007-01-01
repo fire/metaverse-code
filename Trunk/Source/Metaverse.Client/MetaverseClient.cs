@@ -45,6 +45,7 @@ namespace OSMP
         public IRenderer renderer;
         public PlayerMovement playermovement;
         public WorldModel worldstorage; // client's copy of worldmodel
+        public WorldView worldview;
 
         public NetworkLevel2Controller network;
         public RpcController rpc;
@@ -97,8 +98,8 @@ namespace OSMP
         //! Gets world state from server
         void InitializePlayermovement()
         {
-            playermovement.avatarpos = new Vector3( -5, 0, 0 );
-            playermovement.avatarzrot = 0;
+            playermovement.avatarpos = new Vector3( 20, 20, 20 );
+            playermovement.avatarzrot = 45;
             playermovement.avataryrot = 0;
         }
 
@@ -107,8 +108,6 @@ namespace OSMP
         void LoadChat()
         {
             imimplementation = ChatImplementationFactory.CreateInstance();
-            MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler( imimplementation.Tick );
-            
             userchatdialog = new UserChatDialog();
         }
 
@@ -118,6 +117,8 @@ namespace OSMP
         
         public int Init(string[] args, IClientControllers controllers )
         {
+        	Tao.DevIl.Il.ilInit();
+           	Tao.DevIl.Ilu.iluInit();
             Arguments arguments = new Arguments(args);
 
             config = Config.GetInstance();
@@ -142,14 +143,20 @@ namespace OSMP
             rpc = new RpcController(network);
             netreplicationcontroller = new NetReplicationController(rpc);
 
+            renderer = RendererFactory.GetInstance();
+            renderer.Tick += new OSMP.TickHandler( MainLoop );
+            renderer.Init();
+
             playermovement = PlayerMovement.GetInstance();
             worldstorage = new WorldModel(netreplicationcontroller);
+            worldview = new WorldView( worldstorage );
 
             InitializePlayermovement();
 
             myavatar = new Avatar();
             worldstorage.AddEntity(myavatar);
-
+ 			
+           
            controllers.Plugin.LoadClientPlugins();
             if (!arguments.Unnamed.Contains("nochat"))
             {
@@ -171,9 +178,6 @@ namespace OSMP
                 }
             }
 
-            renderer = RendererFactory.GetInstance();
-            renderer.Tick += new OSMP.TickHandler(MainLoop);
-            renderer.Init();
             renderer.StartMainLoop();
 
             return 0;

@@ -56,8 +56,19 @@ namespace OSMP
         public UIContextMenu()
         {
             MouseCache.GetInstance().MouseDown += new MouseButtonEventHandler(UIContextMenu_MouseDown);
+            //CommandCombos.GetInstance().RegisterExactCommand("contextmenu", new KeyCommandHandler(
+                //ContextMenuCommand));
             MouseCache.GetInstance().MouseUp += new MouseButtonEventHandler(UIContextMenu_MouseUp);
         }
+
+        //void ContextMenuCommand(string command, bool down)
+        //{
+          //  if (down)
+            //{
+              //  OpenContextMenu();
+                //MouseCache.GetInstance().OnRightMouseUp();
+            //}
+        //}
 
         void UIContextMenu_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -65,13 +76,14 @@ namespace OSMP
 
         void UIContextMenu_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.Button == MouseButton.SecondaryButton)
+            if (e.Button == MouseButton.SecondaryButton &&
+                KeyNameCache.GetInstance().keynamesdown.Count == 0 )
             {
                 OpenContextMenu();
                 MouseCache.GetInstance().OnRightMouseUp();
             }
         }
-
+        
         //void UIContextMenu_MouseUp(object sender, MouseButtonEventArgs e)
         //{
         //}
