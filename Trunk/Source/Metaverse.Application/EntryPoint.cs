@@ -26,68 +26,61 @@ using System.Diagnostics;
 using Metaverse.Utility;
 using Metaverse.Controller;
 using Metaverse.Common.Controller;
+using Nini.Config;
 
-namespace OSMP
-{
-    public class EntryPoint
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                //new TestBinaryPacker().Go();
-                //TestNetworkUdp.Go(args);
-                //TestLevel2.Go(args);
-                //TestNetRpc.Go(args);
-                //new TestReplicationAttributes().Go();
-                //return;
-
-                LogFile.GetInstance().Init( EnvironmentHelper.GetExeDirectory() + "/osmplog_" + new Random().Next(1000) + ".log");
-
-                Arguments arguments = new Arguments(args);
-
-                LogFile.WriteLine("here1");
-                System.Environment.SetEnvironmentVariable( "PATH", System.Environment.GetEnvironmentVariable( "PATH" ) +
-                    ";" + EnvironmentHelper.GetExeDirectory(), EnvironmentVariableTarget.Process );
-
-                LogFile.WriteLine("here1");
-                if( arguments.Unnamed.Contains("clientonly") )
-                {
-                	LogFile.WriteLine("here2");
-                    LogFile.WriteLine("User requested client only");
-                    ClientController.Instance.Initialize(args);
-                }
-                else if (arguments.Unnamed.Contains("serveronly"))
-                {
-                	LogFile.WriteLine("here3");
-                    LogFile.WriteLine("User requested server only");
-                    ServerController.Instance.Initialize( args );
-                }
-                else
-                {
-                	LogFile.WriteLine("here4");
-                	ClientController.Instance.InitializeWithServer( args );
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine( e );
-                string errorlogpath = EnvironmentHelper.GetExeDirectory() + "/error.log";
-                StreamWriter sw = new StreamWriter( errorlogpath, false );
-                sw.WriteLine( LogFile.GetInstance().logfilecontents );
-                sw.WriteLine( e.ToString() );
-                sw.Close();
-
-                if (System.Environment.OSVersion.Platform != PlatformID.Unix)
-                {
-                    ProcessStartInfo psi = new ProcessStartInfo( "notepad.exe", errorlogpath );
-                    psi.UseShellExecute = true;
-                    Process process = new Process();
-                    process.StartInfo = psi;
-                    process.Start();
-                }
-            }
-        }
-    }
-
+namespace Metaverse.Application {
+  	
+	/// <summary>
+	/// The entrypoint for the metaverse application
+	/// </summary>
+	public class EntryPoint {
+	
+		/// <summary>
+		/// The main function for this application which calls controllers to get them setup
+		/// </summary>
+		/// <param name="args">Arguments from the commandline</param>
+	        public static void Main( string[] args ) {
+			
+			ArgvConfigSource source = new ArgvConfigSource(args);
+				
+			source.AddSwitch("CommandLineArgs", "mode", "m");
+			source.AddSwitch("CommandLineArgs", "config", "c");
+			source.AddSwitch("CommandLineArgs", "logpath", "l");
+			source.AddSwitch("CommandLineArgs", "help", "h");
+			source.AddSwitch("CommandLineArgs", "serverip");
+			source.AddSwitch("CommandLineArgs", "serverport", "p");
+			source.AddSwitch("CommandLineArgs", "url");
+			source.AddSwitch("CommandLineArgs", "nochat");
+			
+			bool help = source.Configs["CommandLineArgs"].Contains( "help" );
+			
+			if( help ) {
+				Console.WriteLine( @"Help text goes here" );
+				System.Environment.Exit( 0 );
+			}
+			
+			string mode = source.Configs["CommandLineArgs"].GetString( "mode","clientandserver" );
+			
+			
+			if( mode == "clientonly" ) {
+				ClientController.Instance.Initialize( source );
+				ClientController.Instance.InitializeClient();
+			}
+			else if ( mode == "serveronly"  ) {
+				ServerController.Instance.Initialize( source );
+				ServerController.Instance.InitializeServer();
+			}
+			else if ( mode == "clientandserver" ) {
+				ClientController.Instance.Initialize( source );
+				ServerController.Instance.Initialize( source );
+				ClientController.Instance.InitializeClientWithServer();
+			}
+			else {
+				Console.WriteLine( "You are trying to start Metaverse in an unknown mode. Please type \"Metaverse.exe -help\" for more options." );
+				System.Environment.Exit( 0 );
+			}
+				
+	          	return;
+	        }
+   	 }
 }

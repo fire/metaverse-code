@@ -157,6 +157,7 @@
 				<include name="${bindir}/Metaverse.Communication.dll" />
 				<include name="${bindir}/Metaverse.Networking.dll" />
 				<include name="${bindir}/Metaverse.Common.dll" />
+				<include name="${bindir}/Nini.dll" />
 			</references>
 			<pkg-references>
 				<package name="gtk-sharp-2.0" unless="${framework::get-target-framework()=='net-2.0'}" />

@@ -8,9 +8,16 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.IO;
+using System.Diagnostics;
 using OSMP;
 using System.Threading;
 using Metaverse.Common.Controller;
+using Nini.Config;
+using Metaverse.Utility;
 
 namespace Metaverse.Controller
 {
@@ -20,6 +27,7 @@ namespace Metaverse.Controller
 	public class ServerController : IServerController
 	{
 		private static IServerController _instance = null;
+		private IConfigSource _commandlineConfig;
 		
 		public static IServerController Instance {
 			get {
@@ -32,8 +40,14 @@ namespace Metaverse.Controller
 		
 		private ServerController() { }
 		
-		public void Initialize( string[] args ) {
-			MetaverseServer.GetInstance().Init(args, ServerControllers.Instance);
+		
+		
+		public void Initialize( IConfigSource commandlineConfig ) {
+			_commandlineConfig = commandlineConfig;
+		}
+		
+		public void InitializeServer() {
+			MetaverseServer.GetInstance().Init(_commandlineConfig, ServerControllers.Instance);
             
 			while (true)
             {

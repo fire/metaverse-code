@@ -81,11 +81,14 @@
       <HintPath>..\..\..\..\Mono\1.2.2\lib\mono\gac\gdk-sharp\2.8.0.0__35e10195dab3c99f\gdk-sharp.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="Nini">
+      <HintPath>..\..\Libraries\Nini.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicTypes\Axis.cs" />
     <Compile Include="BasicTypes\Color.cs" />
-    <Compile Include="BasicTypes\CustomCollections.cs" />
     <Compile Include="BasicTypes\Plane.cs" />
     <Compile Include="BasicTypes\Rot.cs" />
     <Compile Include="BasicTypes\Vector2.cs" />
