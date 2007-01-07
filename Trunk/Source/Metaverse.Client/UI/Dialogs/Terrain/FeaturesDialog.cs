@@ -26,6 +26,7 @@ using System.IO;
 using Gtk;
 using Glade;
 //using Gdk;
+using Metaverse.Utility;
 
 namespace OSMP
 {
@@ -159,7 +160,7 @@ namespace OSMP
 
         public FeaturesDialog()
         {
-            Glade.XML app = new Glade.XML("./MapDesigner.glade", "featurewindow", "");
+            Glade.XML app = new Glade.XML(EnvironmentHelper.GetExeDirectory() + "/TerrainEditing.glade", "featurewindow", "");
             app.Autoconnect(this);
 
             int numfeatures = Directory.GetFiles("objects3d").GetLength(0);

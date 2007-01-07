@@ -7,13 +7,13 @@
 	  </if>
 	  
 	  <target name="build" >
-			  <copy todir="${outputdir}/Metaverse.Client">
+			  <copy todir="${outputdir}/Metaverse.Application">
 				  <fileset basedir="../../Libraries/win32tools">
 					  <include name="Shortcut.exe"/>
 				  </fileset>
 			  </copy>
 			  
-			  <csc target="exe" output="${outputdir}/Metaverse.Client/Setup.exe" debug="true">
+			  <csc target="exe" output="${outputdir}/Metaverse.Application/Setup.exe" debug="true">
 				<references>
 					<include name="System.Windows.Forms.dll" />
 					<include name="System.Drawing.dll" />

@@ -212,7 +212,6 @@
     <Compile Include="WorldModel\WorldModel.cs" />
     <Compile Include="WorldModel\WorldView.cs" />
     <None Include="default.build" />
-    <None Include="metaverse.client.glade" />
     <Compile Include="BasicTypes\mvMath.cs" />
     <Compile Include="Server\QueryServer.cs" />
     <Compile Include="Server\XmlCommands.cs" />

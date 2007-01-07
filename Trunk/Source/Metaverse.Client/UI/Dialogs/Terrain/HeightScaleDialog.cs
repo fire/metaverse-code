@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading;
 using Gtk;
 using Glade;
+using Metaverse.Utility;
 
 namespace OSMP
 {
@@ -79,7 +80,7 @@ namespace OSMP
 
         public HeightScaleDialog()
         {
-            Glade.XML app = new Glade.XML( "./TerrainEditing.glade", "heightscaledialog", "" );
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/TerrainEditing.glade", "heightscaledialog", "" );
             app.Autoconnect(this);
             minimumheightentry.Text = MetaverseClient.GetInstance().worldstorage.terrainmodel.MinHeight.ToString();
             maximumheightentry.Text = MetaverseClient.GetInstance().worldstorage.terrainmodel.MaxHeight.ToString();

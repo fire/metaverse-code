@@ -30,11 +30,11 @@ using System.Diagnostics;
             if (EnvironmentHelper.IsMonoRuntime)
             {
                 targetpath = EnvironmentHelper.GetClrDirectory() + "\\mono.exe";
-                arguments = "--debug \"" + EnvironmentHelper.GetExeDirectory() + "\\metaverse.client.exe\"";
+                arguments = "--debug \"" + EnvironmentHelper.GetExeDirectory() + "\\metaverse.exe\"";
             }
             else
             {
-                targetpath = EnvironmentHelper.GetExeDirectory() + "\\metaverse.client.exe";
+                targetpath = EnvironmentHelper.GetExeDirectory() + "\\metaverse.exe";
             }
 
             string shortcutpath = System.Environment.GetFolderPath(Environment.SpecialFolder.Programs ) +

@@ -83,7 +83,7 @@ namespace OSMP
 
         MainTerrainWindow()
         {
-            Glade.XML app = new Glade.XML("./TerrainEditing.glade", "mainwindow", "");
+            Glade.XML app = new Glade.XML(  EnvironmentHelper.GetExeDirectory() + "/TerrainEditing.glade", "mainwindow", "");
             app.Autoconnect(this);
             //raiselower.Activate();
             MetaverseClient.GetInstance().worldstorage.terrainmodel.TerrainModified += new TerrainModel.TerrainModifiedHandler(MainUIWindow_TerrainModified);
@@ -98,7 +98,7 @@ namespace OSMP
 
         void mainwindow_Destroyed( object sender, EventArgs e )
         {
-            Glade.XML app = new Glade.XML( "./TerrainEditing.glade", "mainwindow", "" );
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/TerrainEditing.glade", "mainwindow", "" );
             app.Autoconnect( this );
             HideWindow();
             mainwindow.Destroyed += new EventHandler( mainwindow_Destroyed );            
