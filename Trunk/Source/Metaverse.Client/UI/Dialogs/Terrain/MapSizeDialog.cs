@@ -25,6 +25,7 @@ using System.Threading;
 using Gtk;
 using Glade;
 using Metaverse.Utility;
+
 namespace OSMP
 {
     class MapSizeDialog
@@ -73,14 +74,14 @@ namespace OSMP
         }
         public MapSizeDialog()
         {
-            Glade.XML app = new Glade.XML( "./TerrainEditing.glade", "mapsizedialog", "" );
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/TerrainEditing.glade", "mapsizedialog", "" );
             app.Autoconnect(this);
             Init();
         }
         public MapSizeDialog(DoneCallback callback)
         {
             this.callback = callback;
-            Glade.XML app = new Glade.XML( "./TerrainEditing.glade", "mapsizedialog", "" );
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/TerrainEditing.glade", "mapsizedialog", "" );
             app.Autoconnect(this);
             Init();
         }

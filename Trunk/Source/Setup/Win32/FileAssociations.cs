@@ -42,7 +42,7 @@ class FileAssociations
 
     public void Go()
     {
-        string metaverseclientexe = "\"" + EnvironmentHelper.GetExeDirectory() + "\\metaverse.client.exe\"";
+        string metaverseclientexe = "\"" + EnvironmentHelper.GetExeDirectory() + "\\metaverse.exe\"";
         if (EnvironmentHelper.IsMonoRuntime)
         {
             metaverseclientexe = "\"" + EnvironmentHelper.GetClrDirectory() + "\\mono.exe\" --debug " +

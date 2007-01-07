@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading;
 using Gtk;
 using Glade;
+using Metaverse.Utility;
 
 namespace OSMP
 {
@@ -119,7 +120,7 @@ namespace OSMP
 
         public LodDialog()
         {
-            Glade.XML app = new Glade.XML( "./TerrainEditing.glade", "levelofdetaildialog", "" );
+            Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/TerrainEditing.glade", "levelofdetaildialog", "" );
             app.Autoconnect(this);
 
             int[] lod = MetaverseClient.GetInstance().worldview.terrainview.GetLod();
