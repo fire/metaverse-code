@@ -35,12 +35,16 @@
     <Compile Include="ChatImplementationFactory.cs" />
     <Compile Include="IChat.cs" />
     <Compile Include="IrcChat.cs" />
+    <Compile Include="XmlCommands.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Metaverse.Utility\Metaverse.Utility.csproj">
       <Project>{3F3F41CF-D45F-457E-B810-078180AB68C1}</Project>
       <Name>Metaverse.Utility</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.build" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

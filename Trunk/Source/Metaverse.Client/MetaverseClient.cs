@@ -118,6 +118,10 @@ namespace OSMP
         
         public int Init( IConfigSource commandlineConfig, IClientControllers controllers )
         {
+        Type type = Type.GetType( "OSMP.ObjectReplicationClientToServer" );
+        LogFile.WriteLine( "type: [" + type + "] " + type.AssemblyQualifiedName );
+        //System.Environment.Exit( 0 );
+
         	Tao.DevIl.Il.ilInit();
            	Tao.DevIl.Ilu.iluInit();
 

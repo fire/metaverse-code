@@ -160,20 +160,17 @@
 				<include name="./MetaverseClient.cs" />
 
 				<include name="./Replication/ObjectReplicationServerToClient.cs" />
-				<include name="./Replication/OsmpXmlSerializer.cs" />
+				<include name="./Replication/ObjectReplicationClientToServer.cs" />
+				<include name="./Replication/NetObjectReferenceController.cs" />
+				<include name="./Replication/WorldReplication.cs" />
+				<include name="./Replication/NetReplicationController.cs" />
+				<include name="./Replication/DirtyObjectController.cs" />
+				<include name="./Replication/DirtyObjectQueueSingleClient.cs" />
+				<include name="./Replication/IDirtyObjectQueue.cs" />
 
 				<include name="./Server/MetaverseServer.cs" />
 				<include name="./Server/ServerRegistration.cs" />
 				<include name="./Server/QueryServer.cs" />
-				<include name="./Server/XmlCommands.cs" />
-				<include name="./Server/ObjectReplicationClientToServer.cs" />
-				<include name="./Server/Replication/NetObjectReferenceController.cs" />
-				<include name="./Server/Replication/ReplicationAttributes.cs" />
-				<include name="./Server/Replication/WorldReplication.cs" />
-				<include name="./Server/Replication/NetReplicationController.cs" />
-				<include name="./Server/Replication/DirtyObjectController.cs" />
-				<include name="./Server/Replication/DirtyObjectQueueSingleClient.cs" />
-				<include name="./Server/Replication/IDirtyObjectQueue.cs" />
 
 				<include name="./MovementAndEditing/PropertyInfoClasses.cs" />
 				<include name="./MovementAndEditing/SelectionView.cs" />
@@ -231,7 +228,7 @@
 
 				<include name="./GeneratedProxies/TestInterface_ClientProxy_Generated.cs" />
 				<include name="./GeneratedProxies/WorldControl_ClientProxy_Generated.cs" />
-				<include name=".//GeneratedProxies/ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
+				<include name="./GeneratedProxies/ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
 				<include name="./GeneratedProxies/ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
 
 				<include name="./BasicTypes/Color.cs" />
