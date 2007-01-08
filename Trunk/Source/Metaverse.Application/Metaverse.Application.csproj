@@ -54,5 +54,15 @@
       <Name>Metaverse.Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="config.xml" />
+    <Content Include="Metaverse.ico" />
+    <Content Include="osmpico32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.build" />
+    <None Include="metaverse.client.glade" />
+    <None Include="TerrainEditing.glade" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

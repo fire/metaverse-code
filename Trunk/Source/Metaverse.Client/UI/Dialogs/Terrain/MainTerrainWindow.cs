@@ -87,14 +87,38 @@ namespace OSMP
             app.Autoconnect(this);
             //raiselower.Activate();
             MetaverseClient.GetInstance().worldstorage.terrainmodel.TerrainModified += new TerrainModel.TerrainModifiedHandler(MainUIWindow_TerrainModified);
-            //MainUIWindow_TerrainModified();
             HideWindow();
+
             mainwindow.Destroyed += new EventHandler( mainwindow_Destroyed );
             ViewerState.GetInstance().StateChanged += new ViewerState.StateChangedHandler(MainTerrainWindow_StateChanged);
 
             ContextMenuController.GetInstance().RegisterPersistentContextMenu( new string[] { "Edit Terrain..." },
                 new ContextMenuHandler( EditTerrainContextMenuHandler ) );
+
+            //inittime = DateTime.Now;
+            //MetaverseClient.GetInstance().Tick += new MetaverseClient.TickHandler( MainTerrainWindow_Tick );
+            KeyNameCache.GetInstance().KeyDown += new KeyNameCache.KeyDownHandler( MainTerrainWindow_KeyDown );
         }
+
+        void MainTerrainWindow_KeyDown( string keyname )
+        {
+            if (keyname.ToLower() == "t")
+            {
+                //ShowWindow();
+                ViewerState.GetInstance().ActivateEditTerrain();
+            }
+        }
+
+        //DateTime inittime;
+        //bool opened = false;
+        //void MainTerrainWindow_Tick()
+        //{
+          //  if (!opened && DateTime.Now.Subtract( inittime ).TotalMilliseconds > 5000)
+            //{
+              //  ShowWindow();
+                //opened = false;
+            //}
+        //}
 
         void mainwindow_Destroyed( object sender, EventArgs e )
         {
