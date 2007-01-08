@@ -8,7 +8,7 @@
     <ProjectGuid>{47B69A89-67A5-450F-A72D-9AD1F14FEC10}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Outputs\net-2.0\Metaverse.Controller\</OutputPath>
     <Optimize>False</Optimize>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugSymbols>True</DebugSymbols>
@@ -28,10 +28,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="Nini">
       <HintPath>..\..\Libraries\Nini.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\..\Libraries\NLog.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
@@ -55,7 +51,6 @@
       <Project>{8DF2285B-E8C6-4D1C-BB51-F85BBE080073}</Project>
       <Name>Metaverse.Common</Name>
     </ProjectReference>
-    <Folder Include="Collections" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

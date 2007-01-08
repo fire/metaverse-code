@@ -26,6 +26,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Common", "..\Meta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stun4cs", "..\stun4cs\stun4cs.csproj", "{5F1439D3-88D8-47FF-996C-8D2062AB4016}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Utility", "..\Metaverse.Utility\Metaverse.Utility.csproj", "{3F3F41CF-D45F-457E-B810-078180AB68C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Communication", "..\Metaverse.Communication\Metaverse.Communication.csproj", "{F6437A24-6FDD-4FCF-9539-0464E9560585}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Networking", "..\Metaverse.Networking\Metaverse.Networking.csproj", "{803AA6DA-CB94-442A-97F0-D6BC408C71BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Application", "..\Metaverse.Application\Metaverse.Application.csproj", "{D1E03AF0-36F5-405E-82C1-A5FAA8F79978}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaverse.Controller", "..\Metaverse.Controller\Metaverse.Controller.csproj", "{47B69A89-67A5-450F-A72D-9AD1F14FEC10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +78,26 @@ Global
 		{5F1439D3-88D8-47FF-996C-8D2062AB4016}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F1439D3-88D8-47FF-996C-8D2062AB4016}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F1439D3-88D8-47FF-996C-8D2062AB4016}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F3F41CF-D45F-457E-B810-078180AB68C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F3F41CF-D45F-457E-B810-078180AB68C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F3F41CF-D45F-457E-B810-078180AB68C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F3F41CF-D45F-457E-B810-078180AB68C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6437A24-6FDD-4FCF-9539-0464E9560585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6437A24-6FDD-4FCF-9539-0464E9560585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6437A24-6FDD-4FCF-9539-0464E9560585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6437A24-6FDD-4FCF-9539-0464E9560585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{803AA6DA-CB94-442A-97F0-D6BC408C71BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{803AA6DA-CB94-442A-97F0-D6BC408C71BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{803AA6DA-CB94-442A-97F0-D6BC408C71BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{803AA6DA-CB94-442A-97F0-D6BC408C71BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1E03AF0-36F5-405E-82C1-A5FAA8F79978}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1E03AF0-36F5-405E-82C1-A5FAA8F79978}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1E03AF0-36F5-405E-82C1-A5FAA8F79978}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1E03AF0-36F5-405E-82C1-A5FAA8F79978}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B69A89-67A5-450F-A72D-9AD1F14FEC10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47B69A89-67A5-450F-A72D-9AD1F14FEC10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47B69A89-67A5-450F-A72D-9AD1F14FEC10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47B69A89-67A5-450F-A72D-9AD1F14FEC10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

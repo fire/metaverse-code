@@ -129,32 +129,20 @@ namespace OSMP
                 "movedown", new KeyCommandHandler(MoveDown));
 
             ViewerState.GetInstance().StateChanged += new ViewerState.StateChangedHandler(PlayerMovement_StateChanged);
-
-            //CommandCombos.GetInstance().RegisterCommand(
-              //"mouselook", new KeyCommandHandler(ActivateMouseLook));
-
-            //CommandCombos.GetInstance().RegisterCommand(
-              //"leftmousebutton", new KeyCommandHandler(MouseDown));
-
             MouseCache.GetInstance().MouseMove += new MouseMoveHandler(PlayerMovement_MouseMove);
+            MetaverseClient.GetInstance().worldstorage.terrainmodel.TerrainModified += new TerrainModel.TerrainModifiedHandler( terrainmodel_TerrainModified );
 
-            //keyfiltercombokeys.RegisterCombo( new string[]{"moveleft"},new string[]{"ANY"}, new KeyComboHandler( this.MoveLeft ) );
-            //keyfiltercombokeys.RegisterCombo( new string[]{"moveright"},new string[]{"ANY"}, new KeyComboHandler( this.MoveRight ) );
-            //keyfiltercombokeys.RegisterCombo( new string[]{"movebackwards"},new string[]{"ANY"}, new KeyComboHandler( this.MoveBackwards ) );
-            //keyfiltercombokeys.RegisterCombo( new string[]{"moveforwards"},new string[]{"ANY"}, new KeyComboHandler( this.MoveForwards ) );
-            //keyfiltercombokeys.RegisterCombo( new string[]{"moveup"},new string[]{"ANY"},new KeyComboHandler( this.MoveUp ) );
-            //keyfiltercombokeys.RegisterCombo( new string[]{"movedown"},new string[]{"ANY"}, new KeyComboHandler( this.MoveDown ) );
-
-            //keyfiltercombokeys.RegisterCombo( new string[]{"none"},new string[]{"moveleft","moveright","movebackwards","moveforwards","moveup","movedown"}, new KeyComboHandler( this.ActivateMouseLook ) );
-            
-            // note to self: to do:
-            //RendererFactory.GetInstance().MouseDown += new MouseEventHandler( MouseDown );
-            //RendererFactory.GetInstance().MouseMove += new MouseEventHandler( MouseMove );
-            //RendererFactory.GetInstance().MouseUp += new MouseEventHandler( MouseUp );
-            
             timekeeper = new TimeKeeper();
             
             Test.Debug("PlayerMovement instantiated");
+        }
+
+        void terrainmodel_TerrainModified()
+        {
+            TerrainModel terrainmodel = MetaverseClient.GetInstance().worldstorage.terrainmodel;
+            WorldBoundingBoxMin = new Vector3( 0, 0, terrainmodel.MinHeight );
+            WorldBoundingBoxMax = new Vector3( terrainmodel.MapWidth, terrainmodel.MapHeight, terrainmodel.MaxHeight );
+            LogFile.WriteLine( "PlayerMovement, new boundingbox " + WorldBoundingBoxMin + " < (x,y,z0 < " + WorldBoundingBoxMax );
         }
 
         void PlayerMovement_StateChanged(ViewerState.ViewerStateEnum neweditstate, ViewerState.ViewerStateEnum newviewstate)

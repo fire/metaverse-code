@@ -18,19 +18,19 @@
 //
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Metaverse.Utility
 {
     public class Arguments
     {
-        public StringHashtable Named;
-        public StringArrayList Unnamed;
+        public Dictionary<string,string> Named;
+        public List<string> Unnamed;
         
         public Arguments( string[] args )
         {
-            Named = new StringHashtable();
-            Unnamed = new StringArrayList();
+            Named = new Dictionary<string,string>();
+            Unnamed = new List<string>();
             
             int i = 0; 
             while( i <= args.GetUpperBound(0) )

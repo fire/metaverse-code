@@ -36,73 +36,66 @@
 		<echo message="MetaverseClient.build running build" />
 		<copy todir="${bindir}">
 			<fileset basedir="../../Libraries">
-				<include name="*.dll"/>
+				<include name="*.*"/>
 			</fileset>
 		</copy>
-		<if test="${framework::get-target-framework()=='net-2.0'}">
-			<copy todir="${bindir}" >
-				<fileset basedir="../../Libraries/Gtk.Net2.0">
-					<include name="*.dll"/>
-				</fileset>
-			</copy>
-		</if>
         
 		<nant buildfile="../FractalSpline/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="../FractalSpline/bin/">
-				<include name="MathGL.dll"/>
+				<include name="MathGL.*"/>
 				<include name="Tao.OpenGl.dll"/>
 				<include name="Tao.OpenGl.Glu.dll"/>
 				<include name="Tao.OpenGl.ExtensionLoader.dll"/>
-				<include name="FractalSpline.dll"/>
+				<include name="FractalSpline.*"/>
 			</fileset>
 		</copy>
 
 		<nant buildfile="../Metaverse.Utility/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/Metaverse.Utility">
-				<include name="Metaverse.Utility.dll"/>
+				<include name="Metaverse.Utility.*"/>
 			</fileset>
 		</copy>
 
 		<nant buildfile="../Metaverse.Communication/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/Metaverse.Communication">
-				<include name="Metaverse.Communication.dll"/>
+				<include name="Metaverse.Communication.*"/>
 			</fileset>
 		</copy>
 
 		<nant buildfile="../Metaverse.Common/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/Metaverse.Common">
-				<include name="Metaverse.Common.dll"/>
+				<include name="Metaverse.Common.*"/>
 			</fileset>
 		</copy>
 
 		<nant buildfile="../Metaverse.Networking/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/Metaverse.Networking">
-				<include name="Metaverse.Networking.dll"/>
+				<include name="Metaverse.Networking.*"/>
 			</fileset>
 		</copy>
         
 		<nant buildfile="../stun4cs/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/stun4cs">
-				<include name="stun4cs.dll"/>
+				<include name="stun4cs.*"/>
 			</fileset>
 		</copy>
         
 		<nant buildfile="../NetworkInterfaces/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/NetworkInterfaces">
-				<include name="NetworkInterfaces.dll"/>
+				<include name="NetworkInterfaces.*"/>
 			</fileset>
 		</copy>
 		<mkdir dir="${outputdir}/RpcProxyGenerator" />
 		<copy todir="${outputdir}/RpcProxyGenerator">
 			<fileset basedir="${outputdir}/NetworkInterfaces">
-				<include name="NetworkInterfaces.dll"/>
+				<include name="NetworkInterfaces.*"/>
 			</fileset>
 		</copy>
 		<nant buildfile="../RpcProxyGenerator/default.build" />
@@ -114,7 +107,7 @@
 		</if>
 		<if test="${framework::get-runtime-engine(framework::get-target-framework()) != ''}" >
 			<exec program="${framework::get-runtime-engine(framework::get-target-framework())}" 
-				commandline="RpcProxyGenerator.exe"
+				commandline="RpcProxyGenerator.*"
 				output="${outputdir}/RpcProxyGenerator/generate.log"
 				workingdir="${outputdir}/RpcProxyGenerator" />
 		</if>
