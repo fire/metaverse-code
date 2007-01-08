@@ -39,6 +39,7 @@ Next release:
 - removed CustomCollections from Metaverse.Utility
 - migrated Arguments to use generics (Metaverse.Utility)
 - nant build files now copy debugging information to output directory
+- context menu usage corrected; alt-tabbing now works correctly between child windows (fix bug http://manageddreams.com/osmpbugs/show_bug.cgi?id=11 )
 
 Release 0.4:
 - migrated context menu to GTK#

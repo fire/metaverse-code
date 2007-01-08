@@ -214,21 +214,18 @@
     <None Include="default.build" />
     <Compile Include="BasicTypes\mvMath.cs" />
     <Compile Include="Server\QueryServer.cs" />
-    <Compile Include="Server\XmlCommands.cs" />
     <Compile Include="UI\ServerInfo.cs" />
-    <Compile Include="Server\ObjectReplicationClientToServer.cs" />
-    <Compile Include="Server\Replication\ReplicationAttributes.cs" />
-    <Compile Include="Server\Replication\DirtyObjectController.cs" />
-    <Compile Include="Server\Replication\NetObjectReferenceController.cs" />
-    <Compile Include="Server\Replication\NetReplicationController.cs" />
+    <Compile Include="Replication\ObjectReplicationClientToServer.cs" />
+    <Compile Include="Replication\DirtyObjectController.cs" />
+    <Compile Include="Replication\NetObjectReferenceController.cs" />
+    <Compile Include="Replication\NetReplicationController.cs" />
     <Compile Include="Replication\ObjectReplicationServerToClient.cs" />
     <Compile Include="GeneratedProxies\WorldControl_ClientProxy_Generated.cs" />
     <Compile Include="GeneratedProxies\ObjectReplicationClientToServer_ClientProxy_Generated.cs" />
     <Compile Include="GeneratedProxies\ObjectReplicationServerToClient_ClientProxy_Generated.cs" />
-    <Compile Include="Server\Replication\WorldReplication.cs" />
-    <Compile Include="Server\Replication\DirtyObjectQueueSingleClient.cs" />
+    <Compile Include="Replication\WorldReplication.cs" />
+    <Compile Include="Replication\DirtyObjectQueueSingleClient.cs" />
     <Compile Include="Rendering\ImageWrapper.cs" />
-    <Compile Include="Replication\OsmpXmlSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FractalSpline\FractalSpline.csproj">
