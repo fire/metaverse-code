@@ -31,6 +31,14 @@ Next release:
 - change terrain height now works
 - serializing splatted terrain to/from xml now works (as long as you've saved blend textures, splattextures and heightmap first)
 - corrected bug in picker3dmodelgl that could lead to random crashes on a left mouse-click
+- setup works correctly again
+- osmp:// reactivated
+- corrected issue with terrain window not closing correctly
+- osmp now builds in visual studio (note:wont actually run with .net 2.0 at the moment)
+- corrected issue with world bounding box not being updated in playermovement after changing mapsize
+- removed CustomCollections from Metaverse.Utility
+- migrated Arguments to use generics (Metaverse.Utility)
+- nant build files now copy debugging information to output directory
 
 Release 0.4:
 - migrated context menu to GTK#

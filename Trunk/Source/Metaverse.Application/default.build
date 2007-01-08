@@ -39,21 +39,21 @@
 		<nant buildfile="../Metaverse.Utility/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/Metaverse.Utility">
-				<include name="Metaverse.Utility.dll"/>
+				<include name="Metaverse.Utility.*"/>
 			</fileset>
 		</copy>
 
 		<nant buildfile="../Metaverse.Common/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/Metaverse.Common">
-				<include name="Metaverse.Common.dll"/>
+				<include name="Metaverse.Common.*"/>
 			</fileset>
 		</copy>
 
 		<nant buildfile="../Metaverse.Controller/default.build" />
 		<copy todir="${bindir}">
 			<fileset basedir="${outputdir}/Metaverse.Controller">
-				<include name="*.dll"/>
+				<include name="*.*"/>
 			</fileset>
 		</copy>
 
@@ -71,8 +71,7 @@
 		</csc>
 		<copy todir="${outputdir}/Metaverse.Application">
 			<fileset basedir="${bindir}">
-				<include name="*.dll"/>
-				<include name="*.exe"/>
+				<include name="*.*"/>
 			</fileset>
 		</copy>
 		<copy todir="${outputdir}/Metaverse.Application">

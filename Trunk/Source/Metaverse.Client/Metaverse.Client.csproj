@@ -274,6 +274,6 @@
 xcopy /d /y *_Generated.cs $(ProjectDir)GeneratedProxies &gt;&gt; prebuild.log
 
 xcopy /d /y $(ProjectDir)..\..\Libraries\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log
-xcopy /d /y $(ProjectDir)..\..\Libraries\Gtk.Net2.0\*.dll $(ProjectDir)bin &gt;&gt; prebuild.log</PreBuildEvent>
+</PreBuildEvent>
   </PropertyGroup>
 </Project>

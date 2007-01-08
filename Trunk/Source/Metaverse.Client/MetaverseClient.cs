@@ -138,9 +138,9 @@ namespace OSMP
             renderer.Tick += new OSMP.TickHandler( MainLoop );
             renderer.Init();
 
-            playermovement = PlayerMovement.GetInstance();
             worldstorage = new WorldModel(netreplicationcontroller);
             worldview = new WorldView( worldstorage );
+            playermovement = PlayerMovement.GetInstance();
 
             InitializePlayermovement();
 
