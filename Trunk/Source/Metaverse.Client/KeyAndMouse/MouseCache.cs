@@ -21,6 +21,7 @@
 
 using System;
 using SdlDotNet;
+using Tao.Sdl;
 
 namespace OSMP
 {
@@ -115,6 +116,8 @@ namespace OSMP
         {
             _rightbuttondown = false;
             PutBackRightMouseButton = true;
+            Sdl.SDL_WM_GrabInput( Sdl.SDL_GRAB_OFF );
+
             //if (MouseUp != null)
             //{
               //  LogFile.WriteLine("OnRightMouseUp()");

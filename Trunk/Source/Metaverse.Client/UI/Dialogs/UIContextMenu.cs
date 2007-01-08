@@ -72,16 +72,16 @@ namespace OSMP
 
         void UIContextMenu_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (e.Button == MouseButton.SecondaryButton &&
+                KeyNameCache.GetInstance().keynamesdown.Count == 1)
+            {
+                //MouseCache.GetInstance().OnRightMouseUp();
+                OpenContextMenu();
+            }
         }
 
         void UIContextMenu_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.Button == MouseButton.SecondaryButton &&
-                KeyNameCache.GetInstance().keynamesdown.Count == 0 )
-            {
-                OpenContextMenu();
-                MouseCache.GetInstance().OnRightMouseUp();
-            }
         }
         
         //void UIContextMenu_MouseUp(object sender, MouseButtonEventArgs e)
@@ -146,7 +146,7 @@ namespace OSMP
 
             contextmenu.ShowAll();
             contextmenu.Popup(null,null,null,IntPtr.Zero,3, Gtk.Global.CurrentEventTime);
-
+            LogFile.WriteLine( "after contextmenu popup" );
         }
 
         //void _menupositionfunc( Menu menu, out int x, out int y, out bool pushin )
@@ -212,8 +212,6 @@ namespace OSMP
 
             contextmenucommanditems.Add(commanditem);
             contextmenucallbacks.Add(handler);
-
-            return;
         }
 
         public void RegisterPersistentContextMenu(string[] contextmenupath, ContextMenuHandler callback)

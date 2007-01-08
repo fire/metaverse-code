@@ -154,6 +154,7 @@ namespace OSMP
             ContextMenuController.GetInstance().ContextMenuPopup += new ContextMenuHandler(_ContextMenuPopup);
             ViewerState.GetInstance().StateChanged += new ViewerState.StateChangedHandler(UIEntityPropertiesDialog_StateChanged);
         //    SetFormSize();
+            //KeyNameCache.GetInstance().KeyDown += new KeyNameCache.KeyDownHandler( UIEntityPropertiesDialog_KeyDown );
         }
 
         void UIEntityPropertiesDialog_StateChanged(ViewerState.ViewerStateEnum currenteditstate, ViewerState.ViewerStateEnum newviewstate)
@@ -249,7 +250,7 @@ namespace OSMP
                 entitypropertiesdialog.Destroy();
             }
 
-            Test.WriteOut("opening properties box ...");
+            LogFile.WriteLine( "opening properties box ..." );
 
             Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/metaverse.client.glade", "entitypropertiesdialog", "" );
             app.Autoconnect(this);            
@@ -265,14 +266,15 @@ namespace OSMP
             ViewerState.GetInstance().ActivateEdit3d();
 
             // hack to add a semblance of user-friendliness
-            DialogHelpers.ShowInfoMessageModal(null, "Hold down z to move the object, x to change scale and v to rotate.");
+            //DialogHelpers.ShowInfoMessageModal(null, "Hold down z to move the object, x to change scale and v to rotate.");
+            new MessageBox( MessageBox.MessageType.Info, "Editing controls", "Hold down z to move the object, x to change scale and v to rotate.", null );
 
             entitypropertiesdialog.ShowAll();
             //entitypropertiesdialog.Show();
 
             selectionmodel.Clear();
             selectionmodel.ToggleObjectInSelection(thisentity, true);
-            Test.WriteOut("...opened");
+            LogFile.WriteLine("...opened");
         }
     }
 }

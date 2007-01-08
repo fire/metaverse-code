@@ -250,6 +250,7 @@
     <Content Include="BasicTypes\Readme.txt" />
     <Content Include="Changes.txt" />
     <Content Include="KeyAndMouse\KeyAndMouse.txt" />
+    <Content Include="license.txt" />
     <ProjectReference Include="..\Metaverse.Utility\Metaverse.Utility.csproj">
       <Project>{3F3F41CF-D45F-457E-B810-078180AB68C1}</Project>
       <Name>Metaverse.Utility</Name>
