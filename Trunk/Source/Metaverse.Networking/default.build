@@ -53,9 +53,9 @@
 
 		<csc target="library" output="${bindir}/Metaverse.Networking.dll" debug="${debug}">
 			<references>
-				<include name="${bindir}/NetworkInterfaces.*" />
-				<include name="${bindir}/Metaverse.Utility.*" />
-				<include name="${bindir}/stun4cs.*" />
+				<include name="${bindir}/NetworkInterfaces.dll" />
+				<include name="${bindir}/Metaverse.Utility.dll" />
+				<include name="${bindir}/stun4cs.dll" />
 			</references>
 
 			<sources>
