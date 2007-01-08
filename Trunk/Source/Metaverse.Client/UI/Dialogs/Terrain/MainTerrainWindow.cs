@@ -98,8 +98,10 @@ namespace OSMP
 
         void mainwindow_Destroyed( object sender, EventArgs e )
         {
+            ViewerState.GetInstance().FinishEditTerrain();
             Glade.XML app = new Glade.XML( EnvironmentHelper.GetExeDirectory() + "/TerrainEditing.glade", "mainwindow", "" );
             app.Autoconnect( this );
+            windowshown = true;
             HideWindow();
             mainwindow.Destroyed += new EventHandler( mainwindow_Destroyed );            
         }
