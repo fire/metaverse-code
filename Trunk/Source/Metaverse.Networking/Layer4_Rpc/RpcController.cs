@@ -80,7 +80,7 @@ namespace OSMP
                     //{
                         string typename = (string)binarypacker.ReadValueFromBuffer(data, ref position, typeof(string));
                         string methodname = (string)binarypacker.ReadValueFromBuffer(data, ref position, typeof(string));
-                        LogFile.WriteLine("Got rpc [" + typename + "] [" + methodname + "]");
+                //        LogFile.WriteLine("Got rpc [" + typename + "] [" + methodname + "]");
                         if( TypeIsAllowed( typename ) ) // security check to prevent arbitrary activation
                         //if (ArrayHelper.IsInArray(allowedtypes, typename))
                         {
@@ -96,10 +96,10 @@ namespace OSMP
                             {
                                 interfacename = typename;
                             }
-                            LogFile.WriteLine("[" + namespacename + "][" + interfacename + "]");
+            //                LogFile.WriteLine("[" + namespacename + "][" + interfacename + "]");
 
                             string serverwrapperclassname = "OSMP." + interfacename.Substring(1) + "";
-                            LogFile.WriteLine("serverwrapperclassname [" + serverwrapperclassname + "]");
+              //              LogFile.WriteLine("serverwrapperclassname [" + serverwrapperclassname + "]");
                             //if (namespacename != "")
                             //{
                               //  serverwrapperclassname = namespacename + "." + serverwrapperclassname;
@@ -180,7 +180,7 @@ namespace OSMP
                 binarypacker.WriteValueToBuffer(packet, ref nextposition, parameter);
             }
 
-            LogFile.WriteLine("Sending " + Encoding.UTF8.GetString(packet, 0, nextposition));
+            //LogFile.WriteLine("Sending " + Encoding.UTF8.GetString(packet, 0, nextposition));
             //LogFile.WriteLine( nextposition + " bytes " + Encoding.ASCII.GetString( packet, 0, nextposition ) );
             network.Send(connection,RpcType, packet, 0, nextposition );
         }
